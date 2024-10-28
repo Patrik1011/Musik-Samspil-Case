@@ -36,19 +36,19 @@ jobs:
       - name: Build Project
         run: pnpm build
 
-  deploy-api:
+  deploy-server:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy API to Vercel
+      - name: Deploy Server to Vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           github-token: ${{ secrets.GIT_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_API }}
-          working-directory: apps/api
+          working-directory: apps/server
           vercel-args: ${{ github.ref == 'refs/heads/production' && '--prod' || '' }}
 
   deploy-web:
