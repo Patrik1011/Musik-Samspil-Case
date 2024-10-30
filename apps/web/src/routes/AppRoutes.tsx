@@ -1,10 +1,10 @@
 // AppRoutes.tsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Login from "../components/Auth/Login";
-import Register from "../components/Auth/Register";
+import Register from "../components/auth/Register";
 import ProtectedRoute from "../components/ProtectedRoute";
 import DummyComponent from "../components/DummyComponent";
+import Login from "../components/Auth/Login";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -19,7 +19,7 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       {/* Default Route */}
-      <Route path="/" element={<Register />} /> 
+      <Route path="/" element={<Login />} /> 
     </Routes>
   );
 };
