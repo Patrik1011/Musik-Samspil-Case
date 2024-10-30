@@ -28,7 +28,12 @@
       ".cache",
       ".husky",
       "pnpm-lock.yaml",
-      "package-lock.json"
+      "package-lock.json",
+      "docker-compose.yml",
+      "apps/web/tsconfig.app.json",
+      "apps/web/tsconfig.node.json",
+      "apps/server/tsconfig.app.json",
+      "apps/server/tsconfig.node.json"
     ]
   }
 }
