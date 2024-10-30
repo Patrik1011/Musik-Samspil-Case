@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { login as loginService } from "../../services/AuthService";
+import { loginService } from "../../services/AuthService";
 
 interface LoginInfo {
   username: string;
@@ -8,7 +8,7 @@ interface LoginInfo {
 }
 
 const Login: React.FC = () => {
-  const { login: authenticateUser } = useAuth();
+  const { authenticateUser } = useAuth();
   const [loginInfo, setLoginInfo] = useState<LoginInfo>({ username: "", password: "" });
   const [passwordError, setPasswordError] = useState<string>("");
 

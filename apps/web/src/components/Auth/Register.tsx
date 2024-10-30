@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { register } from "../../services/AuthService";
+import { registerService } from "../../services/AuthService";
 
 // Define the type for registration information
 interface RegisterInfo {
@@ -10,7 +10,7 @@ interface RegisterInfo {
 }
 
 const Register: React.FC = () => {
-  const { login: authenticateUser } = useAuth();
+  const { authenticateUser } = useAuth();
   const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({ username: "", password: "", email: "" });
   const [passwordError, setPasswordError] = useState<string>("");
 
@@ -33,10 +33,11 @@ const Register: React.FC = () => {
       return;
     }
 
-    const result = await register(registerInfo); // Use AuthService register
+    // calling register service
+    const result = await registerService(registerInfo); 
 
     if (result) {
-      authenticateUser(result); // Log the user in immediately after registration
+      authenticateUser(result);
     } else {
       console.error("Registration failed");
     }

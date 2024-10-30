@@ -14,14 +14,14 @@ interface LoginInfo {
     user: any;
   }
   
-  const API_URL = "https://example.com/api";
+  const API_URL = "url.com";
 
 const headers = {
   "Content-Type": "application/json",
 };
 
 // Login function
-export const login = async (loginInfo: LoginInfo): Promise<AuthResponse | null> => {
+export const loginService = async (loginInfo: LoginInfo): Promise<AuthResponse | null> => {
   try {
     const response = await fetch(`${API_URL}/login`, {
       method: "POST",
@@ -42,7 +42,7 @@ export const login = async (loginInfo: LoginInfo): Promise<AuthResponse | null> 
 };
 
 // Register function
-export const register = async (registerInfo: RegisterInfo): Promise<AuthResponse | null> => {
+export const registerService = async (registerInfo: RegisterInfo): Promise<AuthResponse | null> => {
   try {
     const response = await fetch(`${API_URL}/register`, {
       method: "POST",

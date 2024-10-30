@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface AuthContextType {
   isAuthenticated: boolean;
   user: any;
-  login: (userData: any) => void;
+  authenticateUser: (userData: any) => void;
   logout: () => void;
 }
 
@@ -15,8 +15,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
 
-  // Function to log the user in and update state
-  const login = (userData: any) => {
+  // Function to authenticat user in and update state
+  const authenticateUser = (userData: any) => {
     setIsAuthenticated(true);
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // Context value to be provided to consumers
-  const value = { isAuthenticated, user, login, logout };
+  const value = { isAuthenticated, user, authenticateUser, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
