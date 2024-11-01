@@ -6,7 +6,9 @@ export class UserService {
   private prisma = new PrismaClient();
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany();
+    console.log('Fetched users:', users);
+    return users;
   }
 
   async create(user: User): Promise<User> {
