@@ -1,39 +1,9 @@
-interface LoginInfo {
-    username: string;
-    password: string;
-  }
-  
-  interface RegisterInfo {
-    username: string;
-    password: string;
-    email: string;
-  }
-  
-  interface AuthResponse {
-    token: string;
-    user: any;
-  }
-  
-  const API_URL = "url.com";
+import { LoginType, RegisterType, AuthResponseType } from '../utils/types';
+import { postRequest } from '../utils/api';
 
-const headers = {
-  "Content-Type": "application/json",
-};
-
-// Login function
-export const loginService = async (loginInfo: LoginInfo): Promise<AuthResponse | null> => {
+export const loginService = async (loginInfo: LoginType): Promise<AuthResponseType | null> => {
   try {
-    const response = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(loginInfo),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
-
-    const data: AuthResponse = await response.json();
+    const data: AuthResponseType = await postRequest('/login', loginInfo);
     return data;
   } catch (error) {
     console.error("Login failed:", error);
@@ -41,20 +11,9 @@ export const loginService = async (loginInfo: LoginInfo): Promise<AuthResponse |
   }
 };
 
-// Register function
-export const registerService = async (registerInfo: RegisterInfo): Promise<AuthResponse | null> => {
+export const registerService = async (registerInfo: RegisterType): Promise<AuthResponseType | null> => {
   try {
-    const response = await fetch(`${API_URL}/register`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(registerInfo),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
-
-    const data: AuthResponse = await response.json();
+    const data: AuthResponseType = await postRequest('/register', registerInfo);
     return data;
   } catch (error) {
     console.error("Registration failed:", error);
