@@ -1,21 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-
-const { User } = require('../Entities/user.entity');
+import { PrismaClient, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<typeof User>,
-  ) {}
+  private prisma = new PrismaClient();
 
-  async findAll(): Promise<typeof User[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 
-  async create(user: typeof User): Promise<typeof User> {
-    return this.userRepository.save(user);
+  async create(user: User): Promise<User> {
+    return this.prisma.user.create({ data: user });
   }
 }
