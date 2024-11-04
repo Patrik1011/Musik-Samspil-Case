@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Navigate, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import Login from './components/unauthenticated/auth/Login';
-import Register from './components/unauthenticated/auth/Register';
-import DummyComponent from './components/authenticated/DummyComponent';
+import Login from './pages/unauthenticated/auth/Login';
+import Register from './pages/unauthenticated/auth/Register';
+import Home from './pages/authenticated/Home';
 
 const RoutesComponent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -20,8 +20,8 @@ const RoutesComponent: React.FC = () => {
       protected: false,
     },
     {
-      path: '/dummy',
-      component: DummyComponent,
+      path: '/home',
+      component: Home,
       protected: true,
     },
   ];
