@@ -14,9 +14,9 @@ generator client {
 }
 
 model User {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  fistname String?
-  lastname String?
-  email    String? @unique
-  password String?
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  firstname String?
+  lastname  String?
+  email     String? @unique
+  password  String
 }
