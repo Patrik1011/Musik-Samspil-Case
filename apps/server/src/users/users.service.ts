@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "@prisma/client";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class UsersService {
@@ -21,6 +22,17 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException(`User with email: ${email} was not found`);
+    }
+    return user;
+  }
+
+  async findOne(userId: string): Promise<User> {
+    const objectId = new ObjectId(userId);
+    const user = await this.prisma.user.findUnique({
+      where: { id: objectId.toString() },
+    });
+    if (!user) {
+      throw new NotFoundException(`User with id: ${userId} was not found`);
     }
     return user;
   }
