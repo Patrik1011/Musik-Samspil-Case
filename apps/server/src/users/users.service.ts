@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<User[]> {
     const users = await this.prisma.user.findMany();
