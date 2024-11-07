@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { AuthEntity } from "./entity/auth.entity";
 import { LoginDto } from "./dto/login.dto";
 import { SignUpDto } from "./dto/signup.dto";
@@ -11,13 +11,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("login")
+  @HttpCode(200)
   @ApiOkResponse({ type: AuthEntity })
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
   @Post("signup")
-  @ApiOkResponse({ type: AuthEntity })
+  @ApiCreatedResponse({ type: AuthEntity })
   signup(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
   }
