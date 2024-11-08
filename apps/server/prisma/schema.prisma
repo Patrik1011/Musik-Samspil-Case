@@ -19,4 +19,54 @@ model User {
   lastname  String?
   email     String? @unique
   password  String
+  phone_number: String
+  bio: String
+  instrument: String
+}
+
+model Ensemble {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  musicians      Int[]   
+  description    String?
+  location       Json    
+  hosts          String[] 
+  open_positions String[] 
+  is_active      Boolean  
+  members        User[]   @relation(fields: [memberIds], references: [id])
+  member_ids     String[]
+}
+
+model Post {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  ensemble    Ensemble @relation(fields: [ensembleId], references: [id])
+  ensemble_id String
+  title       String
+  description String
+  website     String
+  type        PostType 
+  author      User     @relation(fields: [authorId], references: [id])
+  author_id   String
+  createdAt   DateTime @default(now())
+}
+
+model Match {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  searching_user   User     @relation("User1Matches", fields: [searching_user_id], references: [id])
+  searching_user_id String
+  matched_user     User     @relation("User2Matches", fields: [matched_user_id], references: [id])
+  matched_user_id  String
+  matchedAt        DateTime @default(now())
+  match_status     MatchStatus 
+}
+
+enum PostType {
+  recruitment
+  event
+}
+
+enum MatchStatus {
+  new
+  messaged
+  joined
 }
