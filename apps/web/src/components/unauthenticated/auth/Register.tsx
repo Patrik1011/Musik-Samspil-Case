@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { registerService } from "../../services/AuthService";
+import { useAuth } from "../../../context/AuthContext";
+import { registerService } from "../../../services/AuthService";
 
 // Define the type for registration information
 interface RegisterInfo {
