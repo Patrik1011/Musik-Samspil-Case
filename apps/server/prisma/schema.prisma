@@ -14,50 +14,61 @@ generator client {
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  firstname String?
-  lastname  String?
-  email     String? @unique
-  password  String
-  phone_number: String
-  bio: String
-  instrument: String
+  id                   String               @id @default(auto()) @map("_id") @db.ObjectId
+  first_name           String?
+  last_name            String?
+  email                String               @unique
+  password             String
+  phone_number         String?
+  bio                  String?
+  instrument           Instrument
+  ensemble_memberships EnsembleMembership[]
+  posts                Post[]               @relation("user_posts")
+  matches_as_searcher  Match[]              @relation("User1Matches")
+  matches_as_matched   Match[]              @relation("User2Matches")
 }
 
 model Ensemble {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  id             String               @id @default(auto()) @map("_id") @db.ObjectId
   name           String
-  musicians      Int[]   
   description    String?
-  location       Json    
-  hosts          String[] 
-  open_positions String[] 
-  is_active      Boolean  
-  members        User[]   @relation(fields: [memberIds], references: [id])
-  member_ids     String[]
+  location       Json
+  open_positions String[]
+  is_active      Boolean
+  memberships    EnsembleMembership[]
+  posts          Post[]               @relation("ensemble_posts")
+}
+
+model EnsembleMembership {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  ensemble    Ensemble @relation(fields: [ensemble_id], references: [id])
+  ensemble_id String   @db.ObjectId
+  member      User     @relation(fields: [member_id], references: [id])
+  member_id   String   @db.ObjectId
+  is_host     Boolean
 }
 
 model Post {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  ensemble    Ensemble @relation(fields: [ensembleId], references: [id])
-  ensemble_id String
+  ensemble    Ensemble @relation("ensemble_posts", fields: [ensemble_id], references: [id])
+  ensemble_id String   @db.ObjectId
   title       String
   description String
-  website     String
-  type        PostType 
-  author      User     @relation(fields: [authorId], references: [id])
+  website_url String
+  type        PostType
+  author      User     @relation("user_posts", fields: [author_id], references: [id])
   author_id   String
-  createdAt   DateTime @default(now())
+  created_at  DateTime @default(now())
 }
 
 model Match {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  searching_user   User     @relation("User1Matches", fields: [searching_user_id], references: [id])
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  searching_user    User        @relation("User1Matches", fields: [searching_user_id], references: [id])
   searching_user_id String
-  matched_user     User     @relation("User2Matches", fields: [matched_user_id], references: [id])
-  matched_user_id  String
-  matchedAt        DateTime @default(now())
-  match_status     MatchStatus 
+  matched_user      User        @relation("User2Matches", fields: [matched_user_id], references: [id])
+  matched_user_id   String
+  matched_at        DateTime    @default(now())
+  match_status      MatchStatus
 }
 
 enum PostType {
@@ -69,4 +80,23 @@ enum MatchStatus {
   new
   messaged
   joined
+}
+
+enum Instrument {
+  Violin
+  Viola
+  Cello
+  DoubleBass
+  Flute
+  Oboe
+  Clarinet
+  Bassoon
+  FrenchHorn
+  Trumpet
+  Trombone
+  Tuba
+  Percussion
+  Harp
+  Piano
+  Saxophone
 }
