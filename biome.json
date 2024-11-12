@@ -22,6 +22,7 @@
     }
   },
   "files": {
+    "include": ["apps/web/src/**/*.tsx", "apps/web/src/**/*.ts"],
     "ignore": [
       "node_modules",
       "dist",
