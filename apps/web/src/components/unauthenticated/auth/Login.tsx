@@ -9,8 +9,13 @@ interface LoginInfo {
 
 const Login: React.FC = () => {
   const { authenticateUser } = useAuth();
-  const [loginInfo, setLoginInfo] = useState<LoginInfo>({ username: "", password: "" });
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+    username: "",
+    password: "",
+  });
   const [passwordError, setPasswordError] = useState<string>("");
+
+  console.log("We are in the Login component");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

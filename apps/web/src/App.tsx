@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes } from "react-router-dom";
-import RoutesComponent from './Routes';
+import { BrowserRouter as Router } from "react-router-dom";
+import RoutesComponent from "./Routes";
 
 const App: React.FC = () => {
   return (
