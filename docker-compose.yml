@@ -14,6 +14,7 @@ services:
     volumes:
       - ./apps/server:/usr/src/app
       - /usr/src/app/node_modules
+    command: pnpm start:dev
     networks:
       - app-network
 
@@ -28,6 +29,7 @@ services:
     volumes:
       - ./apps/web:/usr/src/app
       - /usr/src/app/node_modules
+    command: pnpm dev
     networks:
       - app-network
 

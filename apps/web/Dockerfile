@@ -4,15 +4,15 @@ FROM node:18
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy the API directory
+# Copy the web directory
 COPY . .
 
 # Install dependencies using pnpm
 RUN npm install -g pnpm
 RUN pnpm install
 
-# Expose the port the API runs on
-EXPOSE 3000
+# Expose the port the web app runs on
+EXPOSE 5173
 
-# Start the API application
-CMD ["pnpm", "start"]
+# Start the web application
+CMD ["pnpm", "dev"]
