@@ -4,6 +4,24 @@ import { faker } from "@faker-js/faker";
 const prisma = new PrismaClient();
 
 async function main() {
+  // Create Users
+  for (let i = 0; i < 50; i++) {
+    await prisma.user.create({
+      data: {
+        firstname: faker.name.firstName(),
+        lastname: faker.name.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        phone_number: faker.phone.number(),
+        bio: faker.lorem.sentence(),
+        instrument: faker.helpers.arrayElement([
+         'Violin', 'Viola', 'Cello', 'Double Bass', 
+         'Flute', 'Oboe', 'Clarinet', 'Bassoon', 'French Horn', 
+        ]),
+      },
+    });
+  }
+
   // Create Ensembles
   for (let i = 0; i < 10; i++) {
     await prisma.ensemble.create({
@@ -13,9 +31,10 @@ async function main() {
           type: 'Point',
           coordinates: [parseFloat(faker.address.longitude()), parseFloat(faker.address.latitude())],
         },
-        hosts: [],
+        hosts: [faker.internet.email()],
         open_positions: [faker.music.genre()],
         is_active: faker.datatype.boolean(),
+        member_ids: Array.from({ length: 5 }, () => faker.database.mongodbObjectId()),
       },
     });
   }
@@ -24,12 +43,13 @@ async function main() {
   for (let i = 0; i < 20; i++) {
     await prisma.post.create({
       data: {
-        ensemble_id: faker.datatype.number({ min: 1, max: 10 }),
+        ensemble_id: faker.database.mongodbObjectId(),
         title: faker.lorem.sentence(),
         description: faker.lorem.paragraph(),
-        time_posted: faker.date.recent(),
-        website_link: faker.internet.url(),
-        post_type: faker.helpers.arrayElement(['recruitment', 'event']),
+        website: faker.internet.url(),
+        type: faker.helpers.arrayElement(['recruitment', 'event']),
+        author_id: faker.database.mongodbObjectId(),
+        createdAt: faker.date.recent(),
       },
     });
   }
@@ -38,26 +58,10 @@ async function main() {
   for (let i = 0; i < 30; i++) {
     await prisma.match.create({
       data: {
-        user_id: faker.datatype.number({ min: 1, max: 50 }), // Assuming user IDs range from 1 to 50
-        ensemble_id: faker.datatype.number({ min: 1, max: 10 }),
-        match_status: faker.helpers.arrayElement(['pending', 'accepted', 'rejected']),
-        distance: faker.datatype.float({ min: 0, max: 100 }),
-      },
-    });
-  }
-
-  // Create Conversations
-  for (let i = 0; i < 15; i++) {
-    await prisma.conversation.create({
-      data: {
-        participants: [faker.datatype.number({ min: 1, max: 50 }), faker.datatype.number({ min: 1, max: 50 })],
-        messages: [
-          {
-            sender_id: faker.datatype.number({ min: 1, max: 50 }),
-            content: faker.lorem.sentence(),
-            timestamp: faker.date.recent(),
-          },
-        ],
+        searching_user_id: faker.database.mongodbObjectId(),
+        matched_user_id: faker.database.mongodbObjectId(),
+        matchedAt: faker.date.recent(),
+        match_status: faker.helpers.arrayElement(['messaged', 'confirmed']),
       },
     });
   }
