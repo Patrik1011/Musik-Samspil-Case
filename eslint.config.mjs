@@ -1,9 +1,7 @@
 import js from '@eslint/js';
-import extreme from 'eslint-config-extreme';
 
 const config = [
   js.configs.recommended,
-  ...extreme.configs.extended,
   {
     files: ['**/*.js'],
     languageOptions: {
@@ -17,8 +15,15 @@ const config = [
       }
     },
     rules: {
-      'n/no-process-env': 'off',
+      // Common ESLint rules
+      'no-unused-vars': 'warn',
       'no-console': 'off',
+      'no-debugger': 'warn',
+      'no-alert': 'warn',
+      'no-duplicate-imports': 'error',
+      'no-template-curly-in-string': 'warn',
+      'camelcase': 'warn',
+      'arrow-body-style': ['error', 'as-needed'],
       'import-x/extensions': 'off',
       'import-x/order': 'off',
       'max-statements': 'off',
