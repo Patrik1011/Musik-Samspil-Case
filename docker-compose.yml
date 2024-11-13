@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   server:
     build:
@@ -29,7 +27,7 @@ services:
     volumes:
       - ./apps/web:/usr/src/app
       - /usr/src/app/node_modules
-    command: pnpm dev
+    command: pnpm dev -- --host
     networks:
       - app-network
 
