@@ -35,7 +35,7 @@
     "react": "^18.3.1"
   },
   "lint-staged": {
-    "*.ts": ["eslint --fix"],
-    "*.tsx": ["eslint --fix"]
+    "*.ts": ["pnpm lint"],
+    "*.tsx": ["pnpm lint"]
   }
 }
