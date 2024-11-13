@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import Login from "../../../components/unauthenticated/auth/Login";
 
 const LoginPage: React.FC = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import Register from '../../../components/unauthenticated/auth/Register';
 
 const RegisterPage: React.FC = () => {

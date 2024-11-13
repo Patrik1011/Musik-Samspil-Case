@@ -1,4 +1,4 @@
-import { LoginType, RegisterType, AuthResponseType } from '../utils/types';
+import type { LoginType, RegisterType, AuthResponseType } from '../utils/types';
 import { postRequest } from '../utils/api';
 
 export const loginService = async (loginInfo: LoginType): Promise<AuthResponseType | null> => {

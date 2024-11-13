@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import DummyComponent from '../../components/authenticated/DummyComponent';
 
 const HomePage: React.FC = () => {

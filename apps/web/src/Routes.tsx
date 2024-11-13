@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Route, Navigate, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Login from './pages/unauthenticated/auth/Login';

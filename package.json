@@ -11,7 +11,7 @@
     "biome-lint": "biome lint --write",
     "start:server": "cross-env NODE_ENV=production pnpm --filter=server start:prod",
     "start:web": "pnpm --filter=web dev",
-    "start": "cross-env NODE_ENV=production pnpm --stream -r run start",
+    "start": "docker-compose -f docker-compose.prod.yml up --build",
     "dev": "docker-compose up --build",
     "prepare": "husky && husky install",
     "build": "pnpm --filter=web build && pnpm --filter=server build"
@@ -28,10 +28,6 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.1",
     "@eslint/js": "^8.56.0",
-    "@html-eslint/eslint-plugin": "^0.24.0",
-    "@html-eslint/parser": "^0.24.0",
-    "concurrently": "^9.0.1",
-    "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
     "eslint-config-extreme": "^1.0.25",
     "husky": "^8.0.0",
@@ -39,7 +35,7 @@
     "react": "^18.3.1"
   },
   "lint-staged": {
-    "*.js": ["biome format --write", "biome lint", "eslint --fix"],
-    "*.{json,md,yml}": ["biome format --write"]
+    "*.ts": ["eslint --fix"],
+    "*.tsx": ["eslint --fix"]
   }
 }
