@@ -22,7 +22,11 @@
     }
   },
   "files": {
-    "include": ["apps/web/src/**/*.tsx", "apps/web/src/**/*.ts"],
+    "include": [
+      "apps/web/src/**/*.tsx",
+      "apps/web/src/**/*.ts",
+      "apps/server/src/**/*.ts"
+    ],
     "ignore": [
       "node_modules",
       "dist",
