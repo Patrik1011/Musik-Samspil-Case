@@ -5,10 +5,10 @@ import {
   faSquareInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 
-import { StyledLink } from "./StyledLink.tsx";
+import { StyledLink } from "./components/StyledLink";
 import logoDaos from "../../../assets/logo-daos.png";
 import paleImage from "../../../assets/images-svg/pale.svg";
-import { Headline } from "./Headline.tsx";
+import { Headline } from "../../Headline";
 
 export const Footer = () => {
   return (
@@ -17,7 +17,11 @@ export const Footer = () => {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 pb-6 sm:gap-y-10 lg:grid-cols-3">
           <div className="flex flex-col items-start md:items-center">
             <div className="space-y-6 md:space-y-8">
-              <Headline title="musik samspil" />
+              <Headline
+                title="musik samspil"
+                textColor="text-white"
+                className="uppercase"
+              />
               <div className="flex flex-col md:flex-row md:space-x-8">
                 <StyledLink href="/profile" label="See posts" />
                 <StyledLink href="/login" label="Profile" />
