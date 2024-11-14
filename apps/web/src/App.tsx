@@ -1,15 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import RoutesComponent from "./Routes";
-import { Footer } from "./components/unauthenticated/footer/Footer.tsx";
-import Navigation from "./components/navigation/Navigation.tsx";
+import { Layout } from "./Layout";
 
 const App: React.FC = () => {
   return (
     <Router>
-      <Navigation />
-      <RoutesComponent />
-      <Footer />
+      <Layout>
+        <RoutesComponent />
+      </Layout>
     </Router>
   );
 };
