@@ -39,7 +39,7 @@ export const Footer = () => {
           </div>
 
           <div className="flex items-center justify-center">
-            <div className="flex flex-col items-center space-y-2 w-[344px] h-[99px] py-2.5 bg-white rounded-lg">
+            <div className="flex flex-col items-center space-y-2 w-[344px] h-[99px] py-2.5 bg-white rounded-lg shadow-custom">
               <p className="text-black uppercase text-xs">bragt til dig af</p>
               <img src={logoDaos} alt="logo daos" width="189" height="52" />
             </div>
