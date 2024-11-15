@@ -20,25 +20,37 @@
     "dotenv": "^16.4.5",
     "mongodb": "^6.9.0"
   },
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "author": "",
   "engines": {
     "node": ">=18.16.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.1",
-    "eslint": "^8.56.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.13",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "react": "^18.3.1"
   },
   "lint-staged": {
-    "*.{json,md,yml}": ["biome format --write"],
-    "*.ts": ["eslint --fix", "biome format --write", "biome lint"],
-    "*.tsx": ["eslint --fix", "biome format --write", "biome lint"]
+    "*.{json,md,yml}": [
+      "biome format --write"
+    ],
+    "*.ts": [
+      "eslint --fix",
+      "biome format --write",
+      "biome lint"
+    ],
+    "*.tsx": [
+      "eslint --fix",
+      "biome format --write",
+      "biome lint"
+    ]
   }
 }
