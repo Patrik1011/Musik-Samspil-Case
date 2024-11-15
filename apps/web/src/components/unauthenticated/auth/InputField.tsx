@@ -25,7 +25,7 @@ export const InputField = ({
         <label className="text-sm text-[14px] text-medium-gray">{label}</label>
       )}
       <input
-        className="w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl"
+        className="w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none"
         type={type}
         name={name}
         placeholder={placeholder}

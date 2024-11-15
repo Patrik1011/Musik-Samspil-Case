@@ -5,7 +5,6 @@ import { InputField } from "./InputField";
 import { validateForm } from "../../../utils/formValidation";
 import { Headline } from "./Headline";
 import { Button } from "./Button";
-import { Layout } from "./Layout";
 
 interface FormData {
   email: string;
@@ -50,32 +49,30 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <form className="form" onSubmit={handleSubmit}>
-        <Headline title="Sign In" className="mb-6" />
-        <div className="space-y-4">
-          <InputField
-            errorMessages={errors.email}
-            name="email"
-            placeholder="Email"
-            type="email"
-            label="Email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <InputField
-            name="password"
-            type="password"
-            placeholder="Password"
-            label="Password"
-            value={formData.password}
-            onChange={handleChange}
-            errorMessages={errors.password}
-          />
-          <Button type="submit" title="Sign in" />
-        </div>
-      </form>
-    </Layout>
+    <form className="" onSubmit={handleSubmit}>
+      <Headline title="Sign In" className="mb-6" />
+      <div className="space-y-4">
+        <InputField
+          errorMessages={errors.email}
+          name="email"
+          placeholder="Email"
+          type="email"
+          label="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <InputField
+          name="password"
+          type="password"
+          placeholder="Password"
+          label="Password"
+          value={formData.password}
+          onChange={handleChange}
+          errorMessages={errors.password}
+        />
+        <Button type="submit" title="Sign in" />
+      </div>
+    </form>
   );
 };
 

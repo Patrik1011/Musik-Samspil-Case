@@ -1,10 +1,13 @@
 import React from "react";
 import Login from "../../../components/unauthenticated/auth/Login";
+import { Layout } from "./Layout";
 
 const LoginPage: React.FC = () => {
   return (
     <div>
-      <Login />
+      <Layout>
+        <Login />
+      </Layout>
     </div>
   );
 };

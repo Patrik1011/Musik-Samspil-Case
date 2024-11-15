@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 //import { useAuth } from "../../../context/AuthContext";
 //import { registerService } from "../../../services/AuthService";
 import { Button } from "./Button.tsx";
-import { Layout } from "./Layout.tsx";
 import { Headline } from "./Headline.tsx";
 import { validateForm } from "../../../utils/formValidation.ts";
 import { InputField } from "./InputField.tsx";
@@ -61,50 +60,48 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <form className="form" onSubmit={handleSubmit}>
-        <Headline title="Sign Up" className="mb-6" />
-        <div className="space-y-4">
-          <InputField
-            errorMessages={errors.firstName}
-            name="firstName"
-            type="text"
-            placeholder="Firstname"
-            label="Firstname"
-            value={registerData.firstName}
-            onChange={handleChange}
-          />
-          <InputField
-            errorMessages={errors.lastName}
-            name="lastName"
-            type="text"
-            placeholder="Lastname"
-            label="Lastname"
-            value={registerData.lastName}
-            onChange={handleChange}
-          />
-          <InputField
-            errorMessages={errors.email}
-            name="email"
-            type="email"
-            placeholder="Email"
-            label="Email"
-            value={registerData.email}
-            onChange={handleChange}
-          />
-          <InputField
-            errorMessages={errors.password}
-            name="password"
-            type="password"
-            placeholder="Password"
-            label="Password"
-            value={registerData.password}
-            onChange={handleChange}
-          />
-          <Button type="submit" title="Sign up" />
-        </div>
-      </form>
-    </Layout>
+    <form className="form" onSubmit={handleSubmit}>
+      <Headline title="Sign Up" className="mb-6" />
+      <div className="space-y-4">
+        <InputField
+          errorMessages={errors.firstName}
+          name="firstName"
+          type="text"
+          placeholder="Firstname"
+          label="Firstname"
+          value={registerData.firstName}
+          onChange={handleChange}
+        />
+        <InputField
+          errorMessages={errors.lastName}
+          name="lastName"
+          type="text"
+          placeholder="Lastname"
+          label="Lastname"
+          value={registerData.lastName}
+          onChange={handleChange}
+        />
+        <InputField
+          errorMessages={errors.email}
+          name="email"
+          type="email"
+          placeholder="Email"
+          label="Email"
+          value={registerData.email}
+          onChange={handleChange}
+        />
+        <InputField
+          errorMessages={errors.password}
+          name="password"
+          type="password"
+          placeholder="Password"
+          label="Password"
+          value={registerData.password}
+          onChange={handleChange}
+        />
+        <Button type="submit" title="Sign up" />
+      </div>
+    </form>
   );
 };
 
