@@ -5,10 +5,11 @@
   "main": "",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "format": "biome format . --write",
-    "biome-lint": "biome lint --write",
+    "format:biome": "biome format . --write",
+    "biome": "biome check  --unsafe --write .",
+    "lint:eslint": "eslint . --fix",
+    "lint-staged": "lint-staged",
+    "lint-staged-debug": "lint-staged --debug",
     "start:server": "cross-env NODE_ENV=production pnpm --filter=server start:prod",
     "start:web": "pnpm --filter=web dev",
     "start": "docker-compose -f docker-compose.prod.yml up --build",
@@ -20,9 +21,7 @@
     "dotenv": "^16.4.5",
     "mongodb": "^6.9.0"
   },
-  "workspaces": [
-    "apps/*"
-  ],
+  "workspaces": ["apps/*"],
   "author": "",
   "engines": {
     "node": ">=18.16.1"
@@ -35,17 +34,13 @@
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.13",
+    "globals": "^15.11.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "react": "^18.3.1"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "biome format --write"
-    ],
-    "*.{json,md,yml}": [
-      "biome format --write"
-    ]
+    "*.{json,md,yml}": ["biome format --write"],
+    "apps/**/*.{ts,tsx}": ["pnpm biome", "pnpm lint:eslint"]
   }
 }

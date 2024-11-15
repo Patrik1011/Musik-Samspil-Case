@@ -1,5 +1,5 @@
-import type React from 'react';
-import Register from '../../../components/unauthenticated/auth/Register';
+import type React from "react";
+import Register from "../../../components/unauthenticated/auth/Register";
 
 const RegisterPage: React.FC = () => {
   return (

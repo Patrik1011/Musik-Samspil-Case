@@ -1,10 +1,11 @@
 import type React from "react";
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, type ReactNode } from "react";
+import type { UserType } from "../utils/types";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: any;
-  authenticateUser: (userData: any) => void;
+  user: UserType | null;
+  authenticateUser: (userData: UserType) => void;
   logout: () => void;
 }
 
@@ -12,9 +13,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserType | null>(null);
 
-  const authenticateUser = (userData: any) => {
+  const authenticateUser = (userData: UserType) => {
     setIsAuthenticated(true);
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));

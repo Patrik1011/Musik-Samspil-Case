@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState, type ChangeEvent, type FormEvent } from "react"
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { registerService } from "../../../services/AuthService";
 
@@ -12,7 +12,11 @@ interface RegisterInfo {
 
 const Register: React.FC = () => {
   const { authenticateUser } = useAuth();
-  const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({ username: "", password: "", email: "" });
+  const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
+    username: "",
+    password: "",
+    email: "",
+  });
   const [passwordError, setPasswordError] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +39,7 @@ const Register: React.FC = () => {
     }
 
     // calling register service
-    const result = await registerService(registerInfo); 
+    const result = await registerService(registerInfo);
 
     if (result) {
       authenticateUser(result);

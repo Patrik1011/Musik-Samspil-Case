@@ -1,62 +1,52 @@
-import js from '@eslint/js';
-import react from 'eslint-plugin-react';
-import tseslint from '@typescript-eslint/eslint-plugin';
+import js from "@eslint/js";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 
-const config = [
-  js.configs.recommended,
+export default [
   {
-    files: ['**/*.js'],
+    ignores: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/.cache/**",
+      "**/build/**"
+    ],
+    files: ["**/*.{js,ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: {
-        node: true,
-        browser: true,
-        es2021: true,
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parser: tsParser,
+      parserOptions: {
+        project: [
+          "./apps/web/tsconfig.app.json",
+          "./apps/server/tsconfig.json"
+        ]
       },
-      parser: '@typescript-eslint/parser',
-    },
-    rules: {
-      'no-unused-vars': 'warn',
-      'no-console': 'off',
-      'no-debugger': 'warn',
-      'no-alert': 'warn',
-      'no-duplicate-imports': 'error',
-      'no-template-curly-in-string': 'warn',
-      camelcase: 'warn',
-      'arrow-body-style': ['error', 'as-needed'],
-      'import-x/extensions': 'off',
-      'import-x/order': 'off',
-      'max-statements': 'off',
-      'n/no-unsupported-features/node-builtins': 'off',
-      'sonarjs/pseudo-random': 'off',
-      'promise/prefer-await-to-callbacks': 'off',
-    },
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      parser: '@typescript-eslint/parser',
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
     },
     plugins: {
-      '@typescript-eslint': tseslint,
+      "@typescript-eslint": tseslint,
       react,
-    },
-    extends: [
-      tseslint.configs.recommended,
-      react.configs.recommended,
-    ],
-    settings: {
-      react: {
-        version: 'detect', // Automatically detect the react version
-      },
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
     rules: {
-      'react/react-in-jsx-scope': 'off', // Not needed with React 17+
+      ...tseslint.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react/react-in-jsx-scope": "off",
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
   },
 ];
-
-export default config;
