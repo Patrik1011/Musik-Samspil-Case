@@ -8,22 +8,14 @@ import globals from "globals";
 
 export default [
   {
-    ignores: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/.cache/**",
-      "**/build/**"
-    ],
+    ignores: ["**/node_modules/**", "**/dist/**", "**/.cache/**", "**/build/**"],
     files: ["**/*.{js,ts,tsx}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
       parser: tsParser,
       parserOptions: {
-        project: [
-          "./apps/web/tsconfig.app.json",
-          "./apps/server/tsconfig.json"
-        ]
+        project: ["./apps/web/tsconfig.app.json", "./apps/server/tsconfig.json"],
       },
       globals: {
         ...globals.node,
