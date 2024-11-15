@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import type React from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { loginService } from "../../../services/AuthService";
 

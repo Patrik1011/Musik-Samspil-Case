@@ -1,53 +1,44 @@
-import js from '@eslint/js';
+import js from "@eslint/js";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 
-const config = [
-  js.configs.recommended,
+export default [
   {
-    files: ['**/*.js'],
+    ignores: ["**/node_modules/**", "**/dist/**", "**/.cache/**", "**/build/**"],
+    files: ["**/*.{js,ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parser: tsParser,
+      parserOptions: {
+        project: ["./apps/web/tsconfig.app.json", "./apps/server/tsconfig.json"],
+      },
       globals: {
-        // Add any global variables here
-        node: true,
-        browser: true,
-        es2021: true
-      }
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint,
+      react,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
     rules: {
-      // Common ESLint rules
-      'no-unused-vars': 'warn',
-      'no-console': 'off',
-      'no-debugger': 'warn',
-      'no-alert': 'warn',
-      'no-duplicate-imports': 'error',
-      'no-template-curly-in-string': 'warn',
-      'camelcase': 'warn',
-      'arrow-body-style': ['error', 'as-needed'],
-      'import-x/extensions': 'off',
-      'import-x/order': 'off',
-      'max-statements': 'off',
-      'n/no-unsupported-features/node-builtins': 'off',
-      'sonarjs/pseudo-random': 'off',
-      'promise/prefer-await-to-callbacks': 'off'
-    }
-  }
+      ...tseslint.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react/react-in-jsx-scope": "off",
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+  },
 ];
-
-const htmlPlugin = await import('@html-eslint/eslint-plugin');
-const htmlParser = await import('@html-eslint/parser');
-
-config.push({
-  files: ['**/*.html'],
-  plugins: {
-    '@html-eslint': htmlPlugin
-  },
-  languageOptions: {
-    parser: htmlParser
-  },
-  rules: {
-    ...htmlPlugin.default.configs.extended,
-  }
-});
-
-export default config;

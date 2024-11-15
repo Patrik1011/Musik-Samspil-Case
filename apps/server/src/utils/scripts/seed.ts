@@ -12,7 +12,7 @@ async function main() {
         title: faker.lorem.sentence(),
         description: faker.lorem.paragraph(),
         website_url: faker.internet.url(),
-        type: faker.helpers.arrayElement(['recruitment', 'event']),
+        type: faker.helpers.arrayElement(["recruitment", "event"]),
         author_id: faker.database.mongodbObjectId(),
         created_at: faker.date.recent(),
       },
@@ -26,14 +26,14 @@ async function main() {
         searching_user_id: faker.database.mongodbObjectId(),
         matched_user_id: faker.database.mongodbObjectId(),
         matched_at: faker.date.recent(),
-        match_status: faker.helpers.arrayElement(['new', 'messaged', 'joined']),
+        match_status: faker.helpers.arrayElement(["new", "messaged", "joined"]),
       },
     });
   }
 }
 
 main()
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
     process.exit(1);
   })

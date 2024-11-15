@@ -1,40 +1,30 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.4.1/schema.json",
   "organizeImports": {
-    "enabled": true
+    "enabled": false
+  },
+  "files": {
+    "ignore": ["**/node_modules/**", "**/dist/**", "**/.cache/**", "**/build/**", "pnpm-lock.yaml"]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "complexity": {
+        "noForEach": "off",
+        "useLiteralKeys": "off"
+      }
     }
   },
   "formatter": {
     "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
     "indentWidth": 2,
-    "lineWidth": 80
+    "lineWidth": 100,
+    "indentStyle": "space"
   },
   "javascript": {
-    "formatter": {
-      "quoteStyle": "single"
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
-  },
-  "files": {
-    "include": ["apps/web/src/**/*.tsx", "apps/web/src/**/*.ts"],
-    "ignore": [
-      "node_modules",
-      "dist",
-      ".cache",
-      ".husky",
-      "pnpm-lock.yaml",
-      "package-lock.json",
-      "docker-compose.yml",
-      "apps/web/tsconfig.app.json",
-      "apps/web/tsconfig.node.json",
-      "apps/server/tsconfig.app.json",
-      "apps/server/tsconfig.node.json"
-    ]
   }
 }

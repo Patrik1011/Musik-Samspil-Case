@@ -4,7 +4,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const postRequest = async (endpoint: string, body: any) => {
+export const postRequest = async <T>(endpoint: string, body: T) => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers,
@@ -16,4 +16,4 @@ export const postRequest = async (endpoint: string, body: any) => {
   }
 
   return response.json();
-}; 
+};
