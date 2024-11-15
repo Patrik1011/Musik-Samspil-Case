@@ -2,7 +2,7 @@ import { Container } from "../Container";
 import { NavLinks } from "./components/NavLinks";
 import { Headline } from "../Headline";
 
-export default function Navigation() {
+export const Navigation = () => {
   return (
     <header className="z-20">
       <nav className="shadow-md">
@@ -25,4 +25,4 @@ export default function Navigation() {
       </nav>
     </header>
   );
-}
+};

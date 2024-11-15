@@ -14,7 +14,7 @@ interface Props {
   isMobile: boolean;
 }
 
-export function NavLinks({ isMobile }: Props) {
+export const NavLinks = ({ isMobile }: Props) => {
   if (isMobile) {
     return (
       <Popover className="lg:hidden">
@@ -92,4 +92,4 @@ export function NavLinks({ isMobile }: Props) {
       </span>
     </Link>
   ));
-}
+};
