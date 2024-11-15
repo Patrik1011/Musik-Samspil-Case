@@ -1,9 +1,10 @@
 interface Errors {
   email?: string;
   password?: string;
-  name?: string;
+  firstName?: string;
   lastName?: string;
 }
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const validateEmail = (email: string): string | undefined => {
@@ -24,7 +25,7 @@ const validatePassword = (password: string): string | undefined => {
   return undefined;
 };
 
-const validateName = (name: string): string | undefined => {
+const validateFirstName = (name: string): string | undefined => {
   if (!name) {
     return "Name is required";
   } else if (name.length < 2) {
@@ -45,22 +46,26 @@ const validateLastName = (lastName: string): string | undefined => {
 export const validateForm = (formData: {
   email: string;
   password: string;
-  name?: string;
+  firstName?: string;
   lastName?: string;
 }): Errors => {
   const errors: Errors = {};
 
   const emailError = validateEmail(formData.email);
   const passwordError = validatePassword(formData.password);
-  const nameError = formData.name ? validateName(formData.name) : undefined;
-  const lastNameError = formData.lastName
-    ? validateLastName(formData.lastName)
-    : undefined;
+
+  if (formData.firstName !== undefined) {
+    const firstNameError = validateFirstName(formData.firstName);
+    if (firstNameError) errors.firstName = firstNameError;
+  }
+
+  if (formData.lastName !== undefined) {
+    const lastNameError = validateLastName(formData.lastName);
+    if (lastNameError) errors.lastName = lastNameError;
+  }
 
   if (emailError) errors.email = emailError;
   if (passwordError) errors.password = passwordError;
-  if (nameError) errors.name = nameError;
-  if (lastNameError) errors.lastName = lastNameError;
 
   return errors;
 };
