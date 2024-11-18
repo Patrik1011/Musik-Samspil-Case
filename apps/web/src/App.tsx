@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import RoutesComponent from "./Routes";
 import { Layout } from "./Layout";
