@@ -1,10 +1,12 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-//import { useAuth } from "../../../context/AuthContext";
-//import { loginService } from "../../../services/AuthService";
 import { InputField } from "./InputField";
 import { validateForm } from "../../../utils/formValidation";
 import { Headline } from "./Headline";
 import { Button } from "./Button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store.ts";
+import { loginUser } from "../../../redux/authActions.ts";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -23,6 +25,8 @@ const Login: React.FC = () => {
     password: "",
   });
   const [errors, setErrors] = useState<Errors>({});
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,15 +41,15 @@ const Login: React.FC = () => {
       return;
     }
 
-    setErrors({});
-    setFormData({ email: "", password: "" });
-    console.log("Form submitted successfully");
-
-    // const result = await loginService(loginInfo);
-    // if (result) {
-    //   authenticateUser(result);
-    //   console.log("Login successful:", result);
-    // }
+    try {
+      await dispatch(loginUser(formData));
+      setErrors({});
+      setFormData({ email: "", password: "" });
+      console.log("Login successful");
+      navigate("/home");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (

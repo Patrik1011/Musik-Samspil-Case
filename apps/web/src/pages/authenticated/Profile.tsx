@@ -1,13 +1,13 @@
 import React from "react";
 import DummyComponent from "../../components/authenticated/DummyComponent";
 
-const HomePage: React.FC = () => {
+const ProfilePage: React.FC = () => {
   return (
     <div>
-      <h1>Landing Page</h1>
+      <h1>User Profile Page</h1>
       <DummyComponent />
     </div>
   );
 };
 
-export default HomePage;
+export default ProfilePage;

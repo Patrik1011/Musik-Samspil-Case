@@ -1,17 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
 
 import "./styles/index.css";
 import App from "./App.tsx";
 import ErrorBoundary from "./helpers/errorBoundary";
-import { AuthProvider } from "./context/AuthContext";
+import store from "./redux/store";
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <ErrorBoundary>
-      <AuthProvider>
+      <Provider store={store}>
         <App />
-      </AuthProvider>
+      </Provider>
     </ErrorBoundary>
   </StrictMode>,
 );

@@ -1,4 +1,4 @@
-const API_URL = "localhost:3000";
+const API_URL = "http://localhost:3000";
 
 const headers = {
   "Content-Type": "application/json",
@@ -15,5 +15,7 @@ export const postRequest = async (endpoint: string, body: any) => {
     throw new Error(`Error: ${response.status} ${response.statusText}`);
   }
 
-  return response.json();
-}; 
+  const responseData = await response.json();
+  console.log("Response data:", responseData);
+  return responseData;
+};

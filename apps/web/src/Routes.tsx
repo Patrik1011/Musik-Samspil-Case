@@ -1,27 +1,37 @@
 import React from "react";
 import { Route, Navigate, Routes } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
-import Login from './pages/unauthenticated/auth/Login';
-import Register from './pages/unauthenticated/auth/Register';
-import Home from './pages/authenticated/Home';
+//import { useAuth } from "./context/AuthContext";
+import Login from "./pages/unauthenticated/auth/Login";
+import Register from "./pages/unauthenticated/auth/Register";
+import Home from "./pages/authenticated/Home";
+import Profile from "./pages/authenticated/Profile";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/store.ts";
 
 const RoutesComponent: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
 
   const routes = [
     {
-      path: '/login',
+      path: "/login",
       component: Login,
       protected: false,
     },
     {
-      path: '/register',
+      path: "/register",
       component: Register,
       protected: false,
     },
     {
-      path: '/home',
+      path: "/home",
       component: Home,
+      protected: true,
+    },
+    {
+      path: "/profile",
+      component: Profile,
       protected: true,
     },
   ];

@@ -9,12 +9,54 @@ import {
 import { ChevronUpIcon } from "./ChevronUp";
 import { MenuIcon } from "./MenuIcon";
 import { AnimatePresence, motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store.ts";
+import { logoutUser } from "../../../redux/authActions.ts";
 
 interface Props {
   isMobile: boolean;
 }
 
 export const NavLinks = ({ isMobile }: Props) => {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
+  const renderLinks = () => {
+    const links = isAuthenticated ? Links.authenticated : Links.unauthenticated;
+    return links.map(({ label, href, bgColor, spanColor }) => {
+      if (label === "Logout") {
+        return (
+          <button
+            key={label}
+            className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
+            onClick={handleLogout}
+          >
+            <span className={`text-base ${spanColor ? spanColor : ""}`}>
+              {label}
+            </span>
+          </button>
+        );
+      }
+      return (
+        <Link
+          key={label}
+          className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
+          to={href}
+        >
+          <span className={`text-base ${spanColor ? spanColor : ""}`}>
+            {label}
+          </span>
+        </Link>
+      );
+    });
+  };
+
   if (isMobile) {
     return (
       <Popover className="lg:hidden">
@@ -55,22 +97,7 @@ export const NavLinks = ({ isMobile }: Props) => {
                     }}
                     initial={{ opacity: 0, y: -32 }}
                   >
-                    <div className="space-y-4">
-                      {Links.map(([label, href, bgColor, spanColor]) => (
-                        <PopoverButton
-                          key={label}
-                          as={Link}
-                          className={`flex items-center justify-center rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
-                          to={href}
-                        >
-                          <span
-                            className={`text-base  ${spanColor ? spanColor : ""}`}
-                          >
-                            {label}
-                          </span>
-                        </PopoverButton>
-                      ))}
-                    </div>
+                    <div className="space-y-4">{renderLinks()}</div>
                   </PopoverPanel>
                 </>
               )}
@@ -81,15 +108,5 @@ export const NavLinks = ({ isMobile }: Props) => {
     );
   }
 
-  return Links.map(([label, href, bgColor, spanColor]) => (
-    <Link
-      key={label}
-      className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500   ${bgColor ? bgColor : ""}`}
-      to={href}
-    >
-      <span className={`text-base  ${spanColor ? spanColor : ""}`}>
-        {label}
-      </span>
-    </Link>
-  ));
+  return <>{renderLinks()}</>;
 };
