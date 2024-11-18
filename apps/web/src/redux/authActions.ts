@@ -1,6 +1,6 @@
 import { AppDispatch } from "./store";
 import { authService } from "../services/AuthService.ts";
-import { login, logout } from "./authSlice.ts";
+import { login, logout, setError } from "./authSlice.ts";
 
 export const loginUser =
   (credentials: { email: string; password: string }) =>
@@ -12,7 +12,7 @@ export const loginUser =
         dispatch(login(response.accessToken));
         localStorage.setItem("token", response.accessToken);
       } else {
-        console.error("Login failed: Token not found in response");
+        dispatch(setError("invalid email or password"));
       }
     } catch (error) {
       console.error("Login failed:", error);

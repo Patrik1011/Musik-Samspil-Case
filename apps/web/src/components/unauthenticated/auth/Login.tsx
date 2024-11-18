@@ -3,8 +3,8 @@ import { InputField } from "./InputField";
 import { validateForm } from "../../../utils/formValidation";
 import { Headline } from "./Headline";
 import { Button } from "./Button";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../redux/store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { loginUser } from "../../../redux/authActions.ts";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +27,7 @@ const Login: React.FC = () => {
   const [errors, setErrors] = useState<Errors>({});
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const errorMessage = useSelector((state: RootState) => state.auth.error);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,7 +46,6 @@ const Login: React.FC = () => {
       await dispatch(loginUser(formData));
       setErrors({});
       setFormData({ email: "", password: "" });
-      console.log("Login successful");
       navigate("/home");
     } catch (error) {
       console.error("Login failed:", error);
@@ -75,6 +75,9 @@ const Login: React.FC = () => {
           errorMessages={errors.password}
         />
         <Button type="submit" title="Sign in" />
+        {errorMessage && (
+          <div className="text-red-500 text-sm text-center">{errorMessage}</div>
+        )}
       </div>
     </form>
   );

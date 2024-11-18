@@ -9,12 +9,14 @@ interface AuthState {
   isAuthenticated: boolean;
   accessToken: string | null;
   user: User | null;
+  error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
   accessToken: null,
   isAuthenticated: false,
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -34,8 +36,15 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       localStorage.removeItem("token");
     },
+    setError(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+    },
+    clearError(state) {
+      state.error = null;
+    },
   },
 });
 
-export const { login, setUser, logout } = authSlice.actions;
+export const { login, setUser, logout, setError, clearError } =
+  authSlice.actions;
 export default authSlice.reducer;
