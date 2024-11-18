@@ -7,13 +7,13 @@ interface User {
 
 interface AuthState {
   isAuthenticated: boolean;
-  token: string | null;
+  accessToken: string | null;
   user: User | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  accessToken: null,
   isAuthenticated: false,
 };
 
@@ -22,7 +22,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action: PayloadAction<string>) {
-      state.token = action.payload;
+      state.accessToken = action.payload;
       state.isAuthenticated = true;
     },
     setUser(state, action: PayloadAction<User>) {
@@ -30,8 +30,9 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.user = null;
-      state.token = null;
+      state.accessToken = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("token");
     },
   },
 });
