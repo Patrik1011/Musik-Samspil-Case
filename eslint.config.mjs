@@ -9,10 +9,23 @@ import globals from "globals";
 export default [
   {
     ignores: ["**/node_modules/**", "**/dist/**", "**/.cache/**", "**/build/**"],
-    files: ["**/*.{js,ts,tsx}"],
+  },
+  // Configuration for JS files
+  {
+    files: ["**/*.js", "**/*.mjs"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
+      globals: {
+        ...globals.node,
+        ...globals.browser,
+      },
+    },
+  },
+  // Configuration for TS/TSX files
+  {
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
       parser: tsParser,
       parserOptions: {
         project: ["./apps/web/tsconfig.app.json", "./apps/server/tsconfig.json"],

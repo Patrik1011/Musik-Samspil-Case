@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards } from "@nestjs/common";
-import type { User } from "@prisma/client";
-import type { UsersService } from "./users.service";
+import { User } from "@prisma/client";
+import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ApiOkResponse } from "@nestjs/swagger";
 import { UserEntity } from "./entity/user.entity";
