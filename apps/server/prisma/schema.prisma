@@ -21,7 +21,7 @@ model User {
   password             String
   phone_number         String?
   bio                  String?
-  instrument           Instrument
+  instrument           Instrument?
   ensemble_memberships EnsembleMembership[]
   posts                Post[]               @relation("user_posts")
   matches_as_searcher  Match[]              @relation("User1Matches")
