@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import type { PrismaService } from "../../prisma/prisma.service";
-import type { User } from "@prisma/client";
+import { PrismaService } from "../../prisma/prisma.service";
+import { User } from "@prisma/client";
 import { ObjectId } from "mongodb";
 
 @Injectable()

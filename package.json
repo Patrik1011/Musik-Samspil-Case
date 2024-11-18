@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "format:biome": "biome format . --write",
-    "biome": "biome check  --unsafe --write .",
-    "lint:eslint": "eslint . --fix",
+    "biome": "biome check  --unsafe .",
+    "lint:eslint": "eslint .",
     "lint-staged": "lint-staged",
     "lint-staged-debug": "lint-staged --debug",
     "start:server": "cross-env NODE_ENV=production pnpm --filter=server start:prod",

@@ -4,10 +4,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import type { JwtService } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
-import type { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from "../../prisma/prisma.service";
 import type { AuthEntity } from "./entity/auth.entity";
 import type { SignUpDto } from "./dto/signup.dto";
 import type { LoginDto } from "./dto/login.dto";
