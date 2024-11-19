@@ -1,25 +1,15 @@
 export type LoginType = {
-  username: string;
+  email: string;
   password: string;
 };
 
 export type RegisterType = {
-  username: string;
+  firstName: string;
+  lastName: string;
   password: string;
   email: string;
 };
 
-export type UserType = {
-  id: string;
-  first_name?: string;
-  last_name?: string;
-  email: string;
-  phone_number?: string;
-  bio?: string;
-  instrument: string;
-};
-
 export type AuthResponseType = {
-  token: string;
-  user: UserType;
+  accessToken: string;
 };

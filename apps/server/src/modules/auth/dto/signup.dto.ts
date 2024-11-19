@@ -6,13 +6,13 @@ export class SignUpDto {
   @IsNotEmpty()
   @MinLength(3)
   @ApiProperty()
-  firstname?: string;
+  first_name?: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @ApiProperty()
-  lastname?: string;
+  last_name?: string;
 
   @IsEmail()
   @IsNotEmpty()
