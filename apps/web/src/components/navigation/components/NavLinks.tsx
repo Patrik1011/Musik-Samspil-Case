@@ -1,11 +1,6 @@
 import { Links } from "../../../utils/nav-links";
 import { Link } from "react-router-dom";
-import {
-  Popover,
-  PopoverBackdrop,
-  PopoverButton,
-  PopoverPanel,
-} from "@headlessui/react";
+import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronUpIcon } from "./ChevronUp";
 import { MenuIcon } from "./MenuIcon";
 import { AnimatePresence, motion } from "framer-motion";
@@ -18,9 +13,7 @@ interface Props {
 }
 
 export const NavLinks = ({ isMobile }: Props) => {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const dispatch = useDispatch<AppDispatch>();
 
   const handleLogout = () => {
@@ -34,12 +27,11 @@ export const NavLinks = ({ isMobile }: Props) => {
         return (
           <button
             key={label}
+            type="button"
             className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
             onClick={handleLogout}
           >
-            <span className={`text-base ${spanColor ? spanColor : ""}`}>
-              {label}
-            </span>
+            <span className={`text-base ${spanColor ? spanColor : ""}`}>{label}</span>
           </button>
         );
       }
@@ -49,9 +41,7 @@ export const NavLinks = ({ isMobile }: Props) => {
           className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
           to={href}
         >
-          <span className={`text-base ${spanColor ? spanColor : ""}`}>
-            {label}
-          </span>
+          <span className={`text-base ${spanColor ? spanColor : ""}`}>{label}</span>
         </Link>
       );
     });
@@ -67,11 +57,7 @@ export const NavLinks = ({ isMobile }: Props) => {
               className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none focus:outline-none"
             >
               {({ open }) =>
-                open ? (
-                  <ChevronUpIcon className="h-6 w-6" />
-                ) : (
-                  <MenuIcon className="h-6 w-6" />
-                )
+                open ? <ChevronUpIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />
               }
             </PopoverButton>
             <AnimatePresence initial={false}>

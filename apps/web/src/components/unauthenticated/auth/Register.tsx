@@ -64,6 +64,7 @@ const Register: React.FC = () => {
       <Headline title="Sign Up" className="mb-6" />
       <div className="space-y-4">
         <InputField
+          id="firstName"
           errorMessages={errors.firstName}
           name="firstName"
           type="text"
@@ -73,6 +74,7 @@ const Register: React.FC = () => {
           onChange={handleChange}
         />
         <InputField
+          id="lastName"
           errorMessages={errors.lastName}
           name="lastName"
           type="text"
@@ -82,6 +84,7 @@ const Register: React.FC = () => {
           onChange={handleChange}
         />
         <InputField
+          id="email"
           errorMessages={errors.email}
           name="email"
           type="email"
@@ -91,6 +94,7 @@ const Register: React.FC = () => {
           onChange={handleChange}
         />
         <InputField
+          id="password"
           errorMessages={errors.password}
           name="password"
           type="password"

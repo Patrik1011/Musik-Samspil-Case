@@ -1,10 +1,17 @@
+interface RequestBody {
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  password: string;
+}
+
 const API_URL = "http://localhost:3000";
 
 const headers = {
   "Content-Type": "application/json",
 };
 
-export const postRequest = async (endpoint: string, body: any) => {
+export const postRequest = async (endpoint: string, body: RequestBody) => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers,

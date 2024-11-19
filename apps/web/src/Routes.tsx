@@ -9,9 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux/store.ts";
 
 const RoutesComponent: React.FC = () => {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const routes = [
     {
@@ -43,11 +41,7 @@ const RoutesComponent: React.FC = () => {
           key={route.path}
           path={route.path}
           element={
-            route.protected && !isAuthenticated ? (
-              <Navigate to="/login" />
-            ) : (
-              <route.component />
-            )
+            route.protected && !isAuthenticated ? <Navigate to="/login" /> : <route.component />
           }
         />
       ))}

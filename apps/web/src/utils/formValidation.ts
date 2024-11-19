@@ -10,7 +10,8 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const validateEmail = (email: string): string | undefined => {
   if (!email) {
     return "Email is required";
-  } else if (!EMAIL_REGEX.test(email)) {
+  }
+  if (!EMAIL_REGEX.test(email)) {
     return "Invalid email format";
   }
   return undefined;
@@ -19,7 +20,8 @@ const validateEmail = (email: string): string | undefined => {
 const validatePassword = (password: string): string | undefined => {
   if (!password) {
     return "Password is required";
-  } else if (password.length < 8) {
+  }
+  if (password.length < 8) {
     return "Password must be at least 8 characters";
   }
   return undefined;
@@ -28,7 +30,8 @@ const validatePassword = (password: string): string | undefined => {
 const validateFirstName = (name: string): string | undefined => {
   if (!name) {
     return "Name is required";
-  } else if (name.length < 2) {
+  }
+  if (name.length < 2) {
     return "Name must be at least 2 characters";
   }
   return undefined;
@@ -37,7 +40,8 @@ const validateFirstName = (name: string): string | undefined => {
 const validateLastName = (lastName: string): string | undefined => {
   if (!lastName) {
     return "Last name is required";
-  } else if (lastName.length < 2) {
+  }
+  if (lastName.length < 2) {
     return "Last name must be at least 2 characters";
   }
   return undefined;

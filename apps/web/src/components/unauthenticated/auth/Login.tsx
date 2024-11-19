@@ -27,6 +27,7 @@ const Login: React.FC = () => {
   const [errors, setErrors] = useState<Errors>({});
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
   const errorMessage = useSelector((state: RootState) => state.auth.error);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +58,7 @@ const Login: React.FC = () => {
       <Headline title="Sign In" className="mb-6" />
       <div className="space-y-4">
         <InputField
+          id="email"
           errorMessages={errors.email}
           name="email"
           placeholder="Email"
@@ -66,6 +68,7 @@ const Login: React.FC = () => {
           onChange={handleChange}
         />
         <InputField
+          id="password"
           name="password"
           type="password"
           placeholder="Password"
@@ -75,9 +78,7 @@ const Login: React.FC = () => {
           errorMessages={errors.password}
         />
         <Button type="submit" title="Sign in" />
-        {errorMessage && (
-          <div className="text-red-500 text-sm text-center">{errorMessage}</div>
-        )}
+        {errorMessage && <div className="text-red-500 text-sm text-center">{errorMessage}</div>}
       </div>
     </form>
   );

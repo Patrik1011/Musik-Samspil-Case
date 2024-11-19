@@ -1,6 +1,7 @@
 import React from "react";
 
 interface InputFieldProps {
+  id: string;
   label?: string;
   name: string;
   type: string;
@@ -11,6 +12,7 @@ interface InputFieldProps {
 }
 
 export const InputField = ({
+  id,
   label,
   type,
   name,
@@ -22,9 +24,12 @@ export const InputField = ({
   return (
     <div className="flex flex-col items-start w-full">
       {label && (
-        <label className="text-sm text-[14px] text-medium-gray">{label}</label>
+        <label htmlFor={id} className="text-sm text-[14px] text-medium-gray">
+          {label}
+        </label>
       )}
       <input
+        id={id}
         className="w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none"
         type={type}
         name={name}
@@ -32,9 +37,7 @@ export const InputField = ({
         value={value}
         onChange={onChange}
       />
-      {errorMessages && (
-        <p className="text-red-400 text-[14px]">{errorMessages}</p>
-      )}
+      {errorMessages && <p className="text-red-400 text-[14px]">{errorMessages}</p>}
     </div>
   );
 };
