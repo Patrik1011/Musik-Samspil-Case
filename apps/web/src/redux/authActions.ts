@@ -1,20 +1,34 @@
 import { AppDispatch } from "./store";
 import { authService } from "../services/AuthService.ts";
-import { login, logout, setError } from "./authSlice.ts";
+import { login, logout } from "./authSlice.ts";
 
 export const loginUser =
-  (credentials: { email: string; password: string }) => async (dispatch: AppDispatch) => {
+  (credentials: { email: string; password: string }) =>
+  async (dispatch: AppDispatch) => {
     try {
       const response = await authService.login(credentials);
-      console.log("Response from authService.login:", response);
-      if (response?.accessToken) {
-        dispatch(login(response.accessToken));
-        localStorage.setItem("token", response.accessToken);
-      } else {
-        dispatch(setError("invalid email or password"));
+
+      if (!response?.accessToken) {
+        throw new Error("Invalid email or password");
       }
-    } catch (error) {
-      console.error("Login failed:", error);
+
+      dispatch(login(response.accessToken));
+      localStorage.setItem("token", response.accessToken);
+    } catch (error: unknown) {
+      let errorMessage = "Login failed";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = (error as any).message || errorMessage;
+      }
+
+      console.error("Error in loginUser:", errorMessage);
+      throw new Error(errorMessage);
     }
   };
 
