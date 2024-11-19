@@ -23,7 +23,8 @@ export const loginUser =
         throw new Error(error.message);
       }
       throw new Error("An unexpected error occurred");
-    };
+    }
+  };
 
 export const logoutUser = () => (dispatch: AppDispatch) => {
   dispatch(logout());
