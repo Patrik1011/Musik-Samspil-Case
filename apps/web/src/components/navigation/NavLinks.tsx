@@ -1,12 +1,12 @@
-import { Links } from "../../../utils/nav-links";
+import { Links } from "../../utils/nav-links";
 import { Link } from "react-router-dom";
 import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronUpIcon } from "./ChevronUp";
 import { MenuIcon } from "./MenuIcon";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store.ts";
-import { logoutUser } from "../../../redux/authActions.ts";
+import { AppDispatch, RootState } from "../../redux/store";
+import { logoutUser } from "../../redux/authActions";
 
 interface Props {
   isMobile: boolean;
