@@ -29,8 +29,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -81,11 +80,7 @@ const Login: React.FC = () => {
           errorMessages={errors.password}
         />
         <Button type="submit" title="Sign in" />
-        {errors.general && (
-          <div className="text-red-500 text-sm text-center">
-            {errors.general}
-          </div>
-        )}
+        {errors.general && <div className="text-red-500 text-sm text-center">{errors.general}</div>}
       </div>
     </form>
   );

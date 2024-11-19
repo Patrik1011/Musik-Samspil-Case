@@ -4,7 +4,7 @@ import { login, logout } from "./authSlice.ts";
 
 export const loginUser =
   (credentials: { email: string; password: string }) =>
-  async (dispatch: AppDispatch) => {
+  async (dispatch: AppDispatch): Promise<void> => {
     try {
       const response = await authService.login(credentials);
 
@@ -19,12 +19,6 @@ export const loginUser =
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
-        errorMessage = (error as any).message || errorMessage;
       }
 
       console.error("Error in loginUser:", errorMessage);

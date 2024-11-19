@@ -3,12 +3,7 @@ import { postRequest } from "../utils/api";
 
 export const authService = {
   login: async (credentials: LoginType) => {
-    try {
-      return await postRequest("/auth/login", credentials);
-    } catch (error) {
-      console.error("Login failed:", error);
-      return null;
-    }
+    return await postRequest<{ accessToken: string }>("/auth/login", credentials);
   },
 };
 

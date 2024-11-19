@@ -1,8 +1,5 @@
 interface RequestBody {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  password: string;
+  [key: string]: unknown;
 }
 
 const API_URL = "http://localhost:3000";
@@ -11,7 +8,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const postRequest = async (endpoint: string, body: RequestBody) => {
+export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers,
@@ -19,10 +16,8 @@ export const postRequest = async (endpoint: string, body: RequestBody) => {
   });
 
   if (!response.ok) {
-    throw new Error(`Error: ${response.status} ${response.statusText}`);
+    throw new Error(`Error from PostRequest: ${response.status} ${response.statusText}`);
   }
-
-  const responseData = await response.json();
-  console.log("Response data:", responseData);
-  return responseData;
+  console.log("response", response);
+  return response.json();
 };
