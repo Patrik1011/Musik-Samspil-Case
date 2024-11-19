@@ -28,3 +28,36 @@ export const postRequest = async <T>(endpoint: string, body: RequestBody): Promi
   }
   return response.json();
 };
+
+export const putRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from PutRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};
+
+export const getRequest = async <T>(endpoint: string): Promise<T> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from GetRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};

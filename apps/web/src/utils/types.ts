@@ -13,3 +13,13 @@ export type RegisterType = {
 export type AuthResponseType = {
   accessToken: string;
 };
+
+export interface UserEntity {
+  id?: string;
+  first_name?: string;
+  last_name?: string;
+  email: string;
+  phone_number?: string;
+  bio?: string;
+  instrument?: string;
+}
