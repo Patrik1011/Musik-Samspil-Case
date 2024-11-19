@@ -41,17 +41,19 @@ export class AuthService {
   }
 
   async signUp(signUpDto: SignUpDto): Promise<AuthEntity> {
-    const { email } = signUpDto;
+    const { email, first_name, last_name } = signUpDto;
     const userExists = await this.prisma.user.findUnique({ where: { email } });
     if (userExists) {
-      throw new ConflictException(`User with email ${email} already exists`);
+      throw new ConflictException("User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
 
     const user = await this.prisma.user.create({
       data: {
-        ...signUpDto,
+        email,
+        first_name,
+        last_name,
         password: hashedPassword,
       },
     });

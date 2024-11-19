@@ -8,21 +8,21 @@ export const loginUser =
     try {
       const response = await authService.login(credentials);
 
-      if (!response?.accessToken) {
-        throw new Error("Invalid email or password");
+      if (!response.accessToken) {
+        throw new Error("Invalid response from server");
       }
 
       dispatch(login(response.accessToken));
       localStorage.setItem("token", response.accessToken);
     } catch (error: unknown) {
-      let errorMessage = "Login failed";
-
-      if (error instanceof Error) {
-        errorMessage = error.message;
+      const err = error as { response?: { status?: number } };
+      if (err.response?.status === 401 || err.response?.status === 404) {
+        throw new Error("Invalid email or password");
       }
-
-      console.error("Error in loginUser:", errorMessage);
-      throw new Error(errorMessage);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("An unexpected error occurred");
     }
   };
 

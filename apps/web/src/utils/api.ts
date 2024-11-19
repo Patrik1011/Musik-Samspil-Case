@@ -2,6 +2,10 @@ interface RequestBody {
   [key: string]: unknown;
 }
 
+interface CustomError extends Error {
+  response?: Response;
+}
+
 const API_URL = "http://localhost:3000";
 
 const headers = {
@@ -16,8 +20,11 @@ export const postRequest = async <T>(endpoint: string, body: RequestBody): Promi
   });
 
   if (!response.ok) {
-    throw new Error(`Error from PostRequest: ${response.status} ${response.statusText}`);
+    const error = new Error(
+      `Error from PostRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
   }
-  console.log("response", response);
   return response.json();
 };

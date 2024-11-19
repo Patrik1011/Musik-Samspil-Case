@@ -3,18 +3,11 @@ import { postRequest } from "../utils/api";
 
 export const authService = {
   login: async (credentials: LoginType) => {
-    return await postRequest<{ accessToken: string }>("/auth/login", credentials);
+    const response = await postRequest<AuthResponseType>("/auth/login", credentials);
+    console.log("response", response);
+    return response;
   },
-};
-
-export const registerService = async (
-  registerInfo: RegisterType,
-): Promise<AuthResponseType | null> => {
-  try {
-    const data: AuthResponseType = await postRequest("/register", registerInfo);
-    return data;
-  } catch (error) {
-    console.error("Registration failed:", error);
-    return null;
-  }
+  register: async (credentials: RegisterType) => {
+    return await postRequest<AuthResponseType>("/auth/signup", credentials);
+  },
 };

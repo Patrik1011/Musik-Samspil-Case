@@ -50,7 +50,8 @@ const Login: React.FC = () => {
       if (error instanceof Error) {
         setErrors({ general: error.message });
       } else {
-        setErrors({ general: "An unexpected error occurred." });
+        setErrors({ general: "An unexpected error occurred" });
+        console.error("Error during login:", error);
       }
     }
   };

@@ -1,10 +1,10 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-//import { useAuth } from "../../../context/AuthContext";
-//import { registerService } from "../../../services/AuthService";
 import { Button } from "./Button.tsx";
 import { Headline } from "./Headline.tsx";
 import { validateForm } from "../../../utils/formValidation.ts";
 import { InputField } from "./InputField.tsx";
+import { authService } from "../../../services/AuthService.ts";
+import { useNavigate } from "react-router-dom";
 
 interface RegisterData {
   firstName: string;
@@ -18,10 +18,10 @@ interface Errors {
   password?: string;
   firstName?: string;
   lastName?: string;
+  general?: string;
 }
 
 const Register: React.FC = () => {
-  //const { authenticateUser } = useAuth();
   const [registerData, setRegisterData] = useState<RegisterData>({
     firstName: "",
     lastName: "",
@@ -29,10 +29,11 @@ const Register: React.FC = () => {
     email: "",
   });
   const [errors, setErrors] = useState<Errors>({});
+  const [registerMessage, setRegisterMessage] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setRegisterData({ ...registerData, [name]: value });
+    setRegisterData({ ...registerData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -45,24 +46,39 @@ const Register: React.FC = () => {
       return;
     }
 
-    setErrors({});
-    setRegisterData({ firstName: "", lastName: "", password: "", email: "" });
-    console.log("Form submitted successfully");
+    try {
+      const result = await authService.register(registerData);
 
-    // calling register service
-    // const result = await registerService(registerInfo);
-    //
-    // if (result) {
-    //   authenticateUser(result);
-    // } else {
-    //   console.error("Registration failed");
-    // }
+      if (result) {
+        console.log("Registration successful");
+        setRegisterMessage("Registration successful");
+        setErrors({});
+        setRegisterData({
+          firstName: "",
+          lastName: "",
+          password: "",
+          email: "",
+        });
+        navigate("/login");
+      } else {
+        console.error("Registration failed");
+      }
+    } catch (error: unknown) {
+      const err = error as { response: { status: number } };
+      if (err.response.status === 409) {
+        setErrors({ general: "Email already exists" });
+      } else {
+        setErrors({ general: "An unexpected error occurred" });
+        console.error("Error during registration:", error);
+      }
+    }
   };
 
   return (
     <form className="form" onSubmit={handleSubmit}>
       <Headline title="Sign Up" className="mb-6" />
       <div className="space-y-4">
+        {registerMessage && <p className="text-green-400 text-[14px]">{registerMessage}</p>}
         <InputField
           id="firstName"
           errorMessages={errors.firstName}
@@ -104,6 +120,7 @@ const Register: React.FC = () => {
           onChange={handleChange}
         />
         <Button type="submit" title="Sign up" />
+        {errors.general && <div className="text-red-500 text-sm text-center">{errors.general}</div>}
       </div>
     </form>
   );
