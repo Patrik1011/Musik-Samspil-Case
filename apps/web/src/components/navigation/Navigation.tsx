@@ -1,5 +1,5 @@
 import { Container } from "../Container";
-import { NavLinks } from "./components/NavLinks";
+import { NavLinks } from "./NavLinks";
 import { Headline } from "../Headline";
 
 export const Navigation = () => {
