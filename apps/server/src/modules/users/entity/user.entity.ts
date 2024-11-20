@@ -21,5 +21,5 @@ export class UserEntity {
   bio?: string | null;
 
   @ApiProperty({ required: false })
-  instrument?: Instrument | string;
+  instrument?: Instrument | null;
 }

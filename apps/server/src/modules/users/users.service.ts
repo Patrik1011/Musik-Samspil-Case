@@ -3,6 +3,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { UserEntity } from "./entity/user.entity";
 import { ObjectId } from "mongodb";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,7 @@ export class UsersService {
     return users;
   }
 
-  async getUserByEmail(email: string): Promise<UserEntity> {
+  async getUserByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -27,7 +28,7 @@ export class UsersService {
     return user;
   }
 
-  async findOne(userId: string): Promise<UserEntity> {
+  async findOne(userId: string): Promise<User> {
     const objectId = new ObjectId(userId);
     const user = await this.prisma.user.findUnique({
       where: { id: objectId.toString() },
@@ -39,7 +40,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+  async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
     if (!userId) {
       throw new BadRequestException("User ID is required");
     }

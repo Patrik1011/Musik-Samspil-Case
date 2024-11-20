@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MinLength } from "class-validator";
+import { IsOptional, IsString, MinLength, IsEnum } from "class-validator";
+import { Instrument } from "@prisma/client";
 
 export class UpdateUserDto {
   @IsOptional()
@@ -30,7 +31,7 @@ export class UpdateUserDto {
   bio?: string;
 
   @IsOptional()
-  @IsString()
-  @ApiProperty({ required: false })
-  instrument?: string;
+  @IsEnum(Instrument)
+  @ApiProperty({ required: false, enum: Instrument })
+  instrument?: Instrument;
 }

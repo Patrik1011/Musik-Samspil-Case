@@ -1,3 +1,6 @@
+import { store } from "../redux/store";
+import { selectAccessToken } from "../redux/authSlice";
+
 interface RequestBody {
   [key: string]: unknown;
 }
@@ -8,14 +11,23 @@ interface CustomError extends Error {
 
 const API_URL = "http://localhost:3000";
 
-const headers = {
-  "Content-Type": "application/json",
+const getHeaders = (): Record<string, string> => {
+  const token = selectAccessToken(store.getState());
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 };
 
 export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify(body),
   });
 
@@ -32,7 +44,7 @@ export const postRequest = async <T>(endpoint: string, body: RequestBody): Promi
 export const putRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "PUT",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify(body),
   });
 
@@ -49,7 +61,7 @@ export const putRequest = async <T>(endpoint: string, body: RequestBody): Promis
 export const getRequest = async <T>(endpoint: string): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "GET",
-    headers,
+    headers: getHeaders(),
   });
 
   if (!response.ok) {
