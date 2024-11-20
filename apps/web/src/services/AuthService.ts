@@ -4,7 +4,6 @@ import { postRequest } from "../utils/api";
 export const authService = {
   login: async (credentials: LoginType) => {
     const response = await postRequest<AuthResponseType>("/auth/login", credentials);
-    console.log("response", response);
     return response;
   },
   register: async (credentials: RegisterType) => {

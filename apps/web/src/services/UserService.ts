@@ -9,4 +9,8 @@ export const userService = {
   updateProfile: async (updateData: Partial<UserEntity>) => {
     return await putRequest<UserEntity>("/users/me", updateData);
   },
+
+  getInstruments: async () => {
+    return await getRequest<string[]>("/users/instruments");
+  },
 };

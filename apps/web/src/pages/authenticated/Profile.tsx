@@ -4,12 +4,13 @@ import { userService } from "../../services/UserService";
 
 const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<UserEntity | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<UserEntity>>({});
   const [error, setError] = useState<string>("");
+  const [instruments, setInstruments] = useState<string[]>([]);
 
   useEffect(() => {
     fetchUser();
+    fetchInstruments();
   }, []);
 
   const fetchUser = async () => {
@@ -23,6 +24,15 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  const fetchInstruments = async () => {
+    try {
+      const instrumentsList = await userService.getInstruments();
+      setInstruments(instrumentsList);
+    } catch (err) {
+      console.error("Failed to load instruments", err);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -33,13 +43,30 @@ const ProfilePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!formData.first_name?.trim() || !formData.last_name?.trim()) {
+      setError("First name and last name are required");
+      return;
+    }
+
     try {
-      const updatedUser = await userService.updateProfile(formData);
+      const updatedUser = await userService.updateProfile({
+        first_name: formData.first_name?.trim(),
+        last_name: formData.last_name?.trim(),
+        phone_number: formData.phone_number?.trim(),
+        bio: formData.bio?.trim(),
+        instrument: formData.instrument?.trim(),
+      });
+
       setUser(updatedUser);
-      setIsEditing(false);
       setError("");
     } catch (err) {
-      setError("Failed to update profile");
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to update profile");
+      }
       console.error(err);
     }
   };
@@ -56,7 +83,7 @@ const ProfilePage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="first_name" className="block text-sm font-medium">
-            First Name
+            First Name <span className="text-red-500">*</span>
           </label>
           <input
             id="first_name"
@@ -64,14 +91,14 @@ const ProfilePage: React.FC = () => {
             name="first_name"
             value={formData.first_name || ""}
             onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full p-2 border rounded disabled:bg-gray-100"
+            className="w-full p-2 border rounded"
+            required
           />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="last_name" className="block text-sm font-medium">
-            Last Name
+            Last Name <span className="text-red-500">*</span>
           </label>
           <input
             id="last_name"
@@ -79,8 +106,8 @@ const ProfilePage: React.FC = () => {
             name="last_name"
             value={formData.last_name || ""}
             onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full p-2 border rounded disabled:bg-gray-100"
+            className="w-full p-2 border rounded"
+            required
           />
         </div>
 
@@ -107,8 +134,7 @@ const ProfilePage: React.FC = () => {
             name="phone_number"
             value={formData.phone_number || ""}
             onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full p-2 border rounded disabled:bg-gray-100"
+            className="w-full p-2 border rounded"
           />
         </div>
 
@@ -121,8 +147,7 @@ const ProfilePage: React.FC = () => {
             name="bio"
             value={formData.bio || ""}
             onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full p-2 border rounded disabled:bg-gray-100"
+            className="w-full p-2 border rounded"
             rows={4}
           />
         </div>
@@ -131,46 +156,29 @@ const ProfilePage: React.FC = () => {
           <label htmlFor="instrument" className="block text-sm font-medium">
             Instrument
           </label>
-          <input
+          <select
             id="instrument"
-            type="text"
             name="instrument"
             value={formData.instrument || ""}
             onChange={handleInputChange}
-            disabled={!isEditing}
-            className="w-full p-2 border rounded disabled:bg-gray-100"
-          />
+            className="w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none"
+          >
+            <option value="">Select an instrument</option>
+            {instruments.map((instrument) => (
+              <option key={instrument} value={instrument}>
+                {instrument}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="flex justify-end space-x-4 mt-6">
-          {!isEditing ? (
-            <button
-              type="button"
-              onClick={() => setIsEditing(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Edit Profile
-            </button>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsEditing(false);
-                  setFormData(user);
-                }}
-                className="border border-gray-300 px-4 py-2 rounded hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Save Changes
-              </button>
-            </>
-          )}
+          <button
+            type="submit"
+            className="w-full lg:mx-0 text-base font-bold bg-steel-blue text-white mt-2 py-4 px-8 rounded-[10px] shadow-custom focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-200 ease-in-out"
+          >
+            Save
+          </button>
         </div>
       </form>
     </div>

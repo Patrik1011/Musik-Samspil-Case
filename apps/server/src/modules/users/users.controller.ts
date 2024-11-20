@@ -15,6 +15,7 @@ import { ApiOkResponse } from "@nestjs/swagger";
 import { UserEntity } from "./entity/user.entity";
 import { User } from "@prisma/client";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { Instrument } from "@prisma/client";
 
 interface AuthenticatedRequest extends Request {
   user: User;
@@ -34,7 +35,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: UserEntity })
   async getCurrentUser(@Request() req: AuthenticatedRequest): Promise<User> {
-    console.log("called", req.user);
     return req.user;
   }
 
@@ -63,5 +63,11 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async getUserById(@Param("id") userId: string): Promise<User> {
     return this.usersService.findOne(userId);
+  }
+
+  @Get("instruments")
+  @ApiOkResponse({ type: [String] })
+  async getInstruments(): Promise<string[]> {
+    return Object.values(Instrument);
   }
 }
