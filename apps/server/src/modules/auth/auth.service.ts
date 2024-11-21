@@ -36,7 +36,13 @@ export class AuthService {
       throw new UnauthorizedException("Incorrect password");
     }
 
-    const accessToken = this.jwtService.sign({ userId: user.id });
+    const payload = {
+      id: user.id,
+      email: user.email,
+      onboarded: !!(user.phone_number && user.instrument),
+    };
+
+    const accessToken = this.jwtService.sign(payload);
     return { accessToken };
   }
 
