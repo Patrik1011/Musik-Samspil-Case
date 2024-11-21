@@ -16,7 +16,9 @@ export const AuthGuard = ({
   protected: isProtected,
 }: AuthGuardProps): ReactElement => {
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
 
   useEffect(() => {
     if (isProtected && !isAuthenticated) {
@@ -24,7 +26,7 @@ export const AuthGuard = ({
     }
 
     if (!isProtected && isAuthenticated) {
-      navigate("/home");
+      navigate("/onboarding");
     }
   }, [isAuthenticated, isProtected, navigate, redirectTo]);
 
