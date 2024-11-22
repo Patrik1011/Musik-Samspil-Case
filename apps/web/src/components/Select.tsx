@@ -4,13 +4,15 @@ interface SelectProps {
   label?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: string[];
+  errorMessages?: string;
 }
 
-export const Select = ({ label, onChange, options }: SelectProps) => {
+export const Select = ({ label, onChange, options, errorMessages }: SelectProps) => {
   const [selectedOption, setSelectedOption] = React.useState<string>("");
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedOption(value);
+
     onChange(e);
   };
   return (
@@ -33,6 +35,7 @@ export const Select = ({ label, onChange, options }: SelectProps) => {
           </option>
         ))}
       </select>
+      {errorMessages && <p className="text-red-400 text-[14px]">{errorMessages}</p>}
     </div>
   );
 };

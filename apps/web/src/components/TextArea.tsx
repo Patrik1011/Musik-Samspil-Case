@@ -3,7 +3,7 @@ import React from "react";
 interface TextAreaProps {
   name: string;
   placeholder: string;
-  errorMessage?: string;
+  errorMessages?: string;
   value: string;
   label: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -12,7 +12,7 @@ interface TextAreaProps {
 export const TextArea = ({
   name,
   placeholder,
-  errorMessage,
+  errorMessages,
   label,
   value,
   onChange,
@@ -30,7 +30,7 @@ export const TextArea = ({
         value={value}
         onChange={onChange}
       />
-      {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
+      {errorMessages && <p className="text-red-400 text-[14px]">{errorMessages}</p>}
     </div>
   );
 };

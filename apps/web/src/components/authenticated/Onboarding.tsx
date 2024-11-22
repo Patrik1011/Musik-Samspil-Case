@@ -5,6 +5,7 @@ import React from "react";
 import { Select } from "../Select.tsx";
 import { Instrument } from "../../enums/Instrument.ts";
 import { TextArea } from "../TextArea.tsx";
+import { ValidateOnboardingForm } from "../../utils/onboardingFormValidation.ts";
 
 interface FormData {
   phoneNumber: string;
@@ -33,10 +34,12 @@ export const Onboarding = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.phoneNumber.length < 0) {
-      setErrors({ ...errors, phoneNumber: "Phone number is required" });
+    const formErrors = ValidateOnboardingForm(formData);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
+
     console.log(formData);
   };
   return (
@@ -60,13 +63,14 @@ export const Onboarding = () => {
             }}
             options={Object.values(Instrument).map((instrument) => instrument.toString())}
             label="Select an instrument"
+            errorMessages={errors.instrument}
           />
           <TextArea
             name="bio"
             placeholder="Tell us about yourself (optional)"
             label="Bio"
             value={formData.bio}
-            errorMessage={errors.bio}
+            errorMessages={errors.bio}
             onChange={(e) => {
               setFormData({ ...formData, bio: e.target.value });
             }}
