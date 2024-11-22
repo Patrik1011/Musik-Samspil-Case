@@ -2,15 +2,15 @@ import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateEnsembleDto {
   @IsString()
-    @IsNotEmpty()
-    name!: string;
+  @IsNotEmpty()
+  name!: string;
 
   @IsString()
-    @IsNotEmpty()
-    description!: string;
+  @IsNotEmpty()
+  description!: string;
 
 
-    @IsNotEmpty()
+  @IsNotEmpty()
   location?: any;
 
   @IsArray()
@@ -20,5 +20,5 @@ export class CreateEnsembleDto {
 
   @IsBoolean()
   @IsNotEmpty()
-    isActive!: boolean;
+  isActive!: boolean;
 }

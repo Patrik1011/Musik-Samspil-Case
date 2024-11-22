@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
-import { EnsembleMembershipService } from './ensemble-membership.service';
-import { CreateEnsembleMembershipDto } from './dto/create-ensemble-membership.dto';
-import { UpdateEnsembleMembershipDto } from './dto/update-ensemble-membership.dto';
+import { Body, Controller, Get, Param, Post, ValidationPipe } from '@nestjs/common';
 import { EnsembleMembership } from '@prisma/client';
+import { CreateEnsembleMembershipDto } from './dto/create-ensemble-membership.dto';
+import { EnsembleMembershipService } from './ensemble-membership.service';
 
 @Controller('ensemble-membership')
 export class EnsembleMembershipController {
@@ -10,9 +9,14 @@ export class EnsembleMembershipController {
 
   @Post()
   async create(@Body(ValidationPipe) createEnsembleMembershipDto: CreateEnsembleMembershipDto): Promise<EnsembleMembership> {
-    return this.ensembleMembershipService.create(createEnsembleMembershipDto);
+      return this.ensembleMembershipService.create(createEnsembleMembershipDto);
   }
 
+ 
+  @Get(':ensembleId')
+  async getMembershipsByEnsemble(@Param('ensembleId') ensembleId: string): Promise<EnsembleMembership[]> {
+    return this.ensembleMembershipService.findEnsembleMembershipsByEnsemble(ensembleId);
+  }
 
 
   // @Get()

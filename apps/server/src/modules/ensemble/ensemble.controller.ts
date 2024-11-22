@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { Ensemble } from '@prisma/client';
 import { CreateEnsembleDto } from './dto/create-ensemble.dto';
-import { EnsembleService } from './ensemble.service';
 import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
+import { EnsembleService } from './ensemble.service';
 
 @Controller('ensemble')
 export class EnsembleController {
