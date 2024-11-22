@@ -1,6 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 export class CreateEnsembleMembershipDto {
-
   @IsString()
   @IsNotEmpty()
   ensemble_id!: string;
@@ -12,6 +11,4 @@ export class CreateEnsembleMembershipDto {
   @IsBoolean()
   @IsNotEmpty()
   is_host!: boolean;
-
-
 }

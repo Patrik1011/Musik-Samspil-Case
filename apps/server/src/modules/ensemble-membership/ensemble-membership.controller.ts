@@ -1,23 +1,25 @@
-import { Body, Controller, Get, Param, Post, ValidationPipe } from '@nestjs/common';
-import { EnsembleMembership } from '@prisma/client';
-import { CreateEnsembleMembershipDto } from './dto/create-ensemble-membership.dto';
-import { EnsembleMembershipService } from './ensemble-membership.service';
+import { Body, Controller, Get, Param, Post, ValidationPipe } from "@nestjs/common";
+import { EnsembleMembership } from "@prisma/client";
+import { CreateEnsembleMembershipDto } from "./dto/create-ensemble-membership.dto";
+import { EnsembleMembershipService } from "./ensemble-membership.service";
 
-@Controller('ensemble-membership')
+@Controller("ensemble-membership")
 export class EnsembleMembershipController {
   constructor(private readonly ensembleMembershipService: EnsembleMembershipService) {}
 
   @Post()
-  async create(@Body(ValidationPipe) createEnsembleMembershipDto: CreateEnsembleMembershipDto): Promise<EnsembleMembership> {
-      return this.ensembleMembershipService.create(createEnsembleMembershipDto);
+  async create(
+    @Body(ValidationPipe) createEnsembleMembershipDto: CreateEnsembleMembershipDto,
+  ): Promise<EnsembleMembership> {
+    return this.ensembleMembershipService.create(createEnsembleMembershipDto);
   }
 
- 
-  @Get(':ensembleId')
-  async getMembershipsByEnsemble(@Param('ensembleId') ensembleId: string): Promise<EnsembleMembership[]> {
+  @Get(":ensembleId")
+  async getMembershipsByEnsemble(
+    @Param("ensembleId") ensembleId: string,
+  ): Promise<EnsembleMembership[]> {
     return this.ensembleMembershipService.findEnsembleMembershipsByEnsemble(ensembleId);
   }
-
 
   // @Get()
   // async findAll() {
