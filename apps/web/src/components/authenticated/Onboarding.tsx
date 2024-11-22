@@ -58,9 +58,7 @@ export const Onboarding = () => {
             onChange={(e) => {
               setFormData({ ...formData, instrument: e.target.value });
             }}
-            options={Object.values(Instrument).map((instrument) =>
-              instrument.toString(),
-            )}
+            options={Object.values(Instrument).map((instrument) => instrument.toString())}
             label="Select an instrument"
           />
           <TextArea
@@ -76,9 +74,7 @@ export const Onboarding = () => {
 
           <Button type="submit" title="Complete Onboarding" />
           {errors.general && (
-            <div className="text-red-500 text-sm text-center">
-              {errors.general}
-            </div>
+            <div className="text-red-500 text-sm text-center">{errors.general}</div>
           )}
         </div>
       </form>

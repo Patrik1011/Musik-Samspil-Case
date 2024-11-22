@@ -15,10 +15,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export const postRequest = async <T>(
-  endpoint: string,
-  body: RequestBody,
-): Promise<T> => {
+export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers,
