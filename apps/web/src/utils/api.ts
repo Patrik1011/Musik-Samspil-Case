@@ -11,14 +11,23 @@ interface CustomError extends Error {
 
 const API_URL = "http://localhost:3000";
 
-const headers = {
-  "Content-Type": "application/json",
+const getHeaders = (): Record<string, string> => {
+  const token = getToken(store.getState());
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return headers;
 };
 
 export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
-    headers,
+    headers: getHeaders(),
     body: JSON.stringify(body),
   });
 
@@ -33,13 +42,9 @@ export const postRequest = async <T>(endpoint: string, body: RequestBody): Promi
 };
 
 export const getRequest = async <T>(endpoint: string): Promise<T> => {
-  const token = getToken(store.getState());
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "GET",
-    headers: {
-      ...headers,
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getHeaders(),
   });
 
   if (!response.ok) {

@@ -14,8 +14,8 @@ export type AuthResponseType = {
   accessToken: string;
 };
 
-export type OnboardingType = {
-  telephone: string;
+export type OnboardingEntity = {
+  phone_number: string;
   instrument: string;
   bio: string;
 };

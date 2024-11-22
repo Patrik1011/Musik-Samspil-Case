@@ -22,7 +22,7 @@ export const Select = ({ label, onChange, options, errorMessages }: SelectProps)
       </label>
       <select
         id="selectId"
-        className="block w-full p-2 mt-1 py-3 border border-soft-gray bg-transparent text-base text-medium-gray rounded-[10px] outline-none custom-select"
+        className="block w-full p-2 mt-1 py-3 border border-soft-gray bg-transparent font-medium text-base text-medium-gray rounded-[10px] outline-none custom-select"
         value={selectedOption}
         onChange={handleChange}
       >

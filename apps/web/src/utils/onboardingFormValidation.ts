@@ -1,7 +1,7 @@
 import { Instrument } from "../enums/Instrument.ts";
 
 interface Errors {
-  phoneNumber?: string;
+  phone_number?: string;
   bio?: string;
   instrument?: string;
 }
@@ -10,8 +10,8 @@ const ValidatePhoneNumber = (phoneNumber: string) => {
   if (!phoneNumber) {
     return "Phone number is required";
   }
-  if (phoneNumber.length < 10) {
-    return "Phone number must be at least 10 characters";
+  if (phoneNumber.length < 8) {
+    return "Phone number must be at least 8 characters";
   }
   return undefined;
 };
@@ -35,18 +35,18 @@ const ValidateInstrument = (instrument: string) => {
 };
 
 export const ValidateOnboardingForm = (formData: {
-  phoneNumber: string;
+  phone_number: string;
   bio: string;
   instrument: string;
 }): Errors => {
   const errors: Errors = {};
 
-  const phoneNumberError = ValidatePhoneNumber(formData.phoneNumber);
+  const phoneNumberError = ValidatePhoneNumber(formData.phone_number);
   const bioError = ValidateBio(formData.bio);
   const instrumentError = ValidateInstrument(formData.instrument);
 
   if (phoneNumberError) {
-    errors.phoneNumber = phoneNumberError;
+    errors.phone_number = phoneNumberError;
   }
   if (bioError) {
     errors.bio = bioError;
