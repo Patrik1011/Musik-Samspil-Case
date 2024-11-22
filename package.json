@@ -21,7 +21,9 @@
     "prepare": "husky && husky install",
     "build": "pnpm --filter=web build && pnpm --filter=server build",
     "services:up": "docker-compose up database",
-    "services:down": "docker-compose down"
+    "services:down": "docker-compose down",
+    "seed": "ts-node apps/server/src/utils/scripts/seed.ts",
+    "user-members": "ts-node apps/server/src/utils/scripts/userMembers.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
