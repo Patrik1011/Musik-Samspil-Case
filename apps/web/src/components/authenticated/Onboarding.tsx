@@ -63,7 +63,7 @@ export const Onboarding = () => {
           />
           <TextArea
             name="bio"
-            placeholder="Tell us about yourself (*optional)"
+            placeholder="Tell us about yourself (optional)"
             label="Bio"
             value={formData.bio}
             errorMessage={errors.bio}

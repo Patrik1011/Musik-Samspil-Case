@@ -25,6 +25,7 @@ export const AuthGuard = ({
       const status = await onboardingService.getOnboardingStatus();
       setIsOnboarded(status);
     };
+
     if (isAuthenticated) {
       checkOnboardingStatus();
     }

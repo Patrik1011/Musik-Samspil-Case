@@ -15,12 +15,12 @@ export const Select = ({ label, onChange, options }: SelectProps) => {
   };
   return (
     <div className="mb-4">
-      <label htmlFor="selectId" className="block mb-2 text-sm font-medium text-gray-700">
+      <label htmlFor="selectId" className="text-sm text-[14px] text-medium-gray">
         {label}
       </label>
       <select
         id="selectId"
-        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full p-2 mt-1 py-3 border border-soft-gray bg-transparent text-base text-medium-gray rounded-[10px] outline-none custom-select"
         value={selectedOption}
         onChange={handleChange}
       >
