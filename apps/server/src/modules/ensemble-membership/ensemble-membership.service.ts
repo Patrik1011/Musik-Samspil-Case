@@ -1,27 +1,26 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { EnsembleMembership } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateEnsembleMembershipDto } from './dto/create-ensemble-membership.dto';
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { EnsembleMembership } from "@prisma/client";
+import { PrismaService } from "src/prisma/prisma.service";
+import { CreateEnsembleMembershipDto } from "./dto/create-ensemble-membership.dto";
 
 @Injectable()
 export class EnsembleMembershipService {
-
   constructor(private readonly prismaService: PrismaService) {}
 
-
-  async create(createEnsembleMembershipDto: CreateEnsembleMembershipDto): Promise<EnsembleMembership> {
+  async create(
+    createEnsembleMembershipDto: CreateEnsembleMembershipDto,
+  ): Promise<EnsembleMembership> {
     try {
       return await this.prismaService.ensembleMembership.create({
         data: {
           ensemble_id: createEnsembleMembershipDto.ensemble_id,
           member_id: createEnsembleMembershipDto.member_id,
-          is_host: createEnsembleMembershipDto.is_host
+          is_host: createEnsembleMembershipDto.is_host,
         },
       });
-    } 
-    catch (error) {
-      console.error('Error creating ensemble membership:', error);
-      throw new Error('Failed to create ensemble membership');
+    } catch (error) {
+      console.error("Error creating ensemble membership:", error);
+      throw new Error("Failed to create ensemble membership");
     }
   }
 
@@ -54,8 +53,8 @@ export class EnsembleMembershipService {
       return await this.prismaService.ensembleMembership.delete({
         where: { id },
       });
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to delete ensemble');
+    } catch {
+      throw new InternalServerErrorException("Failed to delete ensemble");
     }
   }
 }

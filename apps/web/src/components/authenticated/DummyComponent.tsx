@@ -1,7 +1,3 @@
-import React from 'react'
-
 export default function DummyComponent() {
-  return (
-    <div>DummyComponent</div>
-  )
+  return <div>DummyComponent</div>;
 }

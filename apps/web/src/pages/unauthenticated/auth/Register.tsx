@@ -1,11 +1,13 @@
-import React from 'react';
-import Register from '../../../components/unauthenticated/auth/Register';
+import React from "react";
+import Register from "../../../components/unauthenticated/auth/Register";
+import { Layout } from "./Layout";
 
 const RegisterPage: React.FC = () => {
   return (
     <div>
-      <h1>Register Page</h1>
-      <Register />
+      <Layout>
+        <Register />
+      </Layout>
     </div>
   );
 };

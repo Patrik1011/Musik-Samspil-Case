@@ -1,10 +1,18 @@
-const API_URL = "localhost:3000";
+interface RequestBody {
+  [key: string]: unknown;
+}
+
+interface CustomError extends Error {
+  response?: Response;
+}
+
+const API_URL = "http://localhost:3000";
 
 const headers = {
   "Content-Type": "application/json",
 };
 
-export const postRequest = async (endpoint: string, body: any) => {
+export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers,
@@ -12,8 +20,11 @@ export const postRequest = async (endpoint: string, body: any) => {
   });
 
   if (!response.ok) {
-    throw new Error(`Error: ${response.status} ${response.statusText}`);
+    const error = new Error(
+      `Error from PostRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
   }
-
   return response.json();
-}; 
+};

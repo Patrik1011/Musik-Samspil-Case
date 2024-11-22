@@ -1,4 +1,5 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { Prisma } from "@prisma/client";
+import { IsArray, IsBoolean, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateEnsembleDto {
   @IsString()
@@ -9,9 +10,8 @@ export class CreateEnsembleDto {
   @IsNotEmpty()
   description!: string;
 
-
   @IsNotEmpty()
-  location?: any;
+  location?: Prisma.JsonValue;
 
   @IsArray()
   @IsString({ each: true })
