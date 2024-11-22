@@ -19,13 +19,25 @@ model User {
   lastname  String?
   email     String? @unique
   password  String
+
+  EnsembleMembership EnsembleMembership[]
 }
 
 model Ensemble {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  description   String
-  location      Json
-  openPositions String[] @map("open_positions")
-  isActive      Boolean  @map("is_active")
+  id             String               @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String?
+  location       Json
+  open_positions String[]
+  is_active      Boolean
+  memberships    EnsembleMembership[]
+}
+
+model EnsembleMembership {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  ensemble    Ensemble @relation(fields: [ensemble_id], references: [id])
+  ensemble_id String   @db.ObjectId
+  member      User     @relation(fields: [member_id], references: [id])
+  member_id   String   @db.ObjectId
+  is_host     Boolean
 }

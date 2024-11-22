@@ -6,12 +6,12 @@ import {
   Param,
   Patch,
   Post,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
-import { CreateEnsembleDto } from './dto/create-ensemble.dto';
-import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
-import { EnsembleService } from './ensemble.service';
 import { Ensemble } from '@prisma/client';
+import { CreateEnsembleDto } from './dto/create-ensemble.dto';
+import { EnsembleService } from './ensemble.service';
+import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
 
 @Controller('ensemble')
 export class EnsembleController {
@@ -27,18 +27,18 @@ export class EnsembleController {
     return this.ensembleService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string): Promise<Ensemble> {
-  //   return this.ensembleService.findOne(id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Ensemble> {
+    return this.ensembleService.findOne(id);
+  }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body(ValidationPipe) updateEnsembleDto: UpdateEnsembleDto,
-  // ): Promise<Ensemble> {
-  //   return this.ensembleService.update(id, updateEnsembleDto);
-  // }
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateEnsembleDto: UpdateEnsembleDto,
+  ): Promise<Ensemble> {
+    return this.ensembleService.update(id, updateEnsembleDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string): Promise<Ensemble> {

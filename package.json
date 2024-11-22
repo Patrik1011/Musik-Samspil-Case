@@ -17,6 +17,7 @@
     "build": "pnpm --filter=web build && pnpm --filter=server build"
   },
   "dependencies": {
+    "@nestjs/mapped-types": "*",
     "dotenv": "^16.4.5",
     "mongodb": "^6.9.0"
   },

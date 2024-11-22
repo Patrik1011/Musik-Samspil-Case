@@ -20,8 +20,8 @@ export class EnsembleService {
           name: createEnsembleDto.name,
           description: createEnsembleDto.description,
           location: createEnsembleDto.location || null,
-          openPositions: createEnsembleDto.openPositions || [],
-          isActive: createEnsembleDto.isActive,
+          open_positions: createEnsembleDto.openPositions || [],
+          is_active: createEnsembleDto.isActive,
         },
       });
     } 
@@ -37,42 +37,45 @@ export class EnsembleService {
 
   async findAll(): Promise<Ensemble[]> {
     try {
-      return await this.prismaService.ensemble.findMany();
+      return await this.prismaService.ensemble.findMany({
+        include: {memberships: true}
+      });
     } catch (error) {
       throw new InternalServerErrorException('Failed to fetch ensembles');
     }
   }
 
-  // async findOne(id: string): Promise<Ensemble> {
-  //   try {
-  //     const ensemble = await this.prismaService.ensemble.findUnique({
-  //       where: { id },
-  //     });
-  //     if (!ensemble) {
-  //       throw new NotFoundException(`Ensemble with id ${id} not found`);
-  //     }
-  //     return ensemble;
-  //   } catch (error) {
-  //     throw new InternalServerErrorException('Failed to fetch ensemble');
-  //   }
-  // }
+  async findOne(id: string): Promise<Ensemble> {
+    try {
+      const ensemble = await this.prismaService.ensemble.findUnique({
+        where: { id },
+        include: {memberships: true}
+      });
+      if (!ensemble) {
+        throw new NotFoundException(`Ensemble with id ${id} not found`);
+      }
+      return ensemble;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch ensemble');
+    }
+  }
 
-  // async update(id: string, updateEnsembleDto: UpdateEnsembleDto): Promise<Ensemble> {
-  //   try {
-  //     const ensemble = await this.prismaService.ensemble.findUnique({
-  //       where: { id },
-  //     });
-  //     if (!ensemble) {
-  //       throw new NotFoundException(`Ensemble with id ${id} not found`);
-  //     }
-  //     return await this.prismaService.ensemble.update({
-  //       where: { id },
-  //       data: updateEnsembleDto,
-  //     });
-  //   } catch (error) {
-  //     throw new InternalServerErrorException('Failed to update ensemble');
-  //   }
-  // }
+  async update(id: string, updateEnsembleDto: UpdateEnsembleDto): Promise<Ensemble> {
+    try {
+      const ensemble = await this.prismaService.ensemble.findUnique({
+        where: { id },
+      });
+      if (!ensemble) {
+        throw new NotFoundException(`Ensemble with id ${id} not found`);
+      }
+      return await this.prismaService.ensemble.update({
+        where: { id },
+        data: updateEnsembleDto,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update ensemble');
+    }
+  }
 
   async delete(id: string): Promise<Ensemble> {
     try {

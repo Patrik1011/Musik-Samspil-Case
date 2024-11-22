@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateEnsembleDto {
   @IsString()
@@ -9,12 +9,16 @@ export class CreateEnsembleDto {
     @IsNotEmpty()
     description!: string;
 
-  @IsOptional()
+
+    @IsNotEmpty()
   location?: any;
 
-  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty()
   openPositions?: string[];
 
   @IsBoolean()
+  @IsNotEmpty()
     isActive!: boolean;
 }
