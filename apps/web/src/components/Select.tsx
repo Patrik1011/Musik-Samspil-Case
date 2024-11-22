@@ -15,10 +15,11 @@ export const Select = ({ label, onChange, options }: SelectProps) => {
   };
   return (
     <div className="mb-4">
-      <label className="block mb-2 text-sm font-medium text-gray-700">
+      <label htmlFor="selectId" className="block mb-2 text-sm font-medium text-gray-700">
         {label}
       </label>
       <select
+        id="selectId"
         className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         value={selectedOption}
         onChange={handleChange}

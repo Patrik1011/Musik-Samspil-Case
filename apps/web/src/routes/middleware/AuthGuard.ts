@@ -17,17 +17,14 @@ export const AuthGuard = ({
   protected: isProtected,
 }: AuthGuardProps): ReactElement => {
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const [isOnboarded, setIsOnboarded] = useState(false);
 
-  const checkOnboardingStatus = async () => {
-    const status = await onboardingService.getOnboardingStatus();
-    setIsOnboarded(status);
-  };
-
   useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      const status = await onboardingService.getOnboardingStatus();
+      setIsOnboarded(status);
+    };
     if (isAuthenticated) {
       checkOnboardingStatus();
     }

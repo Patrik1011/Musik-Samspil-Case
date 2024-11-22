@@ -19,19 +19,18 @@ export const TextArea = ({
 }: TextAreaProps) => {
   return (
     <div>
-      <label className="block mb-2 text-sm font-medium text-gray-700">
+      <label htmlFor="textareaId" className="block mb-2 text-sm font-medium text-gray-700">
         {label}
       </label>
       <textarea
+        id="textareaId"
         className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
       />
-      {errorMessage && (
-        <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
     </div>
   );
 };
