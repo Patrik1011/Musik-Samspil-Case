@@ -12,13 +12,18 @@
     "lint-staged-debug": "lint-staged --debug",
     "start:server": "cross-env NODE_ENV=production pnpm --filter=server start:prod",
     "start:web": "pnpm --filter=web dev",
-    "dev": "docker-compose down && docker-compose up --build",
+    "dev": "pnpm --filter=web dev & pnpm --filter=server start:dev",
+    "dev:docker": "docker-compose down && docker-compose up --build",
     "dev:clean": "docker-compose down -v && docker-compose up --build",
     "stop": "docker-compose down",
     "stop:clean": "docker-compose down -v",
     "start": "docker-compose -f docker-compose.prod.yml up --build",
     "prepare": "husky && husky install",
-    "build": "pnpm --filter=web build && pnpm --filter=server build"
+    "build": "pnpm --filter=web build && pnpm --filter=server build",
+    "services:up": "docker-compose up database",
+    "services:down": "docker-compose down",
+    "seed": "ts-node apps/server/src/utils/scripts/seed.ts",
+    "user-members": "ts-node apps/server/src/utils/scripts/userMembers.ts"
   },
   "dependencies": {
     "@nestjs/mapped-types": "*",

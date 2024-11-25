@@ -26,17 +26,12 @@ export class AuthService {
       throw new NotFoundException(`User with email: ${email} was not found`);
     }
 
-    if (!user.password) {
-      throw new Error("User does not have a set password");
-    }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       throw new UnauthorizedException("Incorrect password");
     }
 
-    const accessToken = this.jwtService.sign({ userId: user.id });
+    const accessToken = this.jwtService.sign({ sub: user.id });
     return { accessToken };
   }
 
