@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { Button } from "./Button.tsx";
+import { Button } from "../../Button.tsx";
 import { Headline } from "./Headline.tsx";
 import { validateForm } from "../../../utils/formValidation.ts";
-import { InputField } from "./InputField.tsx";
+import { InputField } from "../../InputField.tsx";
 import { authService } from "../../../services/AuthService.ts";
 import { useNavigate } from "react-router-dom";
 
