@@ -12,3 +12,13 @@ body {
 .font-oswald {
   font-family: "Oswald", sans-serif;
 }
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="11.263" height="6.718" viewBox="0 0 11.263 6.718"><path id="icons8-expand_arrow" d="M12,14.071,8.179,10.25a1.061,1.061,0,0,0-1.5,0h0a1.061,1.061,0,0,0,0,1.5l4.614,4.614a1,1,0,0,0,1.414,0l4.614-4.614a1.061,1.061,0,0,0,0-1.5h0a1.061,1.061,0,0,0-1.5,0Z" transform="translate(-6.368 -9.94)" fill="%23bf1e2e"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+}

@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   UseGuards,
   Request,
   Put,
@@ -20,16 +21,23 @@ import { Instrument } from "@prisma/client";
 interface AuthenticatedRequest extends Request {
   user: User;
 }
+import { OnboardingDto } from "./dto/onboarding.dto";
+
+interface OnBoardingRequest extends Request {
+  user: {
+    id: string;
+  };
+}
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Get()
-  // @ApiOkResponse({ type: [UserEntity] })
-  // async getAllUsers(): Promise<User[]> {
-  //   return this.usersService.findAll();
-  // }
+  private validateUserId(userId: string): void {
+    if (!userId) {
+      throw new Error("User id not found in request");
+    }
+  }
 
   @Get("me")
   @UseGuards(JwtAuthGuard)
@@ -69,5 +77,24 @@ export class UsersController {
   @ApiOkResponse({ type: [String] })
   async getInstruments(): Promise<string[]> {
     return Object.values(Instrument);
+  }
+
+  @Get("onboarding-status")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getOnboardingStatus(@Request() req: OnBoardingRequest): Promise<{ onboarded: boolean }> {
+    this.validateUserId(req.user.id);
+    return this.usersService.getOnboardingStatus(req.user.id);
+  }
+
+  @Post("onboarding")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async completeOnboarding(
+    @Body() onboardingDto: OnboardingDto,
+    @Request() req: OnBoardingRequest,
+  ): Promise<User> {
+    this.validateUserId(req.user.id);
+    return this.usersService.completeOnboarding(req.user.id, onboardingDto);
   }
 }

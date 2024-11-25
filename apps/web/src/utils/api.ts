@@ -1,5 +1,5 @@
-import { store } from "../redux/store";
-import { selectAccessToken } from "../redux/authSlice";
+import { getToken } from "../redux/authSlice.ts";
+import store from "../redux/store.ts";
 
 interface RequestBody {
   [key: string]: unknown;
@@ -12,7 +12,7 @@ interface CustomError extends Error {
 const API_URL = "http://localhost:3000";
 
 const getHeaders = (): Record<string, string> => {
-  const token = selectAccessToken(store.getState());
+  const token = getToken(store.getState());
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };

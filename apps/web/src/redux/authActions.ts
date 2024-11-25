@@ -1,6 +1,8 @@
 import { AppDispatch } from "./store";
 import { authService } from "../services/AuthService.ts";
-import { login, logout } from "./authSlice.ts";
+import { login, logout, onBoardingStatus } from "./authSlice.ts";
+import { onboardingService } from "../services/OnboardingService.ts";
+import { OnboardingEntity } from "../utils/types.ts";
 
 export const loginUser =
   (credentials: { email: string; password: string }) =>
@@ -29,3 +31,19 @@ export const loginUser =
 export const logoutUser = () => (dispatch: AppDispatch) => {
   dispatch(logout());
 };
+
+export const completeOnboarding =
+  (credentials: OnboardingEntity, navigate: (path: string) => void) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      await onboardingService.onBoardingProcess(credentials);
+      dispatch(onBoardingStatus(true));
+      navigate("/home");
+      console.log("Onboarding completed successfully navigate to /home");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("An unexpected error occurred");
+    }
+  };
