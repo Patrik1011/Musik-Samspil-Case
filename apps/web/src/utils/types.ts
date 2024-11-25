@@ -13,3 +13,9 @@ export type RegisterType = {
 export type AuthResponseType = {
   accessToken: string;
 };
+
+export type OnboardingEntity = {
+  phone_number: string;
+  instrument: string;
+  bio: string;
+};

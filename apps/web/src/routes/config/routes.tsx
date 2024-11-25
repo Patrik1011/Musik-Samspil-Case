@@ -2,7 +2,7 @@ import Login from "../../pages/unauthenticated/auth/Login";
 import Register from "../../pages/unauthenticated/auth/Register";
 import Home from "../../pages/authenticated/Home";
 import Profile from "../../pages/authenticated/Profile";
-
+import Onboarding from "../../pages/authenticated/OnBoarding";
 export const routes = [
   {
     path: "/login",
@@ -22,6 +22,11 @@ export const routes = [
   {
     path: "/profile",
     component: <Profile />,
+    protected: true,
+  },
+  {
+    path: "/onboarding",
+    component: <Onboarding />,
     protected: true,
   },
 ] as const;

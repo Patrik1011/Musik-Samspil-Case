@@ -1,7 +1,6 @@
-import type { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 import type { RootState } from "../../redux/store";
 
 interface AuthGuardProps {

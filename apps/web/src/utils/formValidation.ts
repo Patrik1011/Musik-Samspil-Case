@@ -7,42 +7,51 @@ interface Errors {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const errorMessages = {
+  EMAIL_REQUIRED: "Email is required",
+  INVALID_EMAIL: "Invalid email format",
+  PASSWORD_REQUIRED: "Password is required",
+  PASSWORD_LENGTH: "Password must be at least 8 characters",
+  NAME_REQUIRED: "Name is required",
+  NAME_LENGTH: "Name must be at least 2 characters",
+};
+
 const validateEmail = (email: string): string | undefined => {
   if (!email) {
-    return "Email is required";
+    return errorMessages.EMAIL_REQUIRED;
   }
   if (!EMAIL_REGEX.test(email)) {
-    return "Invalid email format";
+    return errorMessages.INVALID_EMAIL;
   }
   return undefined;
 };
 
 const validatePassword = (password: string): string | undefined => {
   if (!password) {
-    return "Password is required";
+    return errorMessages.PASSWORD_REQUIRED;
   }
   if (password.length < 8) {
-    return "Password must be at least 8 characters";
+    return errorMessages.PASSWORD_LENGTH;
   }
   return undefined;
 };
 
 const validateFirstName = (name: string): string | undefined => {
   if (!name) {
-    return "Name is required";
+    return errorMessages.NAME_REQUIRED;
   }
   if (name.length < 2) {
-    return "Name must be at least 2 characters";
+    return errorMessages.NAME_LENGTH;
   }
   return undefined;
 };
 
 const validateLastName = (lastName: string): string | undefined => {
   if (!lastName) {
-    return "Last name is required";
+    return errorMessages.NAME_REQUIRED;
   }
   if (lastName.length < 2) {
-    return "Last name must be at least 2 characters";
+    return errorMessages.NAME_LENGTH;
   }
   return undefined;
 };

@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { InputField } from "./InputField";
+import { InputField } from "../../InputField.tsx";
 import { validateForm } from "../../../utils/formValidation";
 import { Headline } from "./Headline";
-import { Button } from "./Button";
+import { Button } from "../../Button.tsx";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store.ts";
 import { loginUser } from "../../../redux/authActions.ts";
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
       setErrors({});
       setFormData({ email: "", password: "" });
       console.log("Form submitted successfully");
-      navigate("/home");
+      navigate("/onboarding");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrors({ general: error.message });

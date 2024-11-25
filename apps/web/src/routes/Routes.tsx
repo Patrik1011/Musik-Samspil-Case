@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { AuthGuard } from "./middleware/AuthGuard";
+import { AuthGuard } from "./middleware/AuthGuard.ts";
 import { routes } from "./config/routes";
 
 const RoutesComponent: React.FC = () => {
