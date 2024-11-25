@@ -7,6 +7,7 @@ interface User {
 
 interface AuthState {
   isAuthenticated: boolean;
+  isOnBoarded: boolean;
   accessToken: string | null;
   user: User | null;
 }
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   user: null,
   accessToken: null,
   isAuthenticated: false,
+  isOnBoarded: false,
 };
 
 const authSlice = createSlice({
@@ -34,10 +36,13 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       localStorage.removeItem("token");
     },
+    onBoardingStatus(state, action: PayloadAction<boolean>) {
+      state.isOnBoarded = action.payload;
+    },
   },
 });
 
-export const { login, setUser, logout } = authSlice.actions;
+export const { login, setUser, logout, onBoardingStatus } = authSlice.actions;
 export default authSlice.reducer;
 
 export const getToken = (state: { auth: AuthState }) => state.auth.accessToken;

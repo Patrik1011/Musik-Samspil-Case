@@ -1,13 +1,16 @@
 import { Headline } from "../unauthenticated/auth/Headline.tsx";
 import { InputField } from "../InputField.tsx";
 import { Button } from "../Button.tsx";
-import React from "react";
+import React, { useEffect } from "react";
 import { Select } from "../Select.tsx";
 import { Instrument } from "../../enums/Instrument.ts";
 import { TextArea } from "../TextArea.tsx";
 import { ValidateOnboardingForm } from "../../utils/onboardingFormValidation.ts";
-import { onboardingService } from "../../services/OnboardingService.ts";
+//import { onboardingService } from "../../services/OnboardingService.ts";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch, RootState } from "../../redux/store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { completeOnboarding } from "../../redux/authActions.ts";
 
 interface FormData {
   phone_number: string;
@@ -30,6 +33,15 @@ export const Onboarding = () => {
   });
   const [errors, setErrors] = React.useState<Errors>({});
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isOnBoarded = useSelector((state: RootState) => state.auth.isOnBoarded);
+
+  useEffect(() => {
+    if (isAuthenticated && isOnBoarded) {
+      navigate("/home");
+    }
+  }, [isAuthenticated, isOnBoarded, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,12 +56,11 @@ export const Onboarding = () => {
     }
 
     try {
-      const response = await onboardingService.onBoardingProcess(formData);
-      console.log("response", response);
+      await dispatch(completeOnboarding(formData, navigate));
+      //console.log("response", response);
       setErrors({});
       setFormData({ phone_number: "", bio: "", instrument: "" });
       console.log("Form submitted successfully");
-      navigate("/home");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrors({ general: error.message });

@@ -45,7 +45,7 @@ const Login: React.FC = () => {
       setErrors({});
       setFormData({ email: "", password: "" });
       console.log("Form submitted successfully");
-      navigate("/home");
+      navigate("/onboarding");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setErrors({ general: error.message });
