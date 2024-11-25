@@ -6,30 +6,36 @@ interface Errors {
   instrument?: string;
 }
 
+const ErrorMessages = {
+  PHONE_NUMBER_REQUIRED: "Phone number is required",
+  PHONE_NUMBER_LENGTH: "Phone number must be at least 8 characters",
+  BIO_LENGTH: "Bio must be at least 10 characters",
+  INSTRUMENT_REQUIRED: "Instrument is required",
+  INVALID_INSTRUMENT: "Invalid instrument",
+};
+
 const ValidatePhoneNumber = (phoneNumber: string) => {
   if (!phoneNumber) {
-    return "Phone number is required";
+    return ErrorMessages.PHONE_NUMBER_REQUIRED;
   }
   if (phoneNumber.length < 8) {
-    return "Phone number must be at least 8 characters";
+    return ErrorMessages.PHONE_NUMBER_LENGTH;
   }
   return undefined;
 };
 
 const ValidateBio = (bio: string) => {
-  if (bio.length >= 1) {
-    if (bio.length < 10) {
-      return "Bio must be at least 10 characters";
-    }
+  if (bio.length >= 1 && bio.length < 10) {
+    return ErrorMessages.BIO_LENGTH;
   }
 };
 
 const ValidateInstrument = (instrument: string) => {
   if (!instrument || instrument === "") {
-    return "Instrument is required";
+    return ErrorMessages.INSTRUMENT_REQUIRED;
   }
   if (!Object.values(Instrument).includes(instrument)) {
-    return "Invalid instrument";
+    return ErrorMessages.INVALID_INSTRUMENT;
   }
   return undefined;
 };

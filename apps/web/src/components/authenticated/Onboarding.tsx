@@ -49,6 +49,7 @@ export const Onboarding = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const formErrors = ValidateOnboardingForm(formData);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
@@ -57,17 +58,12 @@ export const Onboarding = () => {
 
     try {
       await dispatch(completeOnboarding(formData, navigate));
-      //console.log("response", response);
       setErrors({});
       setFormData({ phone_number: "", bio: "", instrument: "" });
-      console.log("Form submitted successfully");
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrors({ general: error.message });
-      } else {
-        setErrors({ general: "An unexpected error occurred" });
-        console.error("Error during onboarding:", error);
-      }
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      setErrors({ general: errorMessage });
+      console.error("Error during onboarding:", error);
     }
   };
 
