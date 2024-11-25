@@ -11,8 +11,8 @@ describe("Auth API (e2e)", () => {
   let prisma: PrismaService;
 
   const validUser: SignUpDto = {
-    firstname: "John",
-    lastname: "Doe",
+    first_name: "John",
+    last_name: "Doe",
     email: "john.doe@example.com",
     password: "password123",
   };

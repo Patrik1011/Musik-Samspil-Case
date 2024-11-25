@@ -1,7 +1,9 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException, BadRequestException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { User } from "@prisma/client";
+import { UserEntity } from "./entity/user.entity";
 import { ObjectId } from "mongodb";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { User } from "@prisma/client";
 import { OnboardingDto } from "./dto/onboarding.dto";
 
 @Injectable()
@@ -26,7 +28,7 @@ export class UsersService {
     return user;
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserEntity[]> {
     const users = await this.prisma.user.findMany();
     this.logger.log(`Retrieved ${users.length} users`);
     return users;
@@ -46,6 +48,26 @@ export class UsersService {
   async findOne(userId: string): Promise<User> {
     const user = await this.validateAndGetUser(userId);
     return user;
+  }
+
+  async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
+    if (!userId) {
+      throw new BadRequestException("User ID is required");
+    }
+
+    const objectId = new ObjectId(userId);
+    const user = await this.prisma.user.findUnique({
+      where: { id: objectId.toString() },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with id: ${userId} was not found`);
+    }
+
+    return this.prisma.user.update({
+      where: { id: objectId.toString() },
+      data: updateUserDto,
+    });
   }
 
   async getOnboardingStatus(userId: string): Promise<{ onboarded: boolean }> {
