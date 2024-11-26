@@ -38,7 +38,7 @@ export class AuthService {
     };
 
     const accessToken = this.jwtService.sign(payload);
-    return { accessToken };
+    return { accessToken, onboarded: payload.onboarded };
   }
 
   async signUp(signUpDto: SignUpDto): Promise<AuthEntity> {

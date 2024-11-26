@@ -12,6 +12,7 @@ export type RegisterType = {
 
 export type AuthResponseType = {
   accessToken: string;
+  onboarded: boolean;
 };
 
 export interface UserEntity {
