@@ -1,4 +1,4 @@
-interface NavLink {
+export interface NavLink {
   label: string;
   href: string;
   bgColor: string;
@@ -15,7 +15,7 @@ export const Links: { authenticated: NavLink[]; unauthenticated: NavLink[] } = {
     },
     {
       label: "Logout",
-      href: "/logout",
+      href: "#",
       bgColor: "bg-white",
       spanColor: "text-steel-blue",
     },
