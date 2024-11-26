@@ -9,7 +9,7 @@ interface CustomError extends Error {
   response?: Response;
 }
 
-const API_URL = "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getHeaders = (): Record<string, string> => {
   const token = getToken(store.getState());
