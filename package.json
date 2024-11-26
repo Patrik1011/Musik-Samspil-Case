@@ -26,6 +26,7 @@
     "user-members": "ts-node apps/server/src/utils/scripts/userMembers.ts"
   },
   "dependencies": {
+    "@nestjs/mapped-types": "*",
     "dotenv": "^16.4.5",
     "mongodb": "^6.9.0"
   },

@@ -1,6 +1,6 @@
 import { IsString, IsEnum, IsOptional } from "class-validator";
-import { Instrument } from "@prisma/client";
-import { ApiProperty } from "@nestjs/swagger"; // Assuming you have an enum for instruments
+import { Instrument } from "../../../utils/types/enums";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class OnboardingDto {
   @IsString()
