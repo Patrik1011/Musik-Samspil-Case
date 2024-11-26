@@ -7,8 +7,8 @@ import { authService } from "../../../services/AuthService.ts";
 import { useNavigate } from "react-router-dom";
 
 interface RegisterData {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   password: string;
   email: string;
 }
@@ -23,13 +23,12 @@ interface Errors {
 
 const Register: React.FC = () => {
   const [registerData, setRegisterData] = useState<RegisterData>({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     password: "",
     email: "",
   });
   const [errors, setErrors] = useState<Errors>({});
-  const [registerMessage, setRegisterMessage] = useState<string>("");
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,14 +47,11 @@ const Register: React.FC = () => {
 
     try {
       const result = await authService.register(registerData);
-
       if (result) {
-        console.log("Registration successful");
-        setRegisterMessage("Registration successful");
         setErrors({});
         setRegisterData({
-          firstName: "",
-          lastName: "",
+          first_name: "",
+          last_name: "",
           password: "",
           email: "",
         });
@@ -78,25 +74,24 @@ const Register: React.FC = () => {
     <form className="form" onSubmit={handleSubmit}>
       <Headline title="Sign Up" className="mb-6" />
       <div className="space-y-4">
-        {registerMessage && <p className="text-green-400 text-[14px]">{registerMessage}</p>}
         <InputField
-          id="firstName"
+          id="first_name"
           errorMessages={errors.firstName}
-          name="firstName"
+          name="first_name"
           type="text"
           placeholder="Firstname"
           label="Firstname"
-          value={registerData.firstName}
+          value={registerData.first_name}
           onChange={handleChange}
         />
         <InputField
-          id="lastName"
+          id="last_name"
           errorMessages={errors.lastName}
-          name="lastName"
+          name="last_name"
           type="text"
           placeholder="Lastname"
           label="Lastname"
-          value={registerData.lastName}
+          value={registerData.last_name}
           onChange={handleChange}
         />
         <InputField

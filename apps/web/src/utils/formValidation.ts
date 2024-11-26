@@ -1,8 +1,8 @@
 interface Errors {
   email?: string;
   password?: string;
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -59,22 +59,22 @@ const validateLastName = (lastName: string): string | undefined => {
 export const validateForm = (formData: {
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
 }): Errors => {
   const errors: Errors = {};
 
   const emailError = validateEmail(formData.email);
   const passwordError = validatePassword(formData.password);
 
-  if (formData.firstName !== undefined) {
-    const firstNameError = validateFirstName(formData.firstName);
-    if (firstNameError) errors.firstName = firstNameError;
+  if (formData.first_name !== undefined) {
+    const firstNameError = validateFirstName(formData.first_name);
+    if (firstNameError) errors.first_name = firstNameError;
   }
 
-  if (formData.lastName !== undefined) {
-    const lastNameError = validateLastName(formData.lastName);
-    if (lastNameError) errors.lastName = lastNameError;
+  if (formData.last_name !== undefined) {
+    const lastNameError = validateLastName(formData.last_name);
+    if (lastNameError) errors.last_name = lastNameError;
   }
 
   if (emailError) errors.email = emailError;
