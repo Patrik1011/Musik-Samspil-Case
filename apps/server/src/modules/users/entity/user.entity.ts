@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Instrument } from "@prisma/client";
+import { Instrument } from "../../../utils/types/enums";
 
 export class UserEntity {
   @ApiProperty()

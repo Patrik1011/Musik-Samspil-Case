@@ -10,6 +10,7 @@ interface JwtPayload {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
   constructor(private readonly usersService: UsersService) {
+    console.log("JWT_SECRET", process.env.JWT_SECRET);
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: process.env.JWT_SECRET || "",
