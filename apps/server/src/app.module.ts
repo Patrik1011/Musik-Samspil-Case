@@ -6,6 +6,8 @@ import { AuthModule } from "./modules/auth/auth.module";
 import { UsersModule } from "./modules/users/users.module";
 import { DatabaseService } from "./db/database.service";
 import { resolve } from "node:path";
+import { EnsembleModule } from "./modules/ensemble/ensemble.module";
+import { EnsembleMembershipModule } from "./modules/ensemble-membership/ensemble-membership.module";
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { resolve } from "node:path";
     }),
     AuthModule,
     UsersModule,
+    EnsembleModule,
+    EnsembleMembershipModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseService],
