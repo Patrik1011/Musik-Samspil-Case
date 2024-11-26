@@ -1,60 +1,74 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
-import { EnsembleMembership } from "@prisma/client";
-import { PrismaService } from "src/prisma/prisma.service";
+
+import { Types } from "mongoose";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { CreateEnsembleMembershipDto } from "./dto/create-ensemble-membership.dto";
 
 @Injectable()
 export class EnsembleMembershipService {
-  constructor(private readonly prismaService: PrismaService) {}
-
-  async create(
-    createEnsembleMembershipDto: CreateEnsembleMembershipDto,
-  ): Promise<EnsembleMembership> {
+  async create(createEnsembleMembershipDto: CreateEnsembleMembershipDto) {
     try {
-      return await this.prismaService.ensembleMembership.create({
-        data: {
-          ensemble_id: createEnsembleMembershipDto.ensemble_id,
-          member_id: createEnsembleMembershipDto.member_id,
-          is_host: createEnsembleMembershipDto.is_host,
-        },
+      const membership = await EnsembleMembership.create({
+        ensemble: new Types.ObjectId(createEnsembleMembershipDto.ensemble_id),
+        ensemble_id: createEnsembleMembershipDto.ensemble_id,
+        member: new Types.ObjectId(createEnsembleMembershipDto.member_id),
+        member_id: createEnsembleMembershipDto.member_id,
+        is_host: createEnsembleMembershipDto.is_host,
       });
+
+      return membership.populate(["ensemble", "member"]);
     } catch (error) {
-      console.error("Error creating ensemble membership:", error);
-      throw new Error("Failed to create ensemble membership");
+      throw new InternalServerErrorException(error);
     }
   }
 
-  async findEnsembleMembershipsByEnsemble(ensembleId: string): Promise<EnsembleMembership[]> {
-    return this.prismaService.ensembleMembership.findMany({
-      where: { ensemble_id: ensembleId },
-    });
+  async findEnsembleMembershipsByEnsemble(ensembleId: string) {
+    try {
+      return await EnsembleMembership.find({ ensemble_id: ensembleId }).populate([
+        "ensemble",
+        "member",
+      ]);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
-  // async findAll() {
-  //   return `This action returns all ensembleMembership`;
-  // }
-
-  // async findOne(id: number) {
-  //   return `This action returns a #${id} ensembleMembership`;
-  // }
-
-  // async update(id: number, updateEnsembleMembershipDto: UpdateEnsembleMembershipDto) {
-  //   return `This action updates a #${id} ensembleMembership`;
-  // }
-
-  async remove(id: string): Promise<EnsembleMembership> {
+  async findEnsembleMembershipsByUser(userId: string) {
     try {
-      const ensembleMembership = await this.prismaService.ensemble.findUnique({
-        where: { id },
-      });
-      if (!ensembleMembership) {
+      return await EnsembleMembership.find({ member_id: userId }).populate(["ensemble", "member"]);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async remove(id: string) {
+    try {
+      const membership = await EnsembleMembership.findById(id);
+      if (!membership) {
         throw new NotFoundException(`EnsembleMembership with id ${id} not found`);
       }
-      return await this.prismaService.ensembleMembership.delete({
-        where: { id },
-      });
-    } catch {
-      throw new InternalServerErrorException("Failed to delete ensemble");
+      await membership.deleteOne();
+      return membership;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async findOne(id: string) {
+    try {
+      const membership = await EnsembleMembership.findById(id).populate(["ensemble", "member"]);
+      if (!membership) {
+        throw new NotFoundException(`EnsembleMembership with id ${id} not found`);
+      }
+      return membership;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(error);
     }
   }
 }

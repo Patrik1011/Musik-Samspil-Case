@@ -1,38 +1,60 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, ValidationPipe } from "@nestjs/common";
-import { Ensemble } from "@prisma/client";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  UseGuards,
+  Request,
+  BadRequestException,
+} from "@nestjs/common";
+
+import { EnsembleService } from "./ensemble.service";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { CreateEnsembleDto } from "./dto/create-ensemble.dto";
 import { UpdateEnsembleDto } from "./dto/update-ensemble.dto";
-import { EnsembleService } from "./ensemble.service";
+import { Types } from "mongoose";
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    _id: Types.ObjectId;
+    email: string;
+  };
+}
 
 @Controller("ensemble")
+@ApiTags("ensemble")
 export class EnsembleController {
   constructor(private readonly ensembleService: EnsembleService) {}
 
-  @Post()
-  create(@Body(ValidationPipe) createEnsembleDto: CreateEnsembleDto): Promise<Ensemble> {
-    return this.ensembleService.create(createEnsembleDto);
-  }
-
   @Get()
-  findAll(): Promise<Ensemble[]> {
+  @ApiOkResponse()
+  async findAll() {
     return this.ensembleService.findAll();
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string): Promise<Ensemble> {
+  @ApiOkResponse()
+  async findOne(@Param("id") id: string) {
     return this.ensembleService.findOne(id);
   }
 
-  @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body(ValidationPipe) updateEnsembleDto: UpdateEnsembleDto,
-  ): Promise<Ensemble> {
-    return this.ensembleService.update(id, updateEnsembleDto);
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async create(@Request() req: AuthenticatedRequest, @Body() createEnsembleDto: CreateEnsembleDto) {
+    return this.ensembleService.create(createEnsembleDto);
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string): Promise<Ensemble> {
-    return this.ensembleService.delete(id);
+  @Put(":id")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async update(@Param("id") id: string, @Body() updateEnsembleDto: UpdateEnsembleDto) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException("Invalid ensemble ID");
+    }
+    return this.ensembleService.update(id, updateEnsembleDto);
   }
 }
