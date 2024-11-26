@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString, MinLength, IsEnum } from "class-validator";
-import { Instrument } from "@prisma/client";
+import { Instrument } from "../../../utils/types/enums";
 
 export class UpdateUserDto {
   @IsOptional()

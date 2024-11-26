@@ -6,22 +6,16 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-
-import { PrismaService } from "../../prisma/prisma.service";
-import type { AuthEntity } from "./entity/auth.entity";
+import { User } from "../../schemas/user.schema";
 import type { SignUpDto } from "./dto/signup.dto";
 import type { LoginDto } from "./dto/login.dto";
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-  async login({ email, password }: LoginDto): Promise<AuthEntity> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
-
+  async login({ email, password }: LoginDto) {
+    const user = await User.findOne({ email: email });
     if (!user) {
       throw new NotFoundException(`User with email: ${email} was not found`);
     }
@@ -31,29 +25,39 @@ export class AuthService {
       throw new UnauthorizedException("Incorrect password");
     }
 
-    const accessToken = this.jwtService.sign({ sub: user.id });
+    const payload = {
+      id: user._id,
+      email: user.email,
+      onboarded: !!(user.phone_number && user.instrument),
+    };
+
+    const accessToken = this.jwtService.sign(payload);
     return { accessToken };
   }
 
-  async signUp(signUpDto: SignUpDto): Promise<AuthEntity> {
+  async signUp(signUpDto: SignUpDto) {
     const { email, first_name, last_name } = signUpDto;
-    const userExists = await this.prisma.user.findUnique({ where: { email } });
+    const userExists = await User.findOne({ email });
+
     if (userExists) {
       throw new ConflictException("User already exists");
     }
 
     const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
-
-    const user = await this.prisma.user.create({
-      data: {
-        email,
-        first_name,
-        last_name,
-        password: hashedPassword,
-      },
+    const user = await User.create({
+      email,
+      first_name,
+      last_name,
+      password: hashedPassword,
     });
 
-    const accessToken = this.jwtService.sign({ userId: user.id });
+    const payload = {
+      id: user._id,
+      email: user.email,
+      onboarded: false,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
     return { accessToken };
   }
 }

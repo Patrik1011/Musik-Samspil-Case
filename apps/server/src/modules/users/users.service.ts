@@ -1,62 +1,74 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from "@nestjs/common";
-import { PrismaService } from "../../prisma/prisma.service";
-import { UserEntity } from "./entity/user.entity";
-import { ObjectId } from "mongodb";
+import { User } from "../../schemas/user.schema";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { User } from "@prisma/client";
+import { OnboardingDto } from "./dto/onboarding.dto";
+import { Types } from "mongoose";
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  private async validateAndGetUser(userId: string) {
+    if (!userId || !Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
 
-  async findAll(): Promise<UserEntity[]> {
-    const users = await this.prisma.user.findMany();
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with id: ${userId} was not found`);
+    }
+    return user;
+  }
+
+  async findAll() {
+    const users = await User.find();
     this.logger.log(`Retrieved ${users.length} users`);
     return users;
   }
 
-  async getUserByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
+  async getUserByEmail(email: string) {
+    const user = await User.findOne({ email });
     if (!user) {
       throw new NotFoundException(`User with email: ${email} was not found`);
     }
     return user;
   }
 
-  async findOne(userId: string): Promise<User> {
-    const objectId = new ObjectId(userId);
-    const user = await this.prisma.user.findUnique({
-      where: { id: objectId.toString() },
-    });
+  async findOne(userId: string) {
+    return this.validateAndGetUser(userId);
+  }
+
+  async updateUser(userId: string, updateUserDto: UpdateUserDto) {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+
+    const user = await User.findByIdAndUpdate(userId, { $set: updateUserDto }, { new: true });
 
     if (!user) {
       throw new NotFoundException(`User with id: ${userId} was not found`);
     }
+
     return user;
   }
 
-  async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
-    if (!userId) {
-      throw new BadRequestException("User ID is required");
+  async getOnboardingStatus(userId: string) {
+    const user = await this.validateAndGetUser(userId);
+    const isOnboarded = !!(user.phone_number && user.instrument);
+    return { onboarded: isOnboarded };
+  }
+
+  async completeOnboarding(userId: string, onboardingDto: OnboardingDto) {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
     }
 
-    const objectId = new ObjectId(userId);
-    const user = await this.prisma.user.findUnique({
-      where: { id: objectId.toString() },
-    });
+    const user = await User.findByIdAndUpdate(userId, { $set: onboardingDto }, { new: true });
 
     if (!user) {
       throw new NotFoundException(`User with id: ${userId} was not found`);
     }
 
-    return this.prisma.user.update({
-      where: { id: objectId.toString() },
-      data: updateUserDto,
-    });
+    return user;
   }
 }
