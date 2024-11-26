@@ -1,5 +1,9 @@
-import { Prisma } from "@prisma/client";
-import { IsArray, IsBoolean, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsObject, IsString } from "class-validator";
+
+interface Location {
+  type: string;
+  coordinates: string[];
+}
 
 export class CreateEnsembleDto {
   @IsString()
@@ -10,8 +14,9 @@ export class CreateEnsembleDto {
   @IsNotEmpty()
   description!: string;
 
+  @IsObject()
   @IsNotEmpty()
-  location?: Prisma.JsonValue;
+  location!: Location;
 
   @IsArray()
   @IsString({ each: true })
