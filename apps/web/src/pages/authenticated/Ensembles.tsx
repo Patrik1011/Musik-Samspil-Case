@@ -1,36 +1,47 @@
-import { useEffect, useState } from "react";
-import { ensembleService, type Ensemble } from "../../services/EnsembleService";
+import { useState, useEffect } from "react";
+import { Ensemble, ensembleService } from "../../services/EnsembleService";
+import { CreateEnsembleModal } from "../../components/authenticated/modals/CreateEnsembleModal";
 
 const EnsemblesPage = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
-  const [error, setError] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchEnsembles = async () => {
+    try {
+      const data = await ensembleService.getHostedEnsembles();
+      console.log('data: ', data);
+      setEnsembles(data);
+    } catch (error) {
+      console.error("Failed to fetch ensembles:", error);
+    }
+  };
 
   useEffect(() => {
     fetchEnsembles();
   }, []);
 
-  const fetchEnsembles = async () => {
-    try {
-      const ensemblesList = await ensembleService.getHostedEnsembles();
-      console.log("list: ", ensemblesList);
-      setEnsembles(ensemblesList);
-    } catch (err) {
-      console.error("Failed to load ensembles", err);
-      setError("Failed to load ensembles");
-    }
-  };
-
-  if (error) {
-    return <div className="text-red-500 text-center mt-4">{error}</div>;
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Ensembles</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Your Ensembles</h1>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+        >
+          Add New Ensemble
+        </button>
+      </div>
+
+      <CreateEnsembleModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchEnsembles}
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {ensembles.map((ensemble) => (
-          <div
-            key={ensemble._id}
+          <div 
+            key={ensemble._id} 
             className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
           >
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
