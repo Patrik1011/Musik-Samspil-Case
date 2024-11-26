@@ -9,6 +9,7 @@ import { Types } from "mongoose";
 import { Ensemble } from "../../schemas/ensemble.schema";
 import { CreateEnsembleDto } from "./dto/create-ensemble.dto";
 import { UpdateEnsembleDto } from "./dto/update-ensemble.dto";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 
 @Injectable()
 export class EnsembleService {
@@ -93,6 +94,21 @@ export class EnsembleService {
       if (error instanceof BadRequestException || error instanceof NotFoundException) {
         throw error;
       }
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  // In use
+  async findUserHostedEnsembles(userId: string) {
+    try {
+      const hostMemberships = await EnsembleMembership.find({
+        member: new Types.ObjectId(userId),
+        is_host: true,
+      }).populate("ensemble");
+
+      return hostMemberships.map((membership) => membership.ensemble);
+    } catch (error) {
+      console.error("Error in findUserHostedEnsembles:", error);
       throw new InternalServerErrorException(error);
     }
   }
