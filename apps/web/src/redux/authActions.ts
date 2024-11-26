@@ -14,7 +14,12 @@ export const loginUser =
         throw new Error("Invalid response from server");
       }
 
-      dispatch(login(response.accessToken));
+      dispatch(
+        login({
+          accessToken: response.accessToken,
+          onboarded: response.onboarded,
+        }),
+      );
       localStorage.setItem("token", response.accessToken);
     } catch (error: unknown) {
       const err = error as { response?: { status?: number } };

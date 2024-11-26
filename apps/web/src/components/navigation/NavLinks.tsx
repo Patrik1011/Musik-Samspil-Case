@@ -1,4 +1,4 @@
-import { Links } from "../../utils/nav-links";
+// import { Links } from "../../utils/nav-links";
 import { Link } from "react-router-dom";
 import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronUpIcon } from "./ChevronUp";
@@ -7,12 +7,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { logoutUser } from "../../redux/authActions";
+import { Links } from "../../utils/nav-links.ts";
+import { NavLink } from "../../utils/nav-links.ts";
 
 interface Props {
   isMobile: boolean;
 }
-
-export const NavLinks = ({ isMobile }: Props) => {
+export function NavLinks({ isMobile }: Props) {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -20,32 +21,20 @@ export const NavLinks = ({ isMobile }: Props) => {
     dispatch(logoutUser());
   };
 
-  const renderLinks = () => {
-    const links = isAuthenticated ? Links.authenticated : Links.unauthenticated;
-    return links.map(({ label, href, bgColor, spanColor }) => {
-      if (label === "Logout") {
-        return (
-          <button
-            key={label}
-            type="button"
-            className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
-            onClick={handleLogout}
-          >
-            <span className={`text-base ${spanColor ? spanColor : ""}`}>{label}</span>
-          </button>
-        );
-      }
-      return (
-        <Link
-          key={label}
-          className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor ? bgColor : ""}`}
-          to={href}
-        >
-          <span className={`text-base ${spanColor ? spanColor : ""}`}>{label}</span>
-        </Link>
-      );
-    });
-  };
+  const currentLinks = isAuthenticated ? Links.authenticated : Links.unauthenticated;
+
+  const renderLinks = (links: NavLink[]) =>
+    links.map(({ label, href, bgColor, spanColor }) => (
+      <PopoverButton
+        key={label}
+        as={Link}
+        to={href}
+        className={`flex items-center justify-center rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor}`}
+        onClick={label === "Logout" ? handleLogout : undefined}
+      >
+        <span className={`text-base ${spanColor}`}>{label}</span>
+      </PopoverButton>
+    ));
 
   if (isMobile) {
     return (
@@ -54,7 +43,7 @@ export const NavLinks = ({ isMobile }: Props) => {
           <>
             <PopoverButton
               aria-label="Toggle site navigation"
-              className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none focus:outline-none"
+              className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none"
             >
               {({ open }) =>
                 open ? <ChevronUpIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />
@@ -83,7 +72,7 @@ export const NavLinks = ({ isMobile }: Props) => {
                     }}
                     initial={{ opacity: 0, y: -32 }}
                   >
-                    <div className="space-y-4">{renderLinks()}</div>
+                    <div className="space-y-4">{renderLinks(currentLinks)}</div>
                   </PopoverPanel>
                 </>
               )}
@@ -94,5 +83,14 @@ export const NavLinks = ({ isMobile }: Props) => {
     );
   }
 
-  return <>{renderLinks()}</>;
-};
+  return currentLinks.map(({ label, href, bgColor, spanColor }) => (
+    <Link
+      key={label}
+      className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor}`}
+      to={href}
+      onClick={label === "Logout" ? handleLogout : undefined}
+    >
+      <span className={`text-base ${spanColor}`}>{label}</span>
+    </Link>
+  ));
+}
