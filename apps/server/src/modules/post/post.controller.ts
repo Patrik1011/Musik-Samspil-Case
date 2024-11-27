@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Logger, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { PostService } from "./post.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -41,5 +41,17 @@ export class PostController {
       throw new BadRequestException("Invalid post ID");
     }
     return this.postService.getPostById(postId);
+  }
+
+  @Get("user/posts")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getPostsByUserId(@Request() req: AuthenticatedRequest) {
+    const userId = req.user._id.toString();
+    console.log("userId", userId);
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+    return this.postService.getPostsByUserId(userId);
   }
 }

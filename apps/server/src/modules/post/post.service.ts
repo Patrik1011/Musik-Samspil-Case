@@ -38,4 +38,12 @@ export class PostService {
       throw new InternalServerErrorException(error);
     }
   }
+
+  async getPostsByUserId(userId: string) {
+    try {
+      return await Post.find({ author_id: userId }).populate(["ensemble_id", "author_id"]);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
 }

@@ -1,11 +1,10 @@
 import React from "react";
-import DummyComponent from "../../components/authenticated/DummyComponent";
+import { PostsComponent } from "../../components/common/posts/PostsComponent.tsx";
 
 const HomePage: React.FC = () => {
   return (
     <div>
-      <h1>Landing Page</h1>
-      <DummyComponent />
+      <PostsComponent />
     </div>
   );
 };

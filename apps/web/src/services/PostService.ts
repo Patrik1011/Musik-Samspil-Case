@@ -57,4 +57,9 @@ export const postService = {
     console.log(response);
     return response as PostDetails;
   },
+
+  getPostsByUserId: async (): Promise<Post[]> => {
+    const response = await getRequest("/post/user/posts");
+    return response as Post[];
+  },
 };
