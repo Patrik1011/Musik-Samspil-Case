@@ -8,6 +8,7 @@ import { DatabaseService } from "./db/database.service";
 import { resolve } from "node:path";
 import { EnsembleModule } from "./modules/ensemble/ensemble.module";
 import { EnsembleMembershipModule } from "./modules/ensemble-membership/ensemble-membership.module";
+import { PostModule } from "./modules/post/post.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EnsembleMembershipModule } from "./modules/ensemble-membership/ensemble
     UsersModule,
     EnsembleModule,
     EnsembleMembershipModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseService],
