@@ -1,11 +1,12 @@
 import { PostDetails, postService } from "../../../services/PostService.ts";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { ConfirmationModal } from "../../ConfirmationModal.tsx";
 
 export const DetailsComponent = () => {
   const { id } = useParams();
   const [post, setPost] = useState<PostDetails | null>(null);
-  console.log(post);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -20,6 +21,14 @@ export const DetailsComponent = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleConfirm = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -60,6 +69,23 @@ export const DetailsComponent = () => {
       ) : (
         <div>Loading...</div>
       )}
+
+      <div>
+        <button
+          className="px-4 py-2 bg-steel-blue text-sm font-medium text-white border border-gray-300 rounded-md "
+          onClick={() => setIsModalOpen(true)}
+        >
+          Apply for
+        </button>
+
+        <ConfirmationModal
+          title="Apply for this post"
+          message="Are you sure you want to apply for this post?"
+          isOpen={isModalOpen}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      </div>
     </div>
   );
 };
