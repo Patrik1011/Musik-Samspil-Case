@@ -26,4 +26,16 @@ export class PostService {
       throw new InternalServerErrorException(error);
     }
   }
+
+  async getPostById(postId: string) {
+    try {
+      const post = await Post.findById(postId).populate(["ensemble_id", "author_id"]);
+      if (!post) {
+        throw new InternalServerErrorException("Post not found");
+      }
+      return post;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
 }

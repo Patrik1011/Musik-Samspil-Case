@@ -34,7 +34,7 @@ export const routes: RouteConfig[] = [
     isPublic: true,
   },
   {
-    path: "/post-details",
+    path: "/post-details/:id",
     component: <PostDetails />,
     protected: true,
   },

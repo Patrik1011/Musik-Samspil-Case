@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export const PostsComponent = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const isAunthenticated = useSelector(
+  const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
   const navigate = useNavigate();
@@ -21,9 +21,9 @@ export const PostsComponent = () => {
     fetchPosts();
   }, []);
 
-  const handleRegisterClick = () => {
-    if (isAunthenticated) {
-      navigate("/post-details");
+  const handleRegisterClick = (postId: string) => {
+    if (isAuthenticated) {
+      navigate(`/post-details/${postId}`);
     } else {
       navigate("/login");
     }
@@ -61,10 +61,10 @@ export const PostsComponent = () => {
             </div>
             <div>
               <button
-                onClick={handleRegisterClick}
+                onClick={() => handleRegisterClick(post._id)}
                 className="w-full lg:mx-0 text-base font-bold bg-steel-blue text-white mt-2 py-4 px-8 rounded-[10px] shadow-custom focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-200 ease-in-out"
               >
-                {isAunthenticated ? "Apply" : "Sign in"}
+                {isAuthenticated ? "Apply" : "Sign in"}
               </button>
             </div>
           </div>

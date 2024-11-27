@@ -32,4 +32,14 @@ export class PostController {
   async getAllPosts() {
     return this.postService.getAllPosts();
   }
+
+  @Get(":id")
+  //@UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getPostById(@Param("id") postId: string) {
+    if (!Types.ObjectId.isValid(postId)) {
+      throw new BadRequestException("Invalid post ID");
+    }
+    return this.postService.getPostById(postId);
+  }
 }
