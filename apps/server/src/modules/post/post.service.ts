@@ -23,7 +23,7 @@ export class PostService {
 
   async getAllPosts() {
     try {
-      return await Post.find().populate(["ensemble", "author"]);
+      return await Post.find().populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
