@@ -9,7 +9,7 @@ export interface Post {
   type: PostType;
 }
 
-export interface CreatePostInput extends Record<string, any> {
+export interface CreatePostInput {
   title: string;
   description: string;
   website_url: string;
@@ -17,11 +17,14 @@ export interface CreatePostInput extends Record<string, any> {
 }
 
 export const postService = {
-  createPost: async (
-    data: CreatePostInput,
-    ensembleId: string,
-  ): Promise<Post> => {
-    const response = await postRequest(`post/${ensembleId}`, data);
+  createPost: async (data: CreatePostInput, ensembleId: string): Promise<Post> => {
+    const requestData = {
+      title: data.title,
+      description: data.description,
+      website_url: data.website_url,
+      type: data.type,
+    };
+    const response = await postRequest(`post/${ensembleId}`, requestData);
     return response as Post;
   },
 

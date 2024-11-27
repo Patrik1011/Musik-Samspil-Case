@@ -10,10 +10,12 @@ const EnsembleSchema = new Schema(
       country: String,
       address: String,
     },
-    open_positions: [{
-      type: String,
-      enum: Object.values(Instrument),
-    }],
+    open_positions: [
+      {
+        type: String,
+        enum: Object.values(Instrument),
+      },
+    ],
     is_active: { type: Boolean, default: true },
   },
   { collection: "Ensemble" },

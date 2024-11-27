@@ -6,7 +6,7 @@ const token = localStorage.getItem("token");
 
 const initialState = {
   auth: {
-    isAuthenticated: token && isTokenValid(token) ? true : false,
+    isAuthenticated: !!(token && isTokenValid(token)),
     isOnBoarded: false,
     accessToken: token || null,
     user: null,

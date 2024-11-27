@@ -1,4 +1,4 @@
 export enum PostType {
-  "recruitment",
-  "event",
+  recruitment = 0,
+  event = 1,
 }
