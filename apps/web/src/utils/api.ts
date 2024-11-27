@@ -19,8 +19,12 @@ const getHeaders = (): Record<string, string> => {
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    const localToken = localStorage.getItem("token");
+    if (localToken) {
+      headers["Authorization"] = `Bearer ${localToken}`;
+    }
   }
-
   return headers;
 };
 

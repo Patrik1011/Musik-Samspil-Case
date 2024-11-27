@@ -32,8 +32,8 @@ export const ensembleService = {
     return response as Ensemble[];
   },
 
-  createEnsemble: async (data: CreateEnsembleInput): Promise<Ensemble> => {
-    const response = await postRequest("/ensemble", data);
-    return response as Ensemble;
-  },
+  // createEnsemble: async (data: CreateEnsembleInput): Promise<Ensemble> => {
+  //   const response = await postRequest("/ensemble", data);
+  //   return response as Ensemble;
+  // },
 };
