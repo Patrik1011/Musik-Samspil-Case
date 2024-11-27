@@ -1,19 +1,18 @@
 import { getRequest, postRequest } from "../utils/api";
-import { PostType } from "../enums/PostType.ts";
 
 export interface Post {
   _id: string;
   title: string;
   description: string;
   website_url: string;
-  type: PostType;
+  type: string;
 }
 
 export interface CreatePostInput extends Record<string, any> {
   title: string;
   description: string;
   website_url: string;
-  type: PostType;
+  type: string;
 }
 
 export const postService = {
@@ -21,7 +20,7 @@ export const postService = {
     data: CreatePostInput,
     ensembleId: string,
   ): Promise<Post> => {
-    const response = await postRequest(`post/${ensembleId}`, data);
+    const response = await postRequest(`/post/${ensembleId}`, data);
     return response as Post;
   },
 

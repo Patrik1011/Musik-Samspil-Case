@@ -1,5 +1,5 @@
-import { Headline } from "../Headline.tsx";
-import { Post, postService } from "../../services/PostService.ts";
+import { Headline } from "../../Headline.tsx";
+import { Post, postService } from "../../../services/PostService.ts";
 import { useEffect, useState } from "react";
 
 export const PostsComponent = () => {

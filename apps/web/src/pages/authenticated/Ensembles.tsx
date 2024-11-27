@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Ensemble, ensembleService } from "../../services/EnsembleService";
 import { CreateEnsembleModal } from "../../components/authenticated/ensembles/modals/CreateEnsembleModal";
 import { useNavigate } from "react-router-dom";
+import CreatePostButton from "../../components/common/posts/CreatePostButton.tsx";
 
 const EnsemblesPage = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
@@ -79,6 +80,9 @@ const EnsemblesPage = () => {
                   </ul>
                 </div>
               )}
+            </div>
+            <div>
+              <CreatePostButton ensembleId={ensemble._id} />
             </div>
           </div>
         ))}

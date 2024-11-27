@@ -1,4 +1,4 @@
-import { PostsComponent } from "../../components/unauthenticated/PostsComponent.tsx";
+import { PostsComponent } from "../../components/common/posts/PostsComponent.tsx";
 
 const Posts: React.FC = () => {
   return (

@@ -6,8 +6,6 @@ import { Post } from "../../schemas/post.schema";
 @Injectable()
 export class PostService {
   async create(createPostDto: CreatePostDto, userId: string, ensembleId: string) {
-    console.log("we get here");
-
     try {
       const post = await Post.create({
         ...createPostDto,
