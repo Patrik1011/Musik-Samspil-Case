@@ -11,7 +11,12 @@ const RoutesComponent: React.FC = () => {
           key={route.path}
           path={route.path}
           element={
-            <AuthGuard element={route.component} redirectTo="/login" protected={route.protected} />
+            <AuthGuard
+              element={route.component}
+              redirectTo="/login"
+              protected={route.protected}
+              isPublic={route.isPublic}
+            />
           }
         />
       ))}

@@ -5,8 +5,17 @@ import Profile from "../../pages/authenticated/Profile";
 import Onboarding from "../../pages/authenticated/OnBoarding";
 import Ensembles from "../../pages/authenticated/Ensembles";
 import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
+import Posts from "../../pages/unauthenticated/Posts.tsx";
+import React from "react";
 
-export const routes = [
+type RouteConfig = {
+  path: string;
+  component: React.ReactElement;
+  protected: boolean;
+  isPublic?: boolean;
+};
+
+export const routes: RouteConfig[] = [
   {
     path: "/login",
     component: <Login />,
@@ -16,6 +25,12 @@ export const routes = [
     path: "/register",
     component: <Register />,
     protected: false,
+  },
+  {
+    path: "/posts",
+    component: <Posts />,
+    protected: false,
+    isPublic: true,
   },
   {
     path: "/home",
