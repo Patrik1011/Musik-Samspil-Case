@@ -4,6 +4,7 @@ import Home from "../../pages/authenticated/Home";
 import Profile from "../../pages/authenticated/Profile";
 import Onboarding from "../../pages/authenticated/OnBoarding";
 import Ensembles from "../../pages/authenticated/Ensembles";
+import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
 
 export const routes = [
   {
@@ -29,6 +30,11 @@ export const routes = [
   {
     path: "/ensembles",
     component: <Ensembles />,
+    protected: true,
+  },
+  {
+    path: "/ensembles/:id",
+    component: <EnsembleDetail />,
     protected: true,
   },
   {
