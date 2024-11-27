@@ -8,6 +8,12 @@ export interface NavLink {
 export const Links: { authenticated: NavLink[]; unauthenticated: NavLink[] } = {
   authenticated: [
     {
+      label: "Ensembles",
+      href: "/ensembles",
+      bgColor: "",
+      spanColor: "text-steel-blue",
+    },
+    {
       label: "Profile",
       href: "/profile",
       bgColor: "bg-steel-blue",
