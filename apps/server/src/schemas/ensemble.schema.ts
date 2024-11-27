@@ -18,7 +18,10 @@ const EnsembleSchema = new Schema(
     ],
     is_active: { type: Boolean, default: true },
   },
-  { collection: "Ensemble" },
+  {
+    collection: "Ensemble",
+    timestamps: true,
+  },
 );
 
 export const Ensemble = model("Ensemble", EnsembleSchema);

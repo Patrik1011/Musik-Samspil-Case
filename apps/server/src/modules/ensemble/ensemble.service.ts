@@ -14,7 +14,6 @@ import mongoose from "mongoose";
 
 @Injectable()
 export class EnsembleService {
-  // In use
   async findUserHostedEnsembles(userId: string) {
     try {
       const hostMemberships = await EnsembleMembership.find({
@@ -110,7 +109,16 @@ export class EnsembleService {
 
       const updatedEnsemble = await Ensemble.findByIdAndUpdate(
         id,
-        { $set: updateEnsembleDto },
+        {
+          $set: {
+            ...(updateEnsembleDto.name && { name: updateEnsembleDto.name }),
+            ...(updateEnsembleDto.description && { description: updateEnsembleDto.description }),
+            ...(updateEnsembleDto.location && { location: updateEnsembleDto.location }),
+            ...(updateEnsembleDto.open_positions && {
+              open_positions: updateEnsembleDto.open_positions,
+            }),
+          },
+        },
         { new: true },
       );
 

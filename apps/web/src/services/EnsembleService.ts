@@ -1,4 +1,4 @@
-import { getRequest, postRequest } from "../utils/api";
+import { getRequest, postRequest, putRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
 
 export interface Ensemble {
@@ -50,6 +50,11 @@ export const ensembleService = {
 
   getEnsemble: async (id: string): Promise<Ensemble> => {
     const response = await getRequest(`/ensemble/${id}`);
+    return response as Ensemble;
+  },
+
+  updateEnsemble: async (id: string, data: Partial<Ensemble>): Promise<Ensemble> => {
+    const response = await putRequest(`/ensemble/${id}`, data);
     return response as Ensemble;
   },
 };
