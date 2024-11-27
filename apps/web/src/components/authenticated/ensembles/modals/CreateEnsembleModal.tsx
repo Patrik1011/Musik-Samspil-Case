@@ -1,7 +1,7 @@
 import { Dialog } from "@headlessui/react";
-import { CreateEnsembleInput, ensembleService } from "../../../services/EnsembleService"; 
+import { CreateEnsembleInput, ensembleService } from "../../../../services/EnsembleService"; 
 import { useState } from "react";
-import { Instrument } from "../../../enums/Instrument";
+import { Instrument } from "../../../../enums/Instrument";
 
 interface Props {
   isOpen: boolean;

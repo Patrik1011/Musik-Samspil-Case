@@ -33,7 +33,15 @@ export class EnsembleController {
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
   async getHostedEnsembles(@Request() req: AuthenticatedRequest) {
+    console.log(`Fetching hosted ensembles for user: ${req.user._id.toString()}`);
     return this.ensembleService.findUserHostedEnsembles(req.user._id.toString());
+  }
+
+  @Get(":id")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getEnsemble(@Param("id") id: string, @Request() req: AuthenticatedRequest) {
+    return this.ensembleService.findOne(id, req.user._id.toString());
   }
 
   @Post()

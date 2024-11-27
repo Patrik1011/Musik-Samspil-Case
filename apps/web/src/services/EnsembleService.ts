@@ -36,4 +36,9 @@ export const ensembleService = {
     const response = await postRequest("/ensemble", data);
     return response as Ensemble;
   },
+
+  getEnsemble: async (id: string): Promise<Ensemble> => {
+   const response = await getRequest(`/ensemble/${id}`);
+   return response as Ensemble;
+ },
 };

@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { Ensemble, ensembleService } from "../../services/EnsembleService";
-import { CreateEnsembleModal } from "../../components/authenticated/modals/CreateEnsembleModal";
+import { CreateEnsembleModal } from "../../components/authenticated/ensembles/modals/CreateEnsembleModal";
+import { useNavigate } from "react-router-dom";
 
 const EnsemblesPage = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fetchEnsembles = async () => {
     try {
       const data = await ensembleService.getHostedEnsembles();
-      console.log('data: ', data);
       setEnsembles(data);
     } catch (error) {
       console.error("Failed to fetch ensembles:", error);
@@ -19,6 +20,10 @@ const EnsemblesPage = () => {
   useEffect(() => {
     fetchEnsembles();
   }, []);
+
+  const handleEnsembleClick = (ensembleId: string) => {
+    navigate(`/ensembles/${ensembleId}`);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -42,7 +47,8 @@ const EnsemblesPage = () => {
         {ensembles.map((ensemble) => (
           <div 
             key={ensemble._id} 
-            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
+            onClick={() => handleEnsembleClick(ensemble._id)}
+            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 cursor-pointer transition-transform hover:scale-105"
           >
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">{ensemble.name}</h2>
