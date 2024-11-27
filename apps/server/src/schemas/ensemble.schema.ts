@@ -6,8 +6,9 @@ const EnsembleSchema = new Schema(
     name: { type: String, required: true },
     description: String,
     location: {
-      type: Object,
-      required: true,
+      city: String,
+      country: String,
+      address: String,
     },
     open_positions: [{
       type: String,
