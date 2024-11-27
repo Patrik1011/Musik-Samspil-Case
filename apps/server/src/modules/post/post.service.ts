@@ -13,11 +13,13 @@ export class PostService {
       const post = await Post.create(
         [
           {
+            ensemble: new mongoose.Types.ObjectId(createPostDto.ensemble_id),
             ensemble_id: createPostDto.ensemble_id,
             title: createPostDto.title,
             description: createPostDto.description,
             website_url: createPostDto.website_url,
             type: createPostDto.type,
+            author: new mongoose.Types.ObjectId(createPostDto.author_id),
             author_id: createPostDto.author_id,
             created_at: new Date(),
           },
@@ -37,7 +39,7 @@ export class PostService {
 
   async getAllPosts() {
     try {
-      return await Post.find().populate(["ensemble_id", "author_id"]);
+      return await Post.find().populate(["ensemble", "author"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
