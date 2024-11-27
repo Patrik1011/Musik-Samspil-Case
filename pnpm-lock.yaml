@@ -16,7 +16,7 @@ importers:
         version: 16.4.5
       mongodb:
         specifier: ^6.9.0
-        version: 6.10.0
+        version: 6.11.0
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.9.4
@@ -92,7 +92,7 @@ importers:
         version: 0.14.1
       mongodb:
         specifier: ^6.10.0
-        version: 6.10.0
+        version: 6.11.0
       mongoose:
         specifier: ^8.8.3
         version: 8.8.3
@@ -3294,6 +3294,33 @@ packages:
 
   mongodb@6.10.0:
     resolution: {integrity: sha512-gP9vduuYWb9ZkDM546M+MP2qKVk5ZG2wPF63OvSRuUbqCR+11ZCAE1mOfllhlAG0wcoJY5yDL/rV3OmYEwXIzg==}
+    engines: {node: '>=16.20.1'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.188.0
+      '@mongodb-js/zstd': ^1.1.0
+      gcp-metadata: ^5.2.0
+      kerberos: ^2.0.1
+      mongodb-client-encryption: '>=6.0.0 <7'
+      snappy: ^7.2.2
+      socks: ^2.7.1
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
+
+  mongodb@6.11.0:
+    resolution: {integrity: sha512-yVbPw0qT268YKhG241vAMLaDQAPbRyTgo++odSgGc9kXnzOujQI60Iyj23B9sQQFPSvmNPvMZ3dsFz0aN55KgA==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -8001,6 +8028,12 @@ snapshots:
       whatwg-url: 13.0.0
 
   mongodb@6.10.0:
+    dependencies:
+      '@mongodb-js/saslprep': 1.1.9
+      bson: 6.10.0
+      mongodb-connection-string-url: 3.0.1
+
+  mongodb@6.11.0:
     dependencies:
       '@mongodb-js/saslprep': 1.1.9
       bson: 6.10.0
