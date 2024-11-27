@@ -8,10 +8,6 @@ export class CreatePostDto {
 
   @IsString()
   @IsNotEmpty()
-  author_id!: string;
-
-  @IsString()
-  @IsNotEmpty()
   title!: string;
 
   @IsString()
@@ -25,4 +21,8 @@ export class CreatePostDto {
   @IsEnum(PostType)
   @IsNotEmpty()
   type!: PostType;
+
+  @IsString()
+  @IsNotEmpty()
+  author_id!: string;
 }
