@@ -1,7 +1,9 @@
+import { Headline } from "../Headline.tsx";
+
 export const PostsComponent = () => {
   return (
-    <div>
-      <h1>Post page</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <Headline title="Posts" textColor="text-steel-blue" />
     </div>
   );
 };

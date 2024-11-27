@@ -1,12 +1,13 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { PostService } from "./post.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CreatePostDto } from "./dto/create-post.dto";
+import { Types } from "mongoose";
 
 interface AuthenticatedRequest extends Request {
   user: {
-    _id: string;
+    _id: Types.ObjectId;
     email: string;
   };
 }
@@ -14,18 +15,21 @@ interface AuthenticatedRequest extends Request {
 @Controller("post")
 @ApiTags("post")
 export class PostController {
-  constructor(private readonly ensembleService: PostService) {}
+  constructor(private readonly postService: PostService) {}
 
-  @Post()
+  @Post(":ensembleId")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async create(@Request() req: AuthenticatedRequest, @Body() createPostDto: CreatePostDto) {
-    return this.ensembleService.createPostWithHost(createPostDto, req.user._id.toString());
+  async create(@Param("ensembleId") ensembleId: string, @Request() req: AuthenticatedRequest, @Body() createPostDto: CreatePostDto) {
+    if (!Types.ObjectId.isValid(ensembleId)) {
+      throw new BadRequestException("Invalid ensemble ID");
+    }
+    return this.postService.create(createPostDto, req.user._id.toString(), ensembleId);
   }
 
   @Get()
   @ApiOkResponse()
   async getAllPosts() {
-    return this.ensembleService.getAllPosts();
+    return this.postService.getAllPosts();
   }
 }

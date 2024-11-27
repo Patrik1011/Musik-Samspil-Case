@@ -1,39 +1,23 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Post } from "../../schemas/post.schema";
 
 @Injectable()
 export class PostService {
-  async createPostWithHost(createPostDto: CreatePostDto, userId: string) {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+  async create(createPostDto: CreatePostDto, userId: string, ensembleId: string) {
+    console.log("we get here");
 
     try {
-      const post = await Post.create(
-        [
-          {
-            ensemble: new mongoose.Types.ObjectId(createPostDto.ensemble_id),
-            ensemble_id: createPostDto.ensemble_id,
-            title: createPostDto.title,
-            description: createPostDto.description,
-            website_url: createPostDto.website_url,
-            type: createPostDto.type,
-            author: new mongoose.Types.ObjectId(createPostDto.author_id),
-            author_id: createPostDto.author_id,
-            created_at: new Date(),
-          },
-        ],
-        { session },
-      );
+      const post = await Post.create({
+        ...createPostDto,
+        ensemble_id: new Types.ObjectId(ensembleId),
+        author_id: new Types.ObjectId(userId),
+      });
 
-      await session.commitTransaction();
-      return post[0];
+      return post.populate(["ensemble_id", "author_id"]);
     } catch (error) {
-      await session.abortTransaction();
       throw new InternalServerErrorException(error);
-    } finally {
-      await session.endSession();
     }
   }
 
