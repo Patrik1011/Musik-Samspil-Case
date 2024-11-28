@@ -2,6 +2,7 @@ import { PostDetails, postService } from "../../../services/PostService.ts";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ConfirmationModal } from "../../ConfirmationModal.tsx";
+import { applicationService } from "../../../services/ApplicationService.ts";
 
 export const DetailsComponent = () => {
   const { id } = useParams();
@@ -23,7 +24,17 @@ export const DetailsComponent = () => {
     }
   };
 
+  const handleApplyForPost = async () => {
+    try {
+      if (!post) return;
+      await applicationService.applyForPost(post._id);
+    } catch (error) {
+      console.error("Failed to apply for post:");
+    }
+  };
+
   const handleConfirm = () => {
+    handleApplyForPost();
     setIsModalOpen(false);
   };
 

@@ -54,7 +54,6 @@ export const postService = {
 
   getPostById: async (id: string): Promise<PostDetails> => {
     const response = await getRequest(`/post/${id}`);
-    console.log(response);
     return response as PostDetails;
   },
 

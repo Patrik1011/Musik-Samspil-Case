@@ -8,6 +8,7 @@ import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
 import Posts from "../../pages/common/posts/UserPosts.tsx";
 import React from "react";
 import PostDetails from "../../pages/common/posts/Details.tsx";
+import PostApplications from "../../pages/authenticated/PostApplications.tsx";
 
 type RouteConfig = {
   path: string;
@@ -35,6 +36,11 @@ export const routes: RouteConfig[] = [
   {
     path: "/post-details/:id",
     component: <PostDetails />,
+    protected: true,
+  },
+  {
+    path: "/post-application/:id",
+    component: <PostApplications />,
     protected: true,
   },
   {

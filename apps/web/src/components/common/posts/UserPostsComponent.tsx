@@ -1,18 +1,24 @@
 import { Headline } from "../../Headline.tsx";
 import { Post, postService } from "../../../services/PostService.ts";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const UserPostsComponent = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const fetchPosts = async () => {
     const posts = await postService.getPostsByUserId();
     setPosts(posts);
   };
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  const handleViewApplicationsClick = (postId: string) => {
+    navigate(`/post-application/${postId}`);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -41,6 +47,14 @@ export const UserPostsComponent = () => {
                   Type
                 </h4>
                 <p className="text-sm text-gray-600">{post.type}</p>
+              </div>
+              <div>
+                <button
+                  onClick={() => handleViewApplicationsClick(post._id)}
+                  className="px-4 py-2 bg-steel-blue text-sm font-medium text-white border border-gray-300 rounded-md "
+                >
+                  View Applications
+                </button>
               </div>
             </div>
           </div>

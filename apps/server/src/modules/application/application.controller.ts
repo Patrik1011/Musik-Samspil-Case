@@ -34,7 +34,7 @@ export class ApplicationController {
     if (!Types.ObjectId.isValid(postId)) {
       throw new BadRequestException("Invalid post ID");
     }
-    return this.applicationService.getApplicationsByPostId(postId);
+    return this.applicationService.getApplicationsForPost(postId);
   }
 
   @Get("user")

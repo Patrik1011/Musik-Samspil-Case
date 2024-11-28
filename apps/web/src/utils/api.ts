@@ -28,7 +28,10 @@ const getHeaders = (): Record<string, string> => {
   return headers;
 };
 
-export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
+export const postRequest = async <T>(
+  endpoint: string,
+  body?: RequestBody,
+): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers: getHeaders(),
@@ -45,7 +48,10 @@ export const postRequest = async <T>(endpoint: string, body: RequestBody): Promi
   return response.json();
 };
 
-export const putRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
+export const putRequest = async <T>(
+  endpoint: string,
+  body: RequestBody,
+): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "PUT",
     headers: getHeaders(),

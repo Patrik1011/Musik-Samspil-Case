@@ -3,12 +3,9 @@ import mongoose, { Types } from "mongoose";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Post } from "../../schemas/post.schema";
 import { ApplicationService } from "../application/application.service";
-import { ApplicationStatus } from "../../utils/types/enums";
 
 @Injectable()
 export class PostService {
-  constructor(private readonly applicationService: ApplicationService) {}
-
   async create(createPostDto: CreatePostDto, userId: string, ensembleId: string) {
     try {
       const post = await Post.create({
@@ -49,13 +46,5 @@ export class PostService {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
-  }
-
-  async getApplicationsForPost(postId: string) {
-    return this.applicationService.getApplicationsForPost(postId);
-  }
-
-  async updateApplicationStatus(applicationId: string, status: ApplicationStatus) {
-    return this.applicationService.updateApplicationStatus(applicationId, status);
   }
 }
