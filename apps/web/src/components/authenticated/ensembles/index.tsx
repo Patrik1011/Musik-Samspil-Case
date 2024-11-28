@@ -117,7 +117,7 @@ export const Ensembles = () => {
                       {ensemble.open_positions.map((position) => (
                         <span
                           key={position}
-                          className="inline-block bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-sm"
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-steel-blue bg-opacity-10 text-steel-blue"
                         >
                           {position}
                         </span>
