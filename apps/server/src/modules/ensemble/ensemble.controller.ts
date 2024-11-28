@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request, Put } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  Put,
+  Delete,
+} from "@nestjs/common";
 import { EnsembleService } from "./ensemble.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
@@ -42,5 +52,13 @@ export class EnsembleController {
     @Body() updateEnsembleDto: UpdateEnsembleDto,
   ) {
     return this.ensembleService.update(id, updateEnsembleDto, req.user._id.toString());
+  }
+
+  @Delete(":id")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async delete(@Param("id") id: string, @Request() req: AuthenticatedRequest) {
+    console.log(`Deleting ensemble: ${id} for user: ${req.user._id.toString()}`);
+    return this.ensembleService.delete(id, req.user._id.toString());
   }
 }

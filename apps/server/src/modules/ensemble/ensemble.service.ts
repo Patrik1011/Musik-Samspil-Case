@@ -11,6 +11,7 @@ import { CreateEnsembleDto } from "./dto/create-ensemble.dto";
 import { UpdateEnsembleDto } from "./dto/update-ensemble.dto";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import mongoose from "mongoose";
+import { Post } from "../../schemas/post.schema";
 
 @Injectable()
 export class EnsembleService {
@@ -132,6 +133,40 @@ export class EnsembleService {
         throw error;
       }
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async delete(id: string, userId: string) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const ensemble = await Ensemble.findById(id);
+      if (!ensemble) {
+        throw new NotFoundException("Ensemble not found");
+      }
+
+      const membership = await EnsembleMembership.findOne({
+        ensemble: ensemble._id,
+        member: userId,
+        is_host: true,
+      });
+
+      if (!membership) {
+        throw new ForbiddenException("Only ensemble host can delete the ensemble");
+      }
+
+      await Post.deleteMany({ ensemble_id: ensemble._id }, { session });
+      await EnsembleMembership.deleteMany({ ensemble: ensemble._id }, { session });
+      await Ensemble.findByIdAndDelete(id, { session });
+
+      await session.commitTransaction();
+      return { message: "Ensemble deleted successfully" };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
   }
 }
