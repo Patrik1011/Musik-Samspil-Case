@@ -4,7 +4,7 @@ import { applicationService } from "../../../services/ApplicationService.ts";
 import { ApplicationModal } from "../applications/modals/ApplicationModal.tsx";
 import { ApplicationRequest } from "../../../services/ApplicationService.ts";
 
-export const PostsComponent = () => {
+export const Posts = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
   const [selectedPost, setSelectedPost] = useState<PostDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

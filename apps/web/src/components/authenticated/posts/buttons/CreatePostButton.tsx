@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { CreatePostModal } from "./modals/CreatePostModal.tsx";
-import { Button } from "../../Button.tsx";
+import { CreatePostModal } from "../modals/CreatePostModal.tsx";
+import { Button } from "../../../Button.tsx";
 
 interface Props {
   ensembleId: string;

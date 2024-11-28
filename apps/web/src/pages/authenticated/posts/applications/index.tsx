@@ -1,4 +1,4 @@
-import { Applications } from "../../../../components/authenticated/Applications.tsx";
+import { Applications } from "../../../../components/authenticated/applications";
 
 const PostsApplication: React.FC = () => {
   return (

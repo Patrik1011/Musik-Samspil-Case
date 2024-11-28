@@ -7,7 +7,7 @@ interface HeadlineProps {
 export const Headline = ({ title, className, textColor }: HeadlineProps) => {
   return (
     <p
-      className={`font-oswald font-medium text-xl md:text-[26px] leading-[39px] ${className} ${textColor}`}
+      className={`font-oswald font-medium text-xl md:text-[26px] leading-[39px] mb-6 ${className} ${textColor}`}
     >
       {title}
     </p>

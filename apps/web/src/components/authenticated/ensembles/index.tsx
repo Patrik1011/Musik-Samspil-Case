@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Ensemble, ensembleService } from "../../../services/EnsembleService";
 import { CreateEnsembleModal } from "./modals/CreateEnsembleModal";
 import { useNavigate } from "react-router-dom";
-import CreatePostButton from "../posts/CreatePostButton";
-
+import CreatePostButton from "../posts/buttons/CreatePostButton";
+import { Headline } from "../../Headline";
 export const Ensembles = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
   const [members, setMembers] = useState<Record<string, EnsembleMember[]>>({});
@@ -43,7 +43,7 @@ export const Ensembles = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Your Ensembles</h1>
+        <Headline title="Your Ensembles" textColor="text-steel-blue" />
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}

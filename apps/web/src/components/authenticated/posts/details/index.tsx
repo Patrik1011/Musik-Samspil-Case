@@ -1,8 +1,8 @@
-import { PostDetails, postService } from "../../../services/PostService.ts";
+import { PostDetails, postService } from "../../../../services/PostService.ts";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { applicationService, ApplicationRequest } from "../../../services/ApplicationService.ts";
-import { ApplicationModal } from "../applications/modals/ApplicationModal.tsx";
+import { applicationService, ApplicationRequest } from "../../../../services/ApplicationService.ts";
+import { ApplicationModal } from "../../../../components/authenticated/applications/modals/ApplicationModal";
 
 export const DetailsComponent = () => {
   const { id } = useParams();

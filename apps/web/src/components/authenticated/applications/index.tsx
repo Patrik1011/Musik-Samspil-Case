@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ApplicationResponse, applicationService } from "../../services/ApplicationService.ts";
+import { ApplicationResponse, applicationService } from "../../../services/ApplicationService.ts";
 import { useParams } from "react-router-dom";
-import { Headline } from "../Headline.tsx";
-import { ConfirmationModal } from "../ConfirmationModal.tsx";
-import { ApplicationStatus } from "../../enums/ApplicationStatus";
+import { Headline } from "../../Headline.tsx";
+import { ConfirmationModal } from "../../ConfirmationModal.tsx";
+import { ApplicationStatus } from "../../../enums/ApplicationStatus.ts";
 
 export const Applications = () => {
   const { id } = useParams();
@@ -60,7 +60,7 @@ export const Applications = () => {
   return (
     <div className="m-5">
       <Headline title="Applications" textColor="text-steel-blue" />
-      <table className="table-auto border-collapse border border-gray-300 w-full text-left">
+      <table className="table-auto border-collapse border border-gray-300 w-full text-left bg-white">
         <thead>
           <tr>
             <th className="border border-gray-300 px-4 py-2">First Name</th>

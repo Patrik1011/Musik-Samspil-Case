@@ -1,13 +1,13 @@
-import { Headline } from "../unauthenticated/auth/Headline.tsx";
-import { InputField } from "../InputField.tsx";
-import { Button } from "../Button.tsx";
+import { Headline } from "../../unauthenticated/auth/Headline.tsx";
+import { InputField } from "../../InputField.tsx";
+import { Button } from "../../Button.tsx";
 import React, { useEffect } from "react";
-import { TextArea } from "../TextArea.tsx";
-import { ValidateOnboardingForm } from "../../utils/onboardingFormValidation.ts";
+import { TextArea } from "../../TextArea.tsx";
+import { ValidateOnboardingForm } from "../../../utils/onboardingFormValidation.ts";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch, RootState } from "../../redux/store.ts";
+import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { useDispatch, useSelector } from "react-redux";
-import { completeOnboarding } from "../../redux/authActions.ts";
+import { completeOnboarding } from "../../../redux/authActions.ts";
 
 interface FormData {
   phone_number: string;
