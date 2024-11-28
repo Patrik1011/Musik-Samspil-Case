@@ -3,13 +3,15 @@ import { ApplicationResponse, applicationService } from "../../services/Applicat
 import { useParams } from "react-router-dom";
 import { Headline } from "../Headline.tsx";
 import { ConfirmationModal } from "../ConfirmationModal.tsx";
+import { ApplicationStatus } from "../../enums/ApplicationStatus";
 
 export const Applications = () => {
   const { id } = useParams();
   const [applications, setApplications] = useState<ApplicationResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedApplicationId] = useState<string | null>(null);
+  const [selectedStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (id) {
@@ -26,21 +28,32 @@ export const Applications = () => {
     }
   };
 
-  const openModal = (applicationId: string, status: string) => {
-    setSelectedApplicationId(applicationId);
-    setSelectedStatus(status);
-    setIsModalOpen(true);
-  };
-
   const handleApplicationConfirm = async () => {
     if (!selectedApplicationId || !selectedStatus) return;
     console.log(selectedApplicationId, selectedStatus);
     try {
-      await applicationService.changeApplicationStatus(selectedApplicationId, selectedStatus);
+      await applicationService.changeApplicationStatus(
+        selectedApplicationId,
+        selectedStatus as ApplicationStatus,
+      );
       setIsModalOpen(false);
       if (id) fetchApplications(id);
     } catch (error) {
       console.error("Failed to update application status:", error);
+    }
+  };
+
+  const handleStatusChange = async (applicationId: string, status: ApplicationStatus) => {
+    setLoading((prev) => ({ ...prev, [applicationId]: true }));
+    try {
+      await applicationService.changeApplicationStatus(applicationId, status);
+      setApplications((prev) =>
+        prev.map((app) => (app._id === applicationId ? { ...app, status } : app)),
+      );
+    } catch (error) {
+      console.error("Failed to update application status:", error);
+    } finally {
+      setLoading((prev) => ({ ...prev, [applicationId]: false }));
     }
   };
 
@@ -55,6 +68,7 @@ export const Applications = () => {
             <th className="border border-gray-300 px-4 py-2">Email</th>
             <th className="border border-gray-300 px-4 py-2">Phone Number</th>
             <th className="border border-gray-300 px-4 py-2">Instrument</th>
+            <th className="border border-gray-300 px-4 py-2">Status</th>
             <th className="border border-gray-300 px-4 py-2">Actions</th>
           </tr>
         </thead>
@@ -76,32 +90,31 @@ export const Applications = () => {
               <td className="border border-gray-300 px-4 py-2">
                 {application.instrument || "N/A"}
               </td>
-              <td className="border border-Pgray-300 px-4 py-2 flex gap-2">
-                {application.status === "pending" ? (
-                  <>
+              <td className="border border-gray-300 px-4 py-2">{application.status}</td>
+              <td className="border border-gray-300 px-4 py-2">
+                {application.status === ApplicationStatus.Pending && (
+                  <div className="flex gap-2">
                     <button
                       type="button"
-                      onClick={() => openModal(application._id, "approved")}
-                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                      onClick={() =>
+                        handleStatusChange(application._id, ApplicationStatus.Approved)
+                      }
+                      disabled={loading[application._id]}
+                      className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
                     >
                       Accept
                     </button>
                     <button
                       type="button"
-                      onClick={() => openModal(application._id, "rejected")}
-                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                      onClick={() =>
+                        handleStatusChange(application._id, ApplicationStatus.Rejected)
+                      }
+                      disabled={loading[application._id]}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
                     >
                       Reject
                     </button>
-                  </>
-                ) : (
-                  <span
-                    className={`px-4 py-2 rounded ${
-                      application.status === "approved" ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {application.status}
-                  </span>
+                  </div>
                 )}
               </td>
             </tr>

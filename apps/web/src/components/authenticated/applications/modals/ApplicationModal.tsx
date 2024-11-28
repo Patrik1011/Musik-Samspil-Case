@@ -9,9 +9,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (data: ApplicationRequest) => Promise<void>;
+  openPositions: Instrument[];
 }
 
-export const ApplicationModal = ({ isOpen, onClose, onConfirm }: Props) => {
+export const ApplicationModal = ({ isOpen, onClose, onConfirm, openPositions }: Props) => {
   const [instrument, setInstrument] = useState<Instrument | "">("");
   const [message, setMessage] = useState("");
 
@@ -43,7 +44,7 @@ export const ApplicationModal = ({ isOpen, onClose, onConfirm }: Props) => {
             <Select
               label="Select an instrument"
               onChange={(e) => setInstrument(e.target.value as Instrument | "")}
-              options={Object.values(Instrument).map((inst) => inst.toString())}
+              options={openPositions.map((inst) => inst.toString())}
             />
 
             <TextArea

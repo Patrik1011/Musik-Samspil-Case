@@ -5,10 +5,13 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from "@nestjs/common";
+
 import { Application } from "../../schemas/application.schema";
 import { Types, MongooseError } from "mongoose";
 import { ApplicationStatus, Instrument } from "../../utils/types/enums";
 import { Post } from "../../schemas/post.schema";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
+import { startSession } from "mongoose";
 
 @Injectable()
 export class ApplicationService {
@@ -94,20 +97,50 @@ export class ApplicationService {
   }
 
   async changeApplicationStatus(applicationId: string, status: ApplicationStatus) {
+    const session = await startSession();
+    session.startTransaction();
+
     try {
-      const application = await Application.findByIdAndUpdate(
-        applicationId,
-        { status },
-        { new: true },
-      );
+      const application = await Application.findById(applicationId).populate("post");
 
       if (!application) {
         throw new NotFoundException("Application not found");
       }
 
+      application.status = status;
+      await application.save({ session });
+
+      if (status === ApplicationStatus.approved) {
+        const post = await Post.findById(application.post);
+        if (!post) {
+          throw new NotFoundException("Post not found");
+        }
+
+        await EnsembleMembership.create(
+          [
+            {
+              ensemble: post.ensemble_id,
+              ensemble_id: post.ensemble_id.toString(),
+              member: application.applicant,
+              member_id: application.applicant.toString(),
+              instrument: application.instrument,
+              is_host: false,
+            },
+          ],
+          { session },
+        );
+      }
+
+      await session.commitTransaction();
       return application;
     } catch (error) {
+      await session.abortTransaction();
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new InternalServerErrorException(error);
+    } finally {
+      session.endSession();
     }
   }
 }

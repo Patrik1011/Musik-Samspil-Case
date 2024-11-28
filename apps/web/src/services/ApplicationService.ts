@@ -1,5 +1,6 @@
 import { getRequest, patchRequest, postRequest } from "../utils/api.ts";
 import { Instrument } from "../enums/Instrument";
+import { ApplicationStatus } from "../enums/ApplicationStatus";
 
 export interface Applicant {
   first_name: string;
@@ -13,6 +14,7 @@ export interface ApplicationResponse {
   status: string;
   instrument: Instrument;
   applicant: Applicant;
+  message?: string;
 }
 
 export interface ApplicationRequest extends Record<string, unknown> {
@@ -41,14 +43,14 @@ export const applicationService = {
     }
   },
 
-  changeApplicationStatus: async (applicationId: string, status: string) => {
+  changeApplicationStatus: async (applicationId: string, status: ApplicationStatus) => {
     try {
       const response = await patchRequest(`/application/${applicationId}/status`, {
         status,
       });
-      return response;
+      return response as ApplicationResponse;
     } catch (error) {
-      console.error(error);
+      console.error("Error changing application status:", error);
       throw error;
     }
   },
