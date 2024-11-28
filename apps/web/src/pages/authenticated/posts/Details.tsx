@@ -1,4 +1,4 @@
-import { DetailsComponent } from "../../../components/common/posts/DetailsComponent.tsx";
+import { DetailsComponent } from "../../../components/authenticated/posts/DetailsComponent.tsx";
 
 const PostDetails: React.FC = () => {
   return (

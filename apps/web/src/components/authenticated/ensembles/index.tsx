@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Ensemble, ensembleService } from "../../../services/EnsembleService";
 import { CreateEnsembleModal } from "./modals/CreateEnsembleModal";
 import { useNavigate } from "react-router-dom";
-import CreatePostButton from "../../common/posts/CreatePostButton";
+import CreatePostButton from "../posts/CreatePostButton";
 
 export const Ensembles = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);

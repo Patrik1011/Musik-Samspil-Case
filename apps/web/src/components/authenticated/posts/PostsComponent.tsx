@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { PostDetails, postService } from "../../../services/PostService";
-import { applicationService } from "../../../services/ApplicationService";
-import { ApplicationModal } from "../../authenticated/applications/modals/ApplicationModal";
-import { ApplicationRequest } from "../../../services/ApplicationService";
+import { PostDetails, postService } from "../../../services/PostService.ts";
+import { applicationService } from "../../../services/ApplicationService.ts";
+import { ApplicationModal } from "../applications/modals/ApplicationModal.tsx";
+import { ApplicationRequest } from "../../../services/ApplicationService.ts";
 
 export const PostsComponent = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);

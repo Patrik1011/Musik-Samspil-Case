@@ -2,6 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { CreateEnsembleInput, ensembleService } from "../../../../services/EnsembleService";
 import { useState } from "react";
 import { Instrument } from "../../../../enums/Instrument";
+import { Button } from "../../../Button.tsx";
 
 interface Props {
   isOpen: boolean;
@@ -196,19 +197,13 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
             </div>
 
             <div className="mt-4 flex justify-end space-x-2">
-              <button
+              <Button
+                title="Cancel"
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm font-medium bg-steel-blue text-white border border-transparent rounded-md`"
-              >
-                Create
-              </button>
+                className="bg-gray-50 text-gray-900"
+              />
+              <Button title="Create" type="submit" className="bg-steel-blue text-white" />
             </div>
           </form>
         </Dialog.Panel>
