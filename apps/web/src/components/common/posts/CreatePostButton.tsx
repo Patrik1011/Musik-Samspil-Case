@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CreatePostModal } from "./modals/CreatePostModal";
 import { Button } from "../../Button";
+
 interface Props {
   ensembleId: string;
 }

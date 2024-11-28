@@ -14,7 +14,7 @@ export interface Ensemble {
   is_active: boolean;
 }
 
-export interface CreateEnsembleInput {
+export interface CreateEnsembleInput extends Record<string, unknown> {
   name: string;
   description: string;
   location: {
@@ -33,18 +33,7 @@ export const ensembleService = {
   },
 
   createEnsemble: async (data: CreateEnsembleInput): Promise<Ensemble> => {
-    const requestData = {
-      name: data.name,
-      description: data.description,
-      location: {
-        city: data.location.city,
-        country: data.location.country,
-        address: data.location.address,
-      },
-      open_positions: data.openPositions,
-      is_active: data.isActive,
-    };
-    const response = await postRequest("/ensemble", requestData);
+    const response = await postRequest("/ensemble", data);
     return response as Ensemble;
   },
 
