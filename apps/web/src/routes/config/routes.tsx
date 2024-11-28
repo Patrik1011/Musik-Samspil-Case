@@ -5,7 +5,7 @@ import Profile from "../../pages/authenticated/profile";
 import Onboarding from "../../pages/authenticated/onboarding";
 import Ensembles from "../../pages/authenticated/ensembles";
 import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
-import PostsApplications from "../../pages/authenticated/Posts";
+import PostsApplications from "../../pages/authenticated/posts/applications";
 import React from "react";
 import PostDetails from "../../pages/authenticated/posts/Details.tsx";
 import Posts from "../../pages/authenticated/posts";
