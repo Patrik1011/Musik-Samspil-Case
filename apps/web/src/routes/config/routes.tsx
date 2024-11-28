@@ -5,7 +5,7 @@ import Profile from "../../pages/authenticated/profile";
 import Onboarding from "../../pages/authenticated/onboarding";
 import Ensembles from "../../pages/authenticated/ensembles";
 import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
-import PostApplications from "../../pages/authenticated/posts/applications";
+import PostsApplications from "../../pages/authenticated/Posts";
 import React from "react";
 import PostDetails from "../../pages/authenticated/posts/Details.tsx";
 import Posts from "../../pages/authenticated/posts";
@@ -40,7 +40,7 @@ export const routes: RouteConfig[] = [
   },
   {
     path: "/post-application/:id",
-    component: <PostApplications />,
+    component: <PostsApplications />,
     protected: true,
   },
   {

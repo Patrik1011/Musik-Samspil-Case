@@ -1,10 +1,10 @@
 import React from "react";
-import { UserPosts } from "../../../components/authenticated/posts/applications/index.tsx";
+import { Applications } from "../../../components/authenticated/applications";
 
 const PostApplications: React.FC = () => {
   return (
     <div>
-      <UserPosts />
+      <Applications />
     </div>
   );
 };

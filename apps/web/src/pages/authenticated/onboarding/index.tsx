@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "../../unauthenticated/auth/Layout.tsx";
-import { Onboarding } from "../../../components/authenticated/onboarding";
+import { Onboarding } from "../../../components/authenticated/onboarding/Onboarding.tsx";
 
 const Index: React.FC = () => {
   return (

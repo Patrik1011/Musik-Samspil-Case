@@ -1,12 +1,12 @@
 import React from "react";
-import { Applications } from "../../components/authenticated/applications/index.tsx";
+import { UserPosts } from "../../components/authenticated/posts/applications";
 
-const PostApplications: React.FC = () => {
+const PostsPage: React.FC = () => {
   return (
     <div>
-      <Applications />
+      <UserPosts />
     </div>
   );
 };
 
-export default PostApplications;
+export default PostsPage;
