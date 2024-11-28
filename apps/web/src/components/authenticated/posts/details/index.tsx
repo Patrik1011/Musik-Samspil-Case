@@ -149,6 +149,7 @@ export const DetailsComponent = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleApplyForPost}
+        open_positions={post.ensemble_id?.open_positions || []}
       />
     </div>
   );

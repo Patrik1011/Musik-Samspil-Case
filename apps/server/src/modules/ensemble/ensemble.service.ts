@@ -39,7 +39,7 @@ export class EnsembleService {
             name: createEnsembleDto.name,
             description: createEnsembleDto.description,
             location: createEnsembleDto.location,
-            open_positions: createEnsembleDto.openPositions || [],
+            open_positions: createEnsembleDto.open_positions || [],
             is_active: createEnsembleDto.isActive,
           },
         ],

@@ -5,8 +5,10 @@ export interface EnsembleMember {
   _id: string;
   user_id: string;
   ensemble_id: string;
-  first_name: string;
-  last_name: string;
+  member: {
+    first_name: string;
+    last_name: string;
+  };
   instrument: Instrument;
   is_host: boolean;
 }
@@ -20,7 +22,7 @@ export interface Ensemble {
     country: string;
     address: string;
   };
-  openPositions: Instrument[];
+  open_positions: Instrument[];
   isActive: boolean;
   members: EnsembleMember[];
 }
@@ -33,7 +35,7 @@ export interface CreateEnsembleInput extends Record<string, unknown> {
     country: string;
     address: string;
   };
-  openPositions: Instrument[];
+  open_positions: Instrument[];
   isActive: boolean;
 }
 

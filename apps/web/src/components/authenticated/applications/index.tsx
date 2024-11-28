@@ -68,6 +68,7 @@ export const Applications = () => {
             <th className="border border-gray-300 px-4 py-2">Email</th>
             <th className="border border-gray-300 px-4 py-2">Phone Number</th>
             <th className="border border-gray-300 px-4 py-2">Instrument</th>
+            <th className="border border-gray-300 px-4 py-2">Message</th>
             <th className="border border-gray-300 px-4 py-2">Status</th>
             <th className="border border-gray-300 px-4 py-2">Actions</th>
           </tr>
@@ -89,6 +90,9 @@ export const Applications = () => {
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {application.instrument || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {application.message || "No message"}
               </td>
               <td className="border border-gray-300 px-4 py-2">{application.status}</td>
               <td className="border border-gray-300 px-4 py-2">
