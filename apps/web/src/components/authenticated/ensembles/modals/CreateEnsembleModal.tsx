@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react";
-import { CreateEnsembleInput, ensembleService } from "../../../../services/EnsembleService"; 
+import { CreateEnsembleInput, ensembleService } from "../../../../services/EnsembleService";
 import { useState } from "react";
 import { Instrument } from "../../../../enums/Instrument";
 
@@ -35,27 +35,27 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
       location: {
         ...prevData.location,
-        [name]: value
-      }
+        [name]: value,
+      },
     }));
   };
 
   const handleOpenPositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedInstrument = e.target.value as Instrument;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      openPositions: [...prevData.openPositions, selectedInstrument]
+      openPositions: [...prevData.openPositions, selectedInstrument],
     }));
   };
 
   const removeOpenPosition = (index: number) => {
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      openPositions: prevData.openPositions.filter((_, i) => i !== index)
+      openPositions: prevData.openPositions.filter((_, i) => i !== index),
     }));
   };
 
@@ -65,23 +65,32 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="mx-auto max-w-xl rounded bg-white p-6">
           <Dialog.Title className="text-lg font-medium mb-4">Create New Ensemble</Dialog.Title>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label htmlFor="ensemble-name" className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
               <input
+                id="ensemble-name"
                 type="text"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                name="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label
+                htmlFor="ensemble-description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
               <textarea
-                required
+                id="ensemble-description"
+                name="description"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -92,8 +101,14 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
               <h3 className="text-sm font-medium text-gray-700">Location</h3>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">City</label>
+                  <label
+                    htmlFor="ensemble-city"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    City
+                  </label>
                   <input
+                    id="ensemble-city"
                     type="text"
                     name="city"
                     required
@@ -103,8 +118,14 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Country</label>
+                  <label
+                    htmlFor="ensemble-country"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Country
+                  </label>
                   <input
+                    id="ensemble-country"
                     type="text"
                     name="country"
                     required
@@ -114,8 +135,14 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Address</label>
+                  <label
+                    htmlFor="ensemble-address"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Address
+                  </label>
                   <input
+                    id="ensemble-address"
                     type="text"
                     name="address"
                     required
@@ -128,13 +155,21 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Open Positions</label>
+              <label
+                htmlFor="ensemble-open-positions"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Open Positions
+              </label>
               <select
+                id="ensemble-open-positions"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 onChange={handleOpenPositionChange}
                 value=""
               >
-                <option value="" disabled>Select an instrument</option>
+                <option value="" disabled>
+                  Select an instrument
+                </option>
                 {Object.values(Instrument).map((instrument) => (
                   <option key={instrument} value={instrument}>
                     {instrument}
@@ -143,7 +178,10 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
               </select>
               <div className="mt-2 space-y-2">
                 {formData.openPositions.map((position, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                  <div
+                    key={position}
+                    className="flex items-center justify-between bg-gray-100 p-2 rounded"
+                  >
                     <span>{position}</span>
                     <button
                       type="button"

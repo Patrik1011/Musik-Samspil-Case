@@ -1,4 +1,4 @@
-import { getRequest, postRequest } from "../utils/api";
+import { getRequest, postRequest, putRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
 
 export interface Ensemble {
@@ -14,7 +14,7 @@ export interface Ensemble {
   is_active: boolean;
 }
 
-export interface CreateEnsembleInput extends Record<string, any> {
+export interface CreateEnsembleInput {
   name: string;
   description: string;
   location: {
@@ -33,12 +33,28 @@ export const ensembleService = {
   },
 
   createEnsemble: async (data: CreateEnsembleInput): Promise<Ensemble> => {
-    const response = await postRequest("/ensemble", data);
+    const requestData = {
+      name: data.name,
+      description: data.description,
+      location: {
+        city: data.location.city,
+        country: data.location.country,
+        address: data.location.address,
+      },
+      open_positions: data.openPositions,
+      is_active: data.isActive,
+    };
+    const response = await postRequest("/ensemble", requestData);
     return response as Ensemble;
   },
 
   getEnsemble: async (id: string): Promise<Ensemble> => {
-   const response = await getRequest(`/ensemble/${id}`);
-   return response as Ensemble;
- },
+    const response = await getRequest(`/ensemble/${id}`);
+    return response as Ensemble;
+  },
+
+  updateEnsemble: async (id: string, data: Partial<Ensemble>): Promise<Ensemble> => {
+    const response = await putRequest(`/ensemble/${id}`, data);
+    return response as Ensemble;
+  },
 };

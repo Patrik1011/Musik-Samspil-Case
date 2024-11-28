@@ -1,25 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Ensemble, ensembleService } from "../../services/EnsembleService";
 import { CreateEnsembleModal } from "../../components/authenticated/ensembles/modals/CreateEnsembleModal";
 import { useNavigate } from "react-router-dom";
+import CreatePostButton from "../../components/common/posts/CreatePostButton.tsx";
 
 const EnsemblesPage = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const fetchEnsembles = async () => {
+  const fetchEnsembles = useCallback(async () => {
     try {
       const data = await ensembleService.getHostedEnsembles();
       setEnsembles(data);
     } catch (error) {
       console.error("Failed to fetch ensembles:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchEnsembles();
-  }, []);
+  }, [fetchEnsembles]);
 
   const handleEnsembleClick = (ensembleId: string) => {
     navigate(`/ensembles/${ensembleId}`);
@@ -30,6 +31,7 @@ const EnsemblesPage = () => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Your Ensembles</h1>
         <button
+          type="button"
           onClick={() => setIsModalOpen(true)}
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
         >
@@ -37,7 +39,7 @@ const EnsemblesPage = () => {
         </button>
       </div>
 
-      <CreateEnsembleModal 
+      <CreateEnsembleModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchEnsembles}
@@ -45,10 +47,17 @@ const EnsemblesPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {ensembles.map((ensemble) => (
-          <div 
-            key={ensemble._id} 
+          <button
+            type="button"
+            key={ensemble._id}
             onClick={() => handleEnsembleClick(ensemble._id)}
-            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 cursor-pointer transition-transform hover:scale-105"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleEnsembleClick(ensemble._id);
+              }
+            }}
+            className="w-full text-left bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 cursor-pointer transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900">{ensemble.name}</h2>
@@ -72,7 +81,10 @@ const EnsemblesPage = () => {
                 </div>
               )}
             </div>
-          </div>
+            <div>
+              <CreatePostButton ensembleId={ensemble._id} />
+            </div>
+          </button>
         ))}
       </div>
     </div>

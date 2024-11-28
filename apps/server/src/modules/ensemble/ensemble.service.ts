@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -15,7 +14,6 @@ import mongoose from "mongoose";
 
 @Injectable()
 export class EnsembleService {
-  // In use
   async findUserHostedEnsembles(userId: string) {
     try {
       const hostMemberships = await EnsembleMembership.find({
@@ -35,21 +33,31 @@ export class EnsembleService {
     session.startTransaction();
 
     try {
-      const ensemble = await Ensemble.create([{
-        name: createEnsembleDto.name,
-        description: createEnsembleDto.description,
-        location: createEnsembleDto.location,
-        open_positions: createEnsembleDto.openPositions || [],
-        is_active: createEnsembleDto.isActive,
-      }], { session });
+      const ensemble = await Ensemble.create(
+        [
+          {
+            name: createEnsembleDto.name,
+            description: createEnsembleDto.description,
+            location: createEnsembleDto.location,
+            open_positions: createEnsembleDto.openPositions || [],
+            is_active: createEnsembleDto.isActive,
+          },
+        ],
+        { session },
+      );
 
-      await EnsembleMembership.create([{
-        ensemble: ensemble[0]._id,
-        ensemble_id: ensemble[0]._id.toString(),
-        member: new mongoose.Types.ObjectId(userId),
-        member_id: userId,
-        is_host: true,
-      }], { session });
+      await EnsembleMembership.create(
+        [
+          {
+            ensemble: ensemble[0]._id,
+            ensemble_id: ensemble[0]._id.toString(),
+            member: new mongoose.Types.ObjectId(userId),
+            member_id: userId,
+            is_host: true,
+          },
+        ],
+        { session },
+      );
 
       await session.commitTransaction();
       return ensemble[0];
@@ -73,7 +81,7 @@ export class EnsembleService {
       }
 
       const ensemble = await Ensemble.findById(id);
-      
+
       if (!ensemble) {
         throw new NotFoundException("Ensemble not found");
       }
@@ -101,8 +109,17 @@ export class EnsembleService {
 
       const updatedEnsemble = await Ensemble.findByIdAndUpdate(
         id,
-        { $set: updateEnsembleDto },
-        { new: true }
+        {
+          $set: {
+            ...(updateEnsembleDto.name && { name: updateEnsembleDto.name }),
+            ...(updateEnsembleDto.description && { description: updateEnsembleDto.description }),
+            ...(updateEnsembleDto.location && { location: updateEnsembleDto.location }),
+            ...(updateEnsembleDto.open_positions && {
+              open_positions: updateEnsembleDto.open_positions,
+            }),
+          },
+        },
+        { new: true },
       );
 
       if (!updatedEnsemble) {

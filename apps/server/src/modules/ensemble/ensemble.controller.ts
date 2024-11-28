@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Put,
-  UseGuards,
-  Request,
-  BadRequestException,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, UseGuards, Request, Put } from "@nestjs/common";
 
 import { EnsembleService } from "./ensemble.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -49,5 +39,16 @@ export class EnsembleController {
   @ApiOkResponse()
   async create(@Request() req: AuthenticatedRequest, @Body() createEnsembleDto: CreateEnsembleDto) {
     return this.ensembleService.createWithHost(createEnsembleDto, req.user._id.toString());
+  }
+
+  @Put(":id")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async update(
+    @Param("id") id: string,
+    @Request() req: AuthenticatedRequest,
+    @Body() updateEnsembleDto: UpdateEnsembleDto,
+  ) {
+    return this.ensembleService.update(id, updateEnsembleDto, req.user._id.toString());
   }
 }
