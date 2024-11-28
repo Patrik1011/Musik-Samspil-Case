@@ -60,21 +60,23 @@ export const Applications = () => {
         </thead>
         <tbody>
           {applications.map((application) => (
-            <tr key={application.applicant_id.email}>
+            <tr key={application._id}>
               <td className="border border-gray-300 px-4 py-2">
-                {application.applicant_id.first_name}
+                {application.applicant?.first_name || "N/A"}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {application.applicant_id.last_name}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">{application.applicant_id.email}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                {application.applicant_id.phone_number}
+                {application.applicant?.last_name || "N/A"}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {application.applicant_id.instrument}
+                {application.applicant?.email || "N/A"}
               </td>
-              <td className="border border-gray-300 px-4 py-2 flex gap-2">
+              <td className="border border-gray-300 px-4 py-2">
+                {application.applicant?.phone_number || "N/A"}
+              </td>
+              <td className="border border-gray-300 px-4 py-2">
+                {application.instrument || "N/A"}
+              </td>
+              <td className="border border-Pgray-300 px-4 py-2 flex gap-2">
                 {application.status === "pending" ? (
                   <>
                     <button
