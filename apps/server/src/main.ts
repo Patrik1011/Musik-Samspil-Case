@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: "http://localhost:5173",
-    methods: "GET,PUT,POST,DELETE",
+    methods: "GET,PUT,POST,DELETE,PATCH",
     credentials: true,
   });
 
@@ -20,7 +20,7 @@ async function bootstrap() {
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
-bootstrap().catch((error) => {
+bootstrap().catch(error => {
   console.error("Error starting application:", error);
   process.exit(1);
 });

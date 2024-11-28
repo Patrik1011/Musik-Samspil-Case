@@ -5,10 +5,16 @@ import {
 } from "../../services/ApplicationService.ts";
 import { useParams } from "react-router-dom";
 import { Headline } from "../Headline.tsx";
+import { ConfirmationModal } from "../ConfirmationModal.tsx";
 
 export const Applications = () => {
   const { id } = useParams();
   const [applications, setApplications] = useState<ApplicationResponse[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedApplicationId, setSelectedApplicationId] = useState<
+    string | null
+  >(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -22,6 +28,27 @@ export const Applications = () => {
       setApplications(data);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const openModal = (applicationId: string, status: string) => {
+    setSelectedApplicationId(applicationId);
+    setSelectedStatus(status);
+    setIsModalOpen(true);
+  };
+
+  const handleApplicationConfirm = async () => {
+    if (!selectedApplicationId || !selectedStatus) return;
+    console.log(selectedApplicationId, selectedStatus);
+    try {
+      await applicationService.changeApplicationStatus(
+        selectedApplicationId,
+        selectedStatus,
+      );
+      setIsModalOpen(false);
+      if (id) fetchApplications(id);
+    } catch (error) {
+      console.error("Failed to update application status:");
     }
   };
 
@@ -58,17 +85,45 @@ export const Applications = () => {
                 {application.applicant_id.instrument}
               </td>
               <td className="border border-gray-300 px-4 py-2 flex gap-2">
-                <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                  Accept
-                </button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                  Reject
-                </button>
+                {application.status === "pending" ? (
+                  <>
+                    <button
+                      onClick={() => openModal(application._id, "approved")}
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => openModal(application._id, "rejected")}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    >
+                      Reject
+                    </button>
+                  </>
+                ) : (
+                  <span
+                    className={`px-4 py-2 rounded ${
+                      application.status === "approved"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {application.status}
+                  </span>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <ConfirmationModal
+        title="Application Confirmation"
+        message={`Are you sure you want to ${selectedStatus} this application?`}
+        isOpen={isModalOpen}
+        onConfirm={handleApplicationConfirm}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

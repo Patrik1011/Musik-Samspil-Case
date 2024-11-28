@@ -83,3 +83,23 @@ export const getRequest = async <T>(endpoint: string): Promise<T> => {
   }
   return response.json();
 };
+
+export const patchRequest = async <T>(
+  endpoint: string,
+  body: RequestBody,
+): Promise<T> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from PatchRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};

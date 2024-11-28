@@ -1,4 +1,4 @@
-import { getRequest, postRequest } from "../utils/api.ts";
+import { getRequest, patchRequest, postRequest } from "../utils/api.ts";
 
 export interface Applicant {
   first_name: string;
@@ -9,6 +9,8 @@ export interface Applicant {
 }
 
 export interface ApplicationResponse {
+  _id: string;
+  status: string;
   applicant_id: Applicant;
 }
 
@@ -29,6 +31,21 @@ export const applicationService = {
     try {
       const response = await getRequest(`/application/post/${postId}`);
       return response as ApplicationResponse[];
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+
+  changeApplicationStatus: async (applicationId: string, status: string) => {
+    try {
+      const response = await patchRequest(
+        `/application/${applicationId}/status`,
+        {
+          status,
+        },
+      );
+      return response;
     } catch (error) {
       console.error(error);
       throw error;
