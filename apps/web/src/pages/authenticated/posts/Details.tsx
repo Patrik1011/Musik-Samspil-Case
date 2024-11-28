@@ -1,4 +1,4 @@
-import { DetailsComponent } from "../../../components/common/posts/DetailsComponent";
+import { DetailsComponent } from "../../../components/authenticated/posts/details";
 
 const PostDetails: React.FC = () => {
   return (

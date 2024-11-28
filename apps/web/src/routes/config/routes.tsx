@@ -1,14 +1,14 @@
 import Login from "../../pages/unauthenticated/auth/Login";
 import Register from "../../pages/unauthenticated/auth/Register";
-import Home from "../../pages/authenticated/Home";
-import Profile from "../../pages/authenticated/Profile";
-import Onboarding from "../../pages/authenticated/OnBoarding";
-import Ensembles from "../../pages/authenticated/Ensembles";
+import Home from "../../pages/authenticated/home";
+import Profile from "../../pages/authenticated/profile";
+import Onboarding from "../../pages/authenticated/onboarding";
+import Ensembles from "../../pages/authenticated/ensembles";
 import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
-import Posts from "../../pages/common/posts/UserPosts.tsx";
+import PostsApplications from "../../pages/authenticated/posts/applications";
 import React from "react";
-import PostDetails from "../../pages/common/posts/Details.tsx";
-import PostApplications from "../../pages/authenticated/Posts.tsx";
+import PostDetails from "../../pages/authenticated/posts/Details.tsx";
+import Posts from "../../pages/authenticated/posts";
 
 type RouteConfig = {
   path: string;
@@ -40,7 +40,7 @@ export const routes: RouteConfig[] = [
   },
   {
     path: "/post-application/:id",
-    component: <PostApplications />,
+    component: <PostsApplications />,
     protected: true,
   },
   {

@@ -13,13 +13,7 @@ import { PostService } from "./post.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Types } from "mongoose";
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    _id: Types.ObjectId;
-    email: string;
-  };
-}
+import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
 
 @Controller("post")
 @ApiTags("post")

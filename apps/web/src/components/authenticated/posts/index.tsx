@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { PostDetails, postService } from "../../../services/PostService";
-import { applicationService } from "../../../services/ApplicationService";
-import { ApplicationModal } from "../../authenticated/applications/modals/ApplicationModal";
-import { ApplicationRequest } from "../../../services/ApplicationService";
+import { PostDetails, postService } from "../../../services/PostService.ts";
+import { applicationService } from "../../../services/ApplicationService.ts";
+import { ApplicationModal } from "../applications/modals/ApplicationModal.tsx";
+import { ApplicationRequest } from "../../../services/ApplicationService.ts";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store.ts";
 
-export const PostsComponent = () => {
+export const Posts = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
   const [selectedPost, setSelectedPost] = useState<PostDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
     fetchPosts();
@@ -80,13 +83,22 @@ export const PostsComponent = () => {
               )}
             </div>
 
-            <button
-              type="button"
-              onClick={() => handleApply(post)}
-              className="mt-6 w-full bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-opacity-90"
-            >
-              Apply
-            </button>
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={() => handleApply(post)}
+                className="mt-6 w-full bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-opacity-90"
+              >
+                Apply
+              </button>
+            ) : (
+              <a
+                href="/login"
+                className="mt-6 w-full bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-opacity-90 text-center block"
+              >
+                Sign in
+              </a>
+            )}
           </div>
         ))}
       </div>

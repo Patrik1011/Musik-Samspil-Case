@@ -114,7 +114,7 @@ const Register: React.FC = () => {
           value={registerData.password}
           onChange={handleChange}
         />
-        <Button type="submit" title="Sign up" />
+        <Button type="submit" title="Sign up" className="bg-steel-blue text-white w-full" />
         {errors.general && <div className="text-red-500 text-sm text-center">{errors.general}</div>}
       </div>
     </form>

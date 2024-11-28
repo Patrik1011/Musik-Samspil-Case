@@ -1,9 +1,9 @@
-import { Headline } from "../../Headline.tsx";
-import { Post, postService } from "../../../services/PostService.ts";
+import { Headline } from "../../../Headline.tsx";
+import { Post, postService } from "../../../../services/PostService.ts";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const UserPostsComponent = () => {
+export const UserPosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const navigate = useNavigate();
 

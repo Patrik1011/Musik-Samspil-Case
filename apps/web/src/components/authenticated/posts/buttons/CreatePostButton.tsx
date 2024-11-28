@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { CreatePostModal } from "./modals/CreatePostModal";
-import { Button } from "../../Button";
+import { CreatePostModal } from "../modals/CreatePostModal.tsx";
+import { Button } from "../../../Button.tsx";
 
 interface Props {
   ensembleId: string;
@@ -17,6 +17,7 @@ const CreatePostButton = ({ ensembleId }: Props) => {
           e.stopPropagation();
           setIsCreatePostModalOpen(true);
         }}
+        className="bg-steel-blue text-white"
       />
 
       <CreatePostModal

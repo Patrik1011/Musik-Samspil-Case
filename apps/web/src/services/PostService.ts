@@ -1,4 +1,5 @@
 import { getRequest, postRequest } from "../utils/api";
+import { Instrument } from "../enums/Instrument";
 
 export interface Post {
   _id: string;
@@ -24,7 +25,7 @@ export interface PostDetails extends Post {
     _id: string;
     name: string;
     description: string;
-    open_positions: string[];
+    open_positions: Instrument[];
     is_active: boolean;
     updatedAt: string;
   };
@@ -44,9 +45,9 @@ export const postService = {
     return response as Post;
   },
 
-  getPosts: async (): Promise<Post[]> => {
+  getPosts: async (): Promise<PostDetails[]> => {
     const response = await getRequest("/post");
-    return response as Post[];
+    return response as PostDetails[];
   },
 
   getPostById: async (id: string): Promise<PostDetails> => {
