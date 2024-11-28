@@ -9,6 +9,7 @@ import { resolve } from "node:path";
 import { EnsembleModule } from "./modules/ensemble/ensemble.module";
 import { EnsembleMembershipModule } from "./modules/ensemble-membership/ensemble-membership.module";
 import { PostModule } from "./modules/post/post.module";
+import { ApplicationModule } from "./modules/application/application.module";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PostModule } from "./modules/post/post.module";
     UsersModule,
     EnsembleModule,
     EnsembleMembershipModule,
+    ApplicationModule,
     PostModule,
   ],
   controllers: [AppController],

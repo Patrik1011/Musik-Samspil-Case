@@ -45,4 +45,25 @@ export class PostController {
   async getAllPosts() {
     return this.postService.getAllPosts();
   }
+
+  @Get(":id")
+  //@UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getPostById(@Param("id") postId: string) {
+    if (!Types.ObjectId.isValid(postId)) {
+      throw new BadRequestException("Invalid post ID");
+    }
+    return this.postService.getPostById(postId);
+  }
+
+  @Get("user/posts")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getPostsByUserId(@Request() req: AuthenticatedRequest) {
+    const userId = req.user._id.toString();
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+    return this.postService.getPostsByUserId(userId);
+  }
 }
