@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Ensemble, ensembleService } from "../../../services/EnsembleService";
+import { Ensemble, EnsembleMember, ensembleService } from "../../../services/EnsembleService";
 import { Instrument } from "../../../enums/Instrument";
 
 const EnsembleDetail = () => {

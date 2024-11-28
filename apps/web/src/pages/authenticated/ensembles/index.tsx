@@ -1,4 +1,4 @@
-import { Ensembles } from "../../components/authenticated/ensembles";
+import { Ensembles } from "../../../components/authenticated/ensembles";
 
 const EnsemblesPage = () => {
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { UserEntity } from "../../utils/types";
-import { userService } from "../../services/UserService";
+import { UserEntity } from "../../../utils/types.ts";
+import { userService } from "../../../services/UserService.ts";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage: React.FC = () => {
