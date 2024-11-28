@@ -22,7 +22,7 @@ export class CreateEnsembleDto {
 
   @IsArray()
   @IsEnum(Instrument, { each: true })
-  openPositions?: Instrument[];
+  open_positions?: Instrument[];
 
   @IsBoolean()
   @IsNotEmpty()

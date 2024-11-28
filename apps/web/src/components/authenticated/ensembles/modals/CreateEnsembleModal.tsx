@@ -21,7 +21,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess, ensembles }: P
       country: "",
       address: "",
     },
-    openPositions: [] as Instrument[],
+    open_positions: [] as Instrument[],
     isActive: true,
   });
 
@@ -64,14 +64,14 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess, ensembles }: P
     const selectedInstrument = e.target.value as Instrument;
     setFormData((prevData) => ({
       ...prevData,
-      openPositions: [...prevData.openPositions, selectedInstrument],
+      open_positions: [...prevData.open_positions, selectedInstrument],
     }));
   };
 
   const removeOpenPosition = (index: number) => {
     setFormData((prevData) => ({
       ...prevData,
-      openPositions: prevData.openPositions.filter((_, i) => i !== index),
+      open_positions: prevData.open_positions.filter((_, i) => i !== index),
     }));
   };
 
@@ -194,7 +194,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess, ensembles }: P
                 ))}
               </select>
               <div className="mt-2 space-y-2">
-                {formData.openPositions.map((position, index) => (
+                {formData.open_positions.map((position, index) => (
                   <div
                     key={position}
                     className="flex items-center justify-between bg-gray-100 p-2 rounded"

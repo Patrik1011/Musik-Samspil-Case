@@ -41,7 +41,7 @@ export type Ensemble = {
     country: string;
     address: string;
   };
-  openPositions: Instrument[];
+  open_positions: Instrument[];
   isActive: boolean;
 };
 

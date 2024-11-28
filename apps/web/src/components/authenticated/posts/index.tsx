@@ -111,7 +111,7 @@ export const Posts = () => {
             setSelectedPost(null);
           }}
           onConfirm={handleApplicationSubmit}
-          openPositions={selectedPost.ensemble_id?.open_positions || []}
+          open_positions={selectedPost.ensemble_id?.open_positions || []}
         />
       )}
     </div>

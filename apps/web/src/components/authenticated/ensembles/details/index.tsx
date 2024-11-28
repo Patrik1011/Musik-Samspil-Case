@@ -75,10 +75,10 @@ export const EnsembleDetail = () => {
     }));
   };
 
-  const removeOpenPosition = (index: number) => {
+  const removeOpenPosition = (positionToRemove: Instrument) => {
     setFormData((prev) => ({
       ...prev,
-      open_positions: prev.open_positions?.filter((_, i) => i !== index),
+      open_positions: prev.open_positions?.filter((position) => position !== positionToRemove),
     }));
   };
 
