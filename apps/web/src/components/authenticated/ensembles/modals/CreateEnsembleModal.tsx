@@ -3,14 +3,16 @@ import { CreateEnsembleInput, ensembleService } from "../../../../services/Ensem
 import { useState } from "react";
 import { Instrument } from "../../../../enums/Instrument";
 import { Button } from "../../../Button.tsx";
+import { Ensemble } from "../../../../utils/types";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  ensembles: Ensemble[];
 }
 
-export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
+export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess, ensembles }: Props) => {
   const [formData, setFormData] = useState<CreateEnsembleInput>({
     name: "",
     description: "",
@@ -23,14 +25,27 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
     isActive: true,
   });
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const isDuplicate = ensembles.some(
+        (ensemble) => ensemble.name.toLowerCase() === formData.name.toLowerCase(),
+      );
+
+      if (isDuplicate) {
+        setError("An ensemble with this name already exists");
+        return;
+      }
+
       await ensembleService.createEnsemble(formData);
+      setError(null);
       onSuccess();
       onClose();
     } catch (error) {
       console.error("Failed to create ensemble:", error);
+      setError("Failed to create ensemble");
     }
   };
 
@@ -68,6 +83,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
           <Dialog.Title className="text-xl font-medium mb-6">Create New Ensemble</Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">{error}</div>}
             <div>
               <label htmlFor="ensemble-name" className="block text-sm font-medium text-gray-700">
                 Name
