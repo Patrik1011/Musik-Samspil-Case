@@ -9,7 +9,6 @@ const EnsembleMembershipSchema = new Schema(
     instrument: {
       type: String,
       enum: Object.values(Instrument),
-      required: true,
     },
     is_host: { type: Boolean, required: true },
   },

@@ -63,10 +63,10 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-xl rounded bg-white p-6">
-          <Dialog.Title className="text-lg font-medium mb-4">Create New Ensemble</Dialog.Title>
+        <Dialog.Panel className="mx-auto w-full max-w-2xl rounded bg-white p-8">
+          <Dialog.Title className="text-xl font-medium mb-6">Create New Ensemble</Dialog.Title>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="ensemble-name" className="block text-sm font-medium text-gray-700">
                 Name
@@ -205,7 +205,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700"
+                className="px-4 py-2 text-sm font-medium bg-steel-blue text-white border border-transparent rounded-md"
               >
                 Create
               </button>
