@@ -5,8 +5,10 @@ import Profile from "../../pages/authenticated/Profile";
 import Onboarding from "../../pages/authenticated/OnBoarding";
 import Ensembles from "../../pages/authenticated/Ensembles";
 import EnsembleDetail from "../../pages/authenticated/ensembles/Details";
-import Posts from "../../pages/unauthenticated/Posts.tsx";
+import Posts from "../../pages/common/posts/UserPosts.tsx";
 import React from "react";
+import PostDetails from "../../pages/common/posts/Details.tsx";
+import PostApplications from "../../pages/authenticated/PostApplications.tsx";
 
 type RouteConfig = {
   path: string;
@@ -29,13 +31,23 @@ export const routes: RouteConfig[] = [
   {
     path: "/posts",
     component: <Posts />,
-    protected: false,
-    isPublic: true,
+    protected: true,
+  },
+  {
+    path: "/post-details/:id",
+    component: <PostDetails />,
+    protected: true,
+  },
+  {
+    path: "/post-application/:id",
+    component: <PostApplications />,
+    protected: true,
   },
   {
     path: "/home",
     component: <Home />,
-    protected: true,
+    protected: false,
+    isPublic: true,
   },
   {
     path: "/profile",

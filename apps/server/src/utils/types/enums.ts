@@ -27,3 +27,9 @@ export enum Instrument {
   Piano = "Piano",
   Saxophone = "Saxophone",
 }
+
+export enum ApplicationStatus {
+  pending = "pending",
+  approved = "approved",
+  rejected = "rejected",
+}
