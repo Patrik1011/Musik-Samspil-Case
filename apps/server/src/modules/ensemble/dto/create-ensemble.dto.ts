@@ -21,9 +21,9 @@ export class CreateEnsembleDto {
   @IsArray()
   @IsString({ each: true })
   @IsNotEmpty()
-  openPositions?: string[];
+  open_positions?: string[];
 
   @IsBoolean()
   @IsNotEmpty()
-  isActive!: boolean;
+  is_active!: boolean;
 }

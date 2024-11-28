@@ -19,8 +19,8 @@ export class EnsembleService {
         name: createEnsembleDto.name,
         description: createEnsembleDto.description,
         location: createEnsembleDto.location ?? null,
-        open_positions: createEnsembleDto.openPositions || [],
-        is_active: createEnsembleDto.isActive,
+        open_positions: createEnsembleDto.open_positions || [],
+        is_active: createEnsembleDto.is_active,
       });
       return ensemble;
     } catch (error) {
