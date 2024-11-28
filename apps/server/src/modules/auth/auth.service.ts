@@ -28,7 +28,7 @@ export class AuthService {
     const payload = {
       id: user._id,
       email: user.email,
-      onboarded: !!(user.phone_number && user.instrument),
+      onboarded: !!user.phone_number,
     };
 
     const accessToken = this.jwtService.sign(payload);

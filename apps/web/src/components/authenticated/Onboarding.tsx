@@ -84,7 +84,6 @@ export const Onboarding = () => {
           value={formData.bio}
           errorMessages={errors.bio}
           onChange={handleChange}
-          rows={4}
         />
 
         <Button type="submit" title="Complete Onboarding" />

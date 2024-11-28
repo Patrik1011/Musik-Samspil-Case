@@ -54,7 +54,7 @@ export class UsersService {
 
   async getOnboardingStatus(userId: string) {
     const user = await this.validateAndGetUser(userId);
-    const isOnboarded = !!(user.phone_number && user.instrument);
+    const isOnboarded = !!user.phone_number; // Need to add as propert on user
     return { onboarded: isOnboarded };
   }
 

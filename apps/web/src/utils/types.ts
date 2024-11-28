@@ -27,6 +27,5 @@ export interface UserEntity {
 
 export type OnboardingEntity = {
   phone_number: string;
-  instrument: string;
   bio: string;
 };
