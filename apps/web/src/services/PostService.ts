@@ -1,4 +1,4 @@
-import { getRequest, postRequest } from "../utils/api";
+import { deleteRequest, getRequest, postRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
 
 export interface Post {
@@ -58,5 +58,9 @@ export const postService = {
   getPostsByUserId: async (): Promise<Post[]> => {
     const response = await getRequest("/post/user/posts");
     return response as Post[];
+  },
+
+  deletePost: async (id: string): Promise<void> => {
+    await deleteRequest(`/post/${id}`);
   },
 };

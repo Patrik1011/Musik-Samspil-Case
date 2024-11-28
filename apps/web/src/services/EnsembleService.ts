@@ -1,4 +1,4 @@
-import { getRequest, postRequest, putRequest } from "../utils/api";
+import { getRequest, postRequest, putRequest, deleteRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
 
 export interface EnsembleMember {
@@ -63,5 +63,9 @@ export const ensembleService = {
   getEnsembleMembers: async (ensembleId: string): Promise<EnsembleMember[]> => {
     const response = await getRequest(`/ensemble-membership/ensemble/${ensembleId}`);
     return response as EnsembleMember[];
+  },
+
+  deleteEnsemble: async (id: string): Promise<void> => {
+    await deleteRequest(`/ensemble/${id}`);
   },
 };

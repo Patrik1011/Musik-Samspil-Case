@@ -1,7 +1,13 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ForbiddenException,
+} from "@nestjs/common";
 import { Types } from "mongoose";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Post } from "../../schemas/post.schema";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 
 @Injectable()
 export class PostService {
@@ -45,5 +51,26 @@ export class PostService {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
+  }
+
+  async deletePost(id: string, userId: string) {
+    const post = await Post.findById(id).populate("ensemble_id");
+    if (!post) {
+      throw new NotFoundException("Post not found");
+    }
+
+    const isAuthor = post.author_id.toString() === userId;
+    const isHost = await EnsembleMembership.exists({
+      ensemble: post.ensemble_id,
+      member: userId,
+      is_host: true,
+    });
+
+    if (!isAuthor && !isHost) {
+      throw new ForbiddenException("Only post author or ensemble host can delete the post");
+    }
+
+    await post.deleteOne();
+    return { message: "Post deleted successfully" };
   }
 }

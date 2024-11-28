@@ -94,3 +94,19 @@ export const patchRequest = async <T>(endpoint: string, body: RequestBody): Prom
   }
   return response.json();
 };
+
+export const deleteRequest = async (endpoint: string): Promise<void> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from DeleteRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};

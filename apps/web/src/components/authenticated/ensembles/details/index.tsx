@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Ensemble, EnsembleMember, ensembleService } from "../../../../services/EnsembleService";
 import { Instrument } from "../../../../enums/Instrument";
+import { ConfirmationModal } from "../../../../components/ConfirmationModal";
 
 export const EnsembleDetail = () => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ export const EnsembleDetail = () => {
   const [members, setMembers] = useState<EnsembleMember[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<Ensemble>>({});
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -82,6 +84,16 @@ export const EnsembleDetail = () => {
     }));
   };
 
+  const handleDelete = async () => {
+    try {
+      if (!ensemble?._id) return;
+      await ensembleService.deleteEnsemble(ensemble._id);
+      navigate("/ensembles");
+    } catch (error) {
+      console.error("Failed to delete ensemble:", error);
+    }
+  };
+
   if (!ensemble) {
     return <div>Loading...</div>;
   }
@@ -110,13 +122,22 @@ export const EnsembleDetail = () => {
           ) : (
             <h1 className="text-3xl font-bold text-gray-900">{ensemble.name}</h1>
           )}
-          <button
-            type="button"
-            onClick={() => (isEditing ? handleSubmit() : setIsEditing(true))}
-            className="bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-          >
-            {isEditing ? "Save Changes" : "Edit Ensemble"}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => (isEditing ? handleSubmit() : setIsEditing(true))}
+              className="bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+            >
+              {isEditing ? "Save Changes" : "Edit Ensemble"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowDeleteModal(true)}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+            >
+              Delete Ensemble
+            </button>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -234,6 +255,14 @@ export const EnsembleDetail = () => {
           </div>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        title="Delete Ensemble"
+        message="Are you sure you want to delete this ensemble? This action cannot be undone."
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />
     </div>
   );
 };

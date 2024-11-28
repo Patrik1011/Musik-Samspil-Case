@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -41,7 +42,7 @@ export class PostController {
   }
 
   @Get(":id")
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
   async getPostById(@Param("id") postId: string) {
     if (!Types.ObjectId.isValid(postId)) {
@@ -59,5 +60,12 @@ export class PostController {
       throw new BadRequestException("Invalid user ID");
     }
     return this.postService.getPostsByUserId(userId);
+  }
+
+  @Delete(":id")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async delete(@Param("id") id: string, @Request() req: AuthenticatedRequest) {
+    return this.postService.deletePost(id, req.user._id.toString());
   }
 }
