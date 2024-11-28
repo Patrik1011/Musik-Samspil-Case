@@ -1,8 +1,8 @@
 import { PostDetails, postService } from "../../../services/PostService.ts";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ConfirmationModal } from "../../ConfirmationModal.tsx";
-import { applicationService } from "../../../services/ApplicationService.ts";
+import { applicationService, ApplicationRequest } from "../../../services/ApplicationService.ts";
+import { ApplicationModal } from "../../authenticated/applications/modals/ApplicationModal";
 
 export const DetailsComponent = () => {
   const { id } = useParams();
@@ -24,80 +24,132 @@ export const DetailsComponent = () => {
     }
   };
 
-  const handleApplyForPost = async () => {
-    try {
-      if (!post) return;
-      await applicationService.applyForPost(post._id);
-    } catch (error) {
-      console.error("Failed to apply for post:", error);
-    }
+  const handleApplyForPost = async (data: ApplicationRequest) => {
+    if (!post) return;
+    await applicationService.applyForPost(post._id, data);
   };
 
-  const handleConfirm = () => {
-    handleApplyForPost();
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  if (!post) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-steel-blue" />
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1 className="font-bold">Post Details</h1>
-      {post ? (
-        <div>
-          <h2>{post.title}</h2>
-          <p>{post.description}</p>
-          <p>{post.website_url}</p>
-          <p>{post.type}</p>
-          <p>{post.created_at}</p>
-          <h1 className="font-bold">Data about the user</h1>
-          {post.author_id && (
-            <>
-              <p>{post.author_id.email}</p>
-              <p>{post.author_id.first_name}</p>
-              <p>{post.author_id.last_name}</p>
-              <p>{post.author_id.phone_number}</p>
-            </>
+    <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex justify-between items-start mb-4">
+            <h1 className="text-3xl font-bold text-gray-900">{post.title}</h1>
+            <button
+              type="button"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-steel-blue hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-steel-blue"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Apply Now
+            </button>
+          </div>
+          <p className="text-lg text-gray-600 mb-4">{post.description}</p>
+          {post.website_url && (
+            <a
+              href={post.website_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-steel-blue hover:underline"
+            >
+              Visit Website
+            </a>
           )}
-          <h1 className="font-bold">Data about the ensemble</h1>
-          {post.ensemble_id && (
-            <>
-              <p>{post.ensemble_id.location.city}</p>
-              <p>{post.ensemble_id.location.country}</p>
-              <p>{post.ensemble_id.location.address}</p>
-              <p>{post.ensemble_id._id}</p>
-              <p>{post.ensemble_id.name}</p>
-              <p>{post.ensemble_id.description}</p>
-              <h1 className="font-bold">positions</h1>
-              <p>{post.ensemble_id.open_positions.join(", ")}</p>
-              <p>{post.ensemble_id.is_active ? "Active" : "Inactive"}</p>
-              <p>{post.ensemble_id.updatedAt}</p>
-            </>
-          )}
+          <div className="mt-4 flex items-center justify-between">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-steel-blue text-white">
+              {post.type}
+            </span>
+            <span className="text-sm text-gray-500">
+              Posted on {new Date(post.created_at).toLocaleDateString()}
+            </span>
+          </div>
         </div>
-      ) : (
-        <div>Loading...</div>
-      )}
 
-      <div>
-        <button
-          type="button"
-          className="px-4 py-2 bg-steel-blue text-sm font-medium text-white border border-gray-300 rounded-md "
-          onClick={() => setIsModalOpen(true)}
-        >
-          Apply for
-        </button>
+        {post.author_id && (
+          <div className="p-6 border-b border-gray-200 bg-gray-50">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600">Name</p>
+                <p className="font-medium text-gray-900">
+                  {post.author_id.first_name} {post.author_id.last_name}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Email</p>
+                <p className="font-medium text-gray-900">{post.author_id.email}</p>
+              </div>
+              {post.author_id.phone_number && (
+                <div>
+                  <p className="text-sm text-gray-600">Phone</p>
+                  <p className="font-medium text-gray-900">{post.author_id.phone_number}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
-        <ConfirmationModal
-          title="Apply for this post"
-          message="Are you sure you want to apply for this post?"
-          isOpen={isModalOpen}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-        />
+        {post.ensemble_id && (
+          <div className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Ensemble Details</h2>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{post.ensemble_id.name}</h3>
+                <p className="text-gray-600">{post.ensemble_id.description}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Location</h4>
+                  <p className="text-gray-600">{post.ensemble_id.location.address}</p>
+                  <p className="text-gray-600">
+                    {post.ensemble_id.location.city}, {post.ensemble_id.location.country}
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Open Positions</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {post.ensemble_id.open_positions.map((position) => (
+                      <span
+                        key={position}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-steel-blue bg-opacity-10 text-steel-blue"
+                      >
+                        {position}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-6">
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    post.ensemble_id.is_active
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {post.ensemble_id.is_active ? "Active" : "Inactive"}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      <ApplicationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleApplyForPost}
+      />
     </div>
   );
 };

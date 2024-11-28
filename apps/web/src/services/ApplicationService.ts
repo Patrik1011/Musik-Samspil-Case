@@ -1,4 +1,5 @@
 import { getRequest, patchRequest, postRequest } from "../utils/api.ts";
+import { Instrument } from "../enums/Instrument";
 
 export interface Applicant {
   first_name: string;
@@ -14,10 +15,15 @@ export interface ApplicationResponse {
   applicant_id: Applicant;
 }
 
+export interface ApplicationRequest extends Record<string, unknown> {
+  instrument: Instrument;
+  message?: string;
+}
+
 export const applicationService = {
-  applyForPost: async (postId: string) => {
+  applyForPost: async (postId: string, data: ApplicationRequest) => {
     try {
-      const response = await postRequest(`/application/${postId}`);
+      const response = await postRequest(`/application/${postId}`, data);
       return response;
     } catch (error) {
       console.error(error);

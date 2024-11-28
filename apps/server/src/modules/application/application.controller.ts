@@ -14,6 +14,7 @@ import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ApplicationStatus } from "../../utils/types/enums";
+import { ApplyForPostDto } from "./dto/application.dto";
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -30,11 +31,20 @@ export class ApplicationController {
   @Post(":postId")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async applyForPost(@Param("postId") postId: string, @Request() req: AuthenticatedRequest) {
+  async applyForPost(
+    @Param("postId") postId: string,
+    @Request() req: AuthenticatedRequest,
+    @Body() applyDto: ApplyForPostDto,
+  ) {
     if (!Types.ObjectId.isValid(postId)) {
       throw new BadRequestException("Invalid post ID");
     }
-    return this.applicationService.applyForPost(postId, req.user._id.toString());
+    return this.applicationService.applyForPost(
+      postId,
+      req.user._id.toString(),
+      applyDto.instrument,
+      applyDto.message,
+    );
   }
 
   @Get("post/:postId")
@@ -64,6 +74,6 @@ export class ApplicationController {
     if (!["pending", "approved", "rejected"].includes(status)) {
       throw new BadRequestException("Invalid status");
     }
-    return this.applicationService.updateApplicationStatus(applicationId, status);
+    return this.applicationService.changeApplicationStatus(applicationId, status);
   }
 }
