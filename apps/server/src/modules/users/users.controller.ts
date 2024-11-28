@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Param,
   Post,
   UseGuards,
   Request,
@@ -17,20 +16,8 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { OnboardingDto } from "./dto/onboarding.dto";
 import { Types } from "mongoose";
 import { Instrument } from "../../utils/types/enums";
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    _id: Types.ObjectId;
-    email: string;
-    // ... other user properties
-  };
-}
-
-interface OnBoardingRequest extends Request {
-  user: {
-    _id: Types.ObjectId;
-  };
-}
+import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
+import { OnboardingRequest } from "../../utils/interfaces/OnboardingRequest";
 
 @Controller("users")
 export class UsersController {
@@ -59,21 +46,6 @@ export class UsersController {
     return this.usersService.updateUser(req.user._id.toString(), updateUserDto);
   }
 
-  @Get("email/:email")
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse()
-  async getUserByEmail(@Param("email") email: string) {
-    return this.usersService.getUserByEmail(email);
-  }
-
-  @Get("id/:id")
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse()
-  async getUserById(@Param("id") userId: string) {
-    this.validateUserId(userId);
-    return this.usersService.findOne(userId);
-  }
-
   @Get("instruments")
   @ApiOkResponse({ type: [String] })
   async getInstruments(): Promise<string[]> {
@@ -83,7 +55,7 @@ export class UsersController {
   @Get("onboarding-status")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async getOnboardingStatus(@Request() req: OnBoardingRequest) {
+  async getOnboardingStatus(@Request() req: OnboardingRequest) {
     this.validateUserId(req.user._id.toString());
     return this.usersService.getOnboardingStatus(req.user._id.toString());
   }
@@ -93,7 +65,7 @@ export class UsersController {
   @ApiOkResponse()
   async completeOnboarding(
     @Body() onboardingDto: OnboardingDto,
-    @Request() req: OnBoardingRequest,
+    @Request() req: OnboardingRequest,
   ) {
     this.validateUserId(req.user._id.toString());
     return this.usersService.completeOnboarding(req.user._id.toString(), onboardingDto);

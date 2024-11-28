@@ -1,6 +1,6 @@
 export enum PostType {
-  recruitment = "recruitment",
-  event = "event",
+  Recruitment = "Recruitment",
+  Event = "Event",
 }
 
 export enum MatchStatus {

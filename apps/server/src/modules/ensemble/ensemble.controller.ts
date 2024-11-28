@@ -1,18 +1,10 @@
 import { Controller, Get, Post, Body, Param, UseGuards, Request, Put } from "@nestjs/common";
-
 import { EnsembleService } from "./ensemble.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { CreateEnsembleDto } from "./dto/create-ensemble.dto";
 import { UpdateEnsembleDto } from "./dto/update-ensemble.dto";
-import { Types } from "mongoose";
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    _id: Types.ObjectId;
-    email: string;
-  };
-}
+import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
 
 @Controller("ensemble")
 @ApiTags("ensemble")

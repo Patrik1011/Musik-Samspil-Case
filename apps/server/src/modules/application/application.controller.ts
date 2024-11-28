@@ -15,13 +15,7 @@ import { Types } from "mongoose";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ApplicationStatus } from "../../utils/types/enums";
 import { ApplyForPostDto } from "./dto/application.dto";
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    _id: Types.ObjectId;
-    email: string;
-  };
-}
+import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
 
 @Controller("application")
 @ApiTags("Application")
@@ -55,13 +49,6 @@ export class ApplicationController {
       throw new BadRequestException("Invalid post ID");
     }
     return this.applicationService.getApplicationsForPost(postId);
-  }
-
-  @Get("user")
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse()
-  async getUserApplications(@Request() req: AuthenticatedRequest) {
-    return this.applicationService.getUserApplications(req.user._id.toString());
   }
 
   @Patch(":applicationId/status")

@@ -86,16 +86,6 @@ export class ApplicationService {
     }
   }
 
-  async getUserApplications(userId: string) {
-    try {
-      return await Application.find({
-        applicant: new Types.ObjectId(userId),
-      }).populate("post");
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
-  }
-
   async changeApplicationStatus(applicationId: string, status: ApplicationStatus) {
     const session = await startSession();
     session.startTransaction();
