@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Logger, Param, Post, Request, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { PostService } from "./post.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Types } from "mongoose";
+import { ApplicationStatus } from "../../utils/types/enums";
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -53,5 +54,25 @@ export class PostController {
       throw new BadRequestException("Invalid user ID");
     }
     return this.postService.getPostsByUserId(userId);
+  }
+
+  @Get(":id/applications")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getApplicationsForPost(@Param("id") postId: string) {
+    if (!Types.ObjectId.isValid(postId)) {
+      throw new BadRequestException("Invalid post ID");
+    }
+    return this.postService.getApplicationsForPost(postId);
+  }
+
+  @Patch(":id/applications/:applicationId/status")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async updateApplicationStatus(@Param("applicationId") applicationId: string, @Body("status") status: ApplicationStatus) {
+    if (!["pending", "approved", "rejected"].includes(status)) {
+      throw new BadRequestException("Invalid status");
+    }
+    return this.postService.updateApplicationStatus(applicationId, status);
   }
 }
