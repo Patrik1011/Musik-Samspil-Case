@@ -2,6 +2,9 @@ import { getRequest, postRequest, putRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
 
 export interface EnsembleMember {
+  _id: string;
+  user_id: string;
+  ensemble_id: string;
   first_name: string;
   last_name: string;
   instrument: Instrument;
@@ -17,8 +20,8 @@ export interface Ensemble {
     country: string;
     address: string;
   };
-  open_positions: Instrument[];
-  is_active: boolean;
+  openPositions: Instrument[];
+  isActive: boolean;
   members: EnsembleMember[];
 }
 
