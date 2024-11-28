@@ -80,7 +80,7 @@ const Login: React.FC = () => {
           onChange={handleChange}
           errorMessages={errors.password}
         />
-        <Button type="submit" title="Sign in" />
+        <Button type="submit" title="Sign in" className="bg-steel-blue text-white w-full" />
         {errors.general && <div className="text-red-500 text-sm text-center">{errors.general}</div>}
       </div>
     </form>

@@ -17,6 +17,7 @@ const CreatePostButton = ({ ensembleId }: Props) => {
           e.stopPropagation();
           setIsCreatePostModalOpen(true);
         }}
+        className="bg-steel-blue text-white"
       />
 
       <CreatePostModal

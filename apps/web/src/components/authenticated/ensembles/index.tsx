@@ -26,7 +26,6 @@ export const Ensembles = () => {
     try {
       const data = await ensembleService.getHostedEnsembles();
       setEnsembles(data);
-      // Fetch members for each ensemble
       data.forEach((ensemble) => fetchEnsembleMembers(ensemble._id));
     } catch (error) {
       console.error("Failed to fetch ensembles:", error);
