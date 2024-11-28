@@ -18,7 +18,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
       country: "",
       address: "",
     },
-    openPositions: [],
+    openPositions: [] as Instrument[],
     isActive: true,
   });
 

@@ -6,17 +6,32 @@ import CreatePostButton from "../../common/posts/CreatePostButton";
 
 export const Ensembles = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
+  const [members, setMembers] = useState<Record<string, EnsembleMember[]>>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const fetchEnsembleMembers = useCallback(async (ensembleId: string) => {
+    try {
+      const memberData = await ensembleService.getEnsembleMembers(ensembleId);
+      setMembers((prev) => ({
+        ...prev,
+        [ensembleId]: memberData,
+      }));
+    } catch (error) {
+      console.error("Failed to fetch ensemble members:", error);
+    }
+  }, []);
 
   const fetchEnsembles = useCallback(async () => {
     try {
       const data = await ensembleService.getHostedEnsembles();
       setEnsembles(data);
+      // Fetch members for each ensemble
+      data.forEach((ensemble) => fetchEnsembleMembers(ensemble._id));
     } catch (error) {
       console.error("Failed to fetch ensembles:", error);
     }
-  }, []);
+  }, [fetchEnsembleMembers]);
 
   useEffect(() => {
     fetchEnsembles();
@@ -65,22 +80,54 @@ export const Ensembles = () => {
             </div>
             <div className="p-6">
               <p className="text-gray-600 text-sm mb-4">{ensemble.description}</p>
+
               <div className="mb-4">
                 <h4 className="text-sm font-semibold text-gray-900 mb-2">Location</h4>
                 <p className="text-sm text-gray-600">
                   {ensemble.location.city}, {ensemble.location.country}
                 </p>
               </div>
+
               {ensemble.open_positions.length > 0 && (
-                <div>
+                <div className="mb-4">
                   <h4 className="text-sm font-semibold text-gray-900 mb-2">Open Positions</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-600">
+                  <div className="flex flex-wrap gap-2">
                     {ensemble.open_positions.map((position) => (
-                      <li key={position}>{position}</li>
+                      <span
+                        key={position}
+                        className="inline-block bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs"
+                      >
+                        {position}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
+
+              <div className="mt-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-3">Members</h4>
+                <div className="flex flex-wrap gap-3">
+                  {members[ensemble._id]?.map((membership) => (
+                    <div
+                      key={membership._id}
+                      className="flex items-center bg-gray-50 px-4 py-3 rounded-lg"
+                    >
+                      <span className="text-base font-medium text-gray-800 mr-3">
+                        {membership.member.first_name} {membership.member.last_name}
+                      </span>
+                      {membership.is_host ? (
+                        <span className="text-sm bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full">
+                          Host
+                        </span>
+                      ) : (
+                        <span className="text-sm bg-steel-blue bg-opacity-10 text-steel-blue px-3 py-1.5 rounded-full">
+                          {membership.instrument}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </button>
         ))}

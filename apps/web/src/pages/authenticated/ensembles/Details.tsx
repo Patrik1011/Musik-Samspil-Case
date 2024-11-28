@@ -7,12 +7,14 @@ const EnsembleDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [ensemble, setEnsemble] = useState<Ensemble | null>(null);
+  const [members, setMembers] = useState<EnsembleMember[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<Ensemble>>({});
 
   useEffect(() => {
     if (id) {
       fetchEnsemble(id);
+      fetchEnsembleMembers(id);
     }
   }, [id]);
 
@@ -28,6 +30,15 @@ const EnsembleDetail = () => {
       setEnsemble(data);
     } catch (error) {
       console.error("Failed to fetch ensemble:", error);
+    }
+  };
+
+  const fetchEnsembleMembers = async (ensembleId: string) => {
+    try {
+      const memberData = await ensembleService.getEnsembleMembers(ensembleId);
+      setMembers(memberData);
+    } catch (error) {
+      console.error("Failed to fetch ensemble members:", error);
     }
   };
 
@@ -102,7 +113,7 @@ const EnsembleDetail = () => {
           <button
             type="button"
             onClick={() => (isEditing ? handleSubmit() : setIsEditing(true))}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+            className="bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-indigo-700"
           >
             {isEditing ? "Save Changes" : "Edit Ensemble"}
           </button>
@@ -195,6 +206,31 @@ const EnsembleDetail = () => {
                 </li>
               ))}
             </ul>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Members</h2>
+            <div className="flex flex-wrap gap-3">
+              {members.map((membership) => (
+                <div
+                  key={membership._id}
+                  className="flex items-center bg-gray-50 px-4 py-3 rounded-lg"
+                >
+                  <span className="text-base font-medium text-gray-800 mr-3">
+                    {membership.member.first_name} {membership.member.last_name}
+                  </span>
+                  {membership.is_host ? (
+                    <span className="text-sm bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full">
+                      Host
+                    </span>
+                  ) : (
+                    <span className="text-sm bg-steel-blue bg-opacity-10 text-steel-blue px-3 py-1.5 rounded-full">
+                      {membership.instrument}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
