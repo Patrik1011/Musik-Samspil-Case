@@ -205,7 +205,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess }: Props) => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium bg-steel-blue text-white border border-transparent rounded-md"
+                className="px-4 py-2 text-sm font-medium bg-steel-blue text-white border border-transparent rounded-md`"
               >
                 Create
               </button>

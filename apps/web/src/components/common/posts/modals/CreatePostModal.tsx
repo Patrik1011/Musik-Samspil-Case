@@ -20,6 +20,19 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
     type: "",
   });
 
+  const handleOverlayKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === " " || e.key === "Enter") {
+      e.stopPropagation();
+    }
+  };
+
   const clearFormData = () => {
     setFormData({
       title: "",
@@ -33,7 +46,6 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
     e.preventDefault();
     try {
       await postService.createPost(formData, ensembleId);
-      console.log("Post created:", formData);
       clearFormData();
       onClose();
     } catch (error) {
@@ -43,12 +55,19 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div
+        className="fixed inset-0 bg-black/30"
+        aria-hidden="true"
+        onKeyDown={handleOverlayKeyDown}
+      />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto w-full max-w-2xl rounded bg-white p-8">
+        <Dialog.Panel
+          className="mx-auto w-full max-w-2xl rounded bg-white p-8"
+          onKeyDown={handleInputKeyDown}
+        >
           <Dialog.Title className="text-xl font-medium mb-6">Create a post</Dialog.Title>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" onKeyDown={handleInputKeyDown}>
             <InputField
               id="title"
               name="title"
