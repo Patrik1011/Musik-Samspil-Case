@@ -64,8 +64,8 @@ export const Onboarding = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <Headline title="Complete Your Profile" textColor="text-steel-blue" />
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <Headline title="Complete Your Profile" className="mb-4" />
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <InputField
           id="phone_number"
           errorMessages={errors.phone_number}
@@ -86,7 +86,7 @@ export const Onboarding = () => {
           onChange={handleChange}
         />
 
-        <Button type="submit" title="Complete Onboarding" />
+        <Button type="submit" title="Complete Onboarding" className="bg-steel-blue text-white" />
 
         {errors.general && (
           <div className="text-red-500 text-sm text-center mt-2">{errors.general}</div>
