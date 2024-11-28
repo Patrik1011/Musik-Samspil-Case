@@ -6,13 +6,13 @@ export interface Applicant {
   last_name: string;
   email: string;
   phone_number: string;
-  instrument: string;
 }
 
 export interface ApplicationResponse {
   _id: string;
   status: string;
-  applicant_id: Applicant;
+  instrument: Instrument;
+  applicant: Applicant;
 }
 
 export interface ApplicationRequest extends Record<string, unknown> {

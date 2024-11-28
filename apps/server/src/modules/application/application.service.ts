@@ -3,9 +3,10 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  BadRequestException,
 } from "@nestjs/common";
 import { Application } from "../../schemas/application.schema";
-import { Types } from "mongoose";
+import { Types, MongooseError } from "mongoose";
 import { ApplicationStatus, Instrument } from "../../utils/types/enums";
 import { Post } from "../../schemas/post.schema";
 
@@ -13,13 +14,19 @@ import { Post } from "../../schemas/post.schema";
 export class ApplicationService {
   async applyForPost(postId: string, userId: string, instrument: Instrument, message?: string) {
     try {
-      // Check if post exists
+      if (!postId || !userId || !instrument) {
+        throw new BadRequestException("Missing required fields");
+      }
+
+      if (!Types.ObjectId.isValid(postId) || !Types.ObjectId.isValid(userId)) {
+        throw new BadRequestException("Invalid ID format");
+      }
+
       const post = await Post.findById(postId);
       if (!post) {
         throw new NotFoundException("Post not found");
       }
 
-      // Create new application
       const application = new Application({
         post: new Types.ObjectId(postId),
         applicant: new Types.ObjectId(userId),
@@ -28,23 +35,51 @@ export class ApplicationService {
         status: ApplicationStatus.pending,
       });
 
-      await application.save();
-      return application;
-    } catch (error) {
-      if (error.code === 11000) {
-        throw new ConflictException("You already have a pending application for this post");
+      await application.validate();
+      const savedApplication = await application.save();
+      return savedApplication;
+    } catch (err: unknown) {
+      if (err instanceof MongooseError) {
+        if ("code" in err && err.code === 11000) {
+          throw new ConflictException("You already have a pending application for this post");
+        }
+        if ("name" in err && err.name === "ValidationError") {
+          throw new BadRequestException(err.message);
+        }
       }
-      throw new InternalServerErrorException(error);
+
+      if (err instanceof BadRequestException || err instanceof NotFoundException) {
+        throw err;
+      }
+
+      console.error("Application error:", err);
+      throw new InternalServerErrorException("Failed to create application");
     }
   }
 
   async getApplicationsForPost(postId: string) {
     try {
-      return await Application.find({ post: new Types.ObjectId(postId) })
-        .populate("applicant", "first_name last_name email phone_number")
+      if (!Types.ObjectId.isValid(postId)) {
+        throw new BadRequestException("Invalid post ID");
+      }
+
+      const applications = await Application.find({ post: new Types.ObjectId(postId) })
+        .populate("applicant")
         .sort({ createdAt: -1 });
-    } catch (error) {
-      throw new InternalServerErrorException(error);
+
+      if (!applications) {
+        return [];
+      }
+
+      return applications;
+    } catch (err: unknown) {
+      if (err instanceof MongooseError) {
+        throw new InternalServerErrorException(err.message);
+      }
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
+      throw new InternalServerErrorException("Failed to fetch applications");
     }
   }
 
