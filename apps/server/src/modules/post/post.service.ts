@@ -1,8 +1,7 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Post } from "../../schemas/post.schema";
-import { ApplicationService } from "../application/application.service";
 
 @Injectable()
 export class PostService {

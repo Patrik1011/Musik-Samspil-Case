@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -35,21 +34,31 @@ export class EnsembleService {
     session.startTransaction();
 
     try {
-      const ensemble = await Ensemble.create([{
-        name: createEnsembleDto.name,
-        description: createEnsembleDto.description,
-        location: createEnsembleDto.location,
-        open_positions: createEnsembleDto.openPositions || [],
-        is_active: createEnsembleDto.isActive,
-      }], { session });
+      const ensemble = await Ensemble.create(
+        [
+          {
+            name: createEnsembleDto.name,
+            description: createEnsembleDto.description,
+            location: createEnsembleDto.location,
+            open_positions: createEnsembleDto.openPositions || [],
+            is_active: createEnsembleDto.isActive,
+          },
+        ],
+        { session },
+      );
 
-      await EnsembleMembership.create([{
-        ensemble: ensemble[0]._id,
-        ensemble_id: ensemble[0]._id.toString(),
-        member: new mongoose.Types.ObjectId(userId),
-        member_id: userId,
-        is_host: true,
-      }], { session });
+      await EnsembleMembership.create(
+        [
+          {
+            ensemble: ensemble[0]._id,
+            ensemble_id: ensemble[0]._id.toString(),
+            member: new mongoose.Types.ObjectId(userId),
+            member_id: userId,
+            is_host: true,
+          },
+        ],
+        { session },
+      );
 
       await session.commitTransaction();
       return ensemble[0];
@@ -73,7 +82,7 @@ export class EnsembleService {
       }
 
       const ensemble = await Ensemble.findById(id);
-      
+
       if (!ensemble) {
         throw new NotFoundException("Ensemble not found");
       }
@@ -102,7 +111,7 @@ export class EnsembleService {
       const updatedEnsemble = await Ensemble.findByIdAndUpdate(
         id,
         { $set: updateEnsembleDto },
-        { new: true }
+        { new: true },
       );
 
       if (!updatedEnsemble) {

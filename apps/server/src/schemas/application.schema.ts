@@ -1,4 +1,4 @@
-import { Schema, model, Types, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const ApplicationSchema = new Schema(
   {

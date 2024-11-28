@@ -30,26 +30,21 @@ export const UserPostsComponent = () => {
             className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 cursor-pointer transition-transform hover:scale-105"
           >
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">
-                {post.title}
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">{post.title}</h2>
             </div>
             <div className="p-6">
               <p className="text-gray-600 text-sm mb-4">{post.description}</p>
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                  Website
-                </h4>
+                <h4 className="text-sm font-semibold text-gray-900 mb-2">Website</h4>
                 <p className="text-sm text-gray-600">{post.website_url}</p>
               </div>
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                  Type
-                </h4>
+                <h4 className="text-sm font-semibold text-gray-900 mb-2">Type</h4>
                 <p className="text-sm text-gray-600">{post.type}</p>
               </div>
               <div>
                 <button
+                  type="button"
                   onClick={() => handleViewApplicationsClick(post._id)}
                   className="px-4 py-2 bg-steel-blue text-sm font-medium text-white border border-gray-300 rounded-md "
                 >

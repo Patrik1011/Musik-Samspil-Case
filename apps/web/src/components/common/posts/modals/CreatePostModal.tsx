@@ -1,9 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { useState } from "react";
-import {
-  CreatePostInput,
-  postService,
-} from "../../../../services/PostService.ts";
+import { CreatePostInput, postService } from "../../../../services/PostService.ts";
 import { PostType } from "../../../../enums/PostType.ts";
 import { Select } from "../../../Select.tsx";
 import { InputField } from "../../../InputField.tsx";
@@ -49,9 +46,7 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="mx-auto max-w-xl rounded bg-white p-6">
-          <Dialog.Title className="text-lg font-medium mb-4">
-            Create a post
-          </Dialog.Title>
+          <Dialog.Title className="text-lg font-medium mb-4">Create a post</Dialog.Title>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-4">
@@ -62,18 +57,14 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
                 type="text"
                 value={formData.title}
                 placeholder="Enter a title"
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
               <TextArea
                 name="description"
                 label="Description"
                 value={formData.description}
                 placeholder="Enter a description"
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
               <InputField
                 id="website_url"
@@ -82,9 +73,7 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
                 type="text"
                 value={formData.website_url}
                 placeholder="Enter a website URL"
-                onChange={(e) =>
-                  setFormData({ ...formData, website_url: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
               />
 
               <Select

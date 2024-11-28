@@ -25,9 +25,7 @@ export const applicationService = {
     }
   },
 
-  getApplicationsForPost: async (
-    postId: string,
-  ): Promise<ApplicationResponse[]> => {
+  getApplicationsForPost: async (postId: string): Promise<ApplicationResponse[]> => {
     try {
       const response = await getRequest(`/application/post/${postId}`);
       return response as ApplicationResponse[];
@@ -39,12 +37,9 @@ export const applicationService = {
 
   changeApplicationStatus: async (applicationId: string, status: string) => {
     try {
-      const response = await patchRequest(
-        `/application/${applicationId}/status`,
-        {
-          status,
-        },
-      );
+      const response = await patchRequest(`/application/${applicationId}/status`, {
+        status,
+      });
       return response;
     } catch (error) {
       console.error(error);

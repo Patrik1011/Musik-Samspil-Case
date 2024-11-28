@@ -31,7 +31,7 @@ export interface PostDetails extends Post {
   created_at: string;
 }
 
-export interface CreatePostInput extends Record<string, any> {
+export interface CreatePostInput extends Record<string, string> {
   title: string;
   description: string;
   website_url: string;
@@ -39,10 +39,7 @@ export interface CreatePostInput extends Record<string, any> {
 }
 
 export const postService = {
-  createPost: async (
-    data: CreatePostInput,
-    ensembleId: string,
-  ): Promise<Post> => {
+  createPost: async (data: CreatePostInput, ensembleId: string): Promise<Post> => {
     const response = await postRequest(`/post/${ensembleId}`, data);
     return response as Post;
   },

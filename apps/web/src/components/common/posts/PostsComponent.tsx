@@ -1,25 +1,23 @@
 import { Headline } from "../../Headline.tsx";
 import { Post, postService } from "../../../services/PostService.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store.ts";
 import { useNavigate } from "react-router-dom";
 
 export const PostsComponent = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const navigate = useNavigate();
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     const posts = await postService.getPosts();
     setPosts(posts);
-  };
+  }, []);
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [fetchPosts]);
 
   const handleRegisterClick = (postId: string) => {
     if (isAuthenticated) {
@@ -40,27 +38,22 @@ export const PostsComponent = () => {
             className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 cursor-pointer transition-transform hover:scale-105"
           >
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">
-                {post.title}
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">{post.title}</h2>
             </div>
             <div className="p-6">
               <p className="text-gray-600 text-sm mb-4">{post.description}</p>
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                  Website
-                </h4>
+                <h4 className="text-sm font-semibold text-gray-900 mb-2">Website</h4>
                 <p className="text-sm text-gray-600">{post.website_url}</p>
               </div>
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                  Type
-                </h4>
+                <h4 className="text-sm font-semibold text-gray-900 mb-2">Type</h4>
                 <p className="text-sm text-gray-600">{post.type}</p>
               </div>
             </div>
             <div>
               <button
+                type="button"
                 onClick={() => handleRegisterClick(post._id)}
                 className="w-full lg:mx-0 text-base font-bold bg-steel-blue text-white mt-2 py-4 px-8 rounded-[10px] shadow-custom focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-200 ease-in-out"
               >

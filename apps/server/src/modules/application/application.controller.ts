@@ -1,4 +1,14 @@
-import { Controller, Param, Post, UseGuards, Request, BadRequestException, Get, Patch, Body } from "@nestjs/common";
+import {
+  Controller,
+  Param,
+  Post,
+  UseGuards,
+  Request,
+  BadRequestException,
+  Get,
+  Patch,
+  Body,
+} from "@nestjs/common";
 import { ApplicationService } from "./application.service";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
@@ -47,7 +57,10 @@ export class ApplicationController {
   @Patch(":applicationId/status")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async updateApplicationStatus(@Param("applicationId") applicationId: string, @Body("status") status: ApplicationStatus) {
+  async updateApplicationStatus(
+    @Param("applicationId") applicationId: string,
+    @Body("status") status: ApplicationStatus,
+  ) {
     if (!["pending", "approved", "rejected"].includes(status)) {
       throw new BadRequestException("Invalid status");
     }

@@ -1,4 +1,13 @@
-import { BadRequestException, Body, Controller, Get, Logger, Param, Patch, Post, Request, UseGuards } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { PostService } from "./post.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -20,7 +29,11 @@ export class PostController {
   @Post(":ensembleId")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async create(@Param("ensembleId") ensembleId: string, @Request() req: AuthenticatedRequest, @Body() createPostDto: CreatePostDto) {
+  async create(
+    @Param("ensembleId") ensembleId: string,
+    @Request() req: AuthenticatedRequest,
+    @Body() createPostDto: CreatePostDto,
+  ) {
     if (!Types.ObjectId.isValid(ensembleId)) {
       throw new BadRequestException("Invalid ensemble ID");
     }

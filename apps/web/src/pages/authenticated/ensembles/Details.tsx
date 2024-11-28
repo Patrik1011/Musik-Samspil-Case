@@ -31,7 +31,8 @@ const EnsembleDetail = () => {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
         <button
-          onClick={() => navigate('/ensembles')}
+          type="button"
+          onClick={() => navigate("/ensembles")}
           className="text-indigo-600 hover:text-indigo-800"
         >
           ← Back to Ensembles
@@ -42,10 +43,11 @@ const EnsembleDetail = () => {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">{ensemble.name}</h1>
           <button
+            type="button"
             onClick={() => setIsEditing(!isEditing)}
             className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
           >
-            {isEditing ? 'Cancel Edit' : 'Edit Ensemble'}
+            {isEditing ? "Cancel Edit" : "Edit Ensemble"}
           </button>
         </div>
 
@@ -58,7 +60,8 @@ const EnsembleDetail = () => {
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Location</h2>
             <p className="text-gray-600">
-              {ensemble.location.address}<br />
+              {ensemble.location.address}
+              <br />
               {ensemble.location.city}, {ensemble.location.country}
             </p>
           </div>

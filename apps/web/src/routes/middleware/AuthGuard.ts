@@ -17,9 +17,7 @@ export const AuthGuard = ({
   isPublic = false,
 }: AuthGuardProps): ReactElement => {
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
     if (isProtected && !isAuthenticated) {

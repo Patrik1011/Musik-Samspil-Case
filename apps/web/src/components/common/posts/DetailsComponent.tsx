@@ -29,7 +29,7 @@ export const DetailsComponent = () => {
       if (!post) return;
       await applicationService.applyForPost(post._id);
     } catch (error) {
-      console.error("Failed to apply for post:");
+      console.error("Failed to apply for post:", error);
     }
   };
 
@@ -83,6 +83,7 @@ export const DetailsComponent = () => {
 
       <div>
         <button
+          type="button"
           className="px-4 py-2 bg-steel-blue text-sm font-medium text-white border border-gray-300 rounded-md "
           onClick={() => setIsModalOpen(true)}
         >
