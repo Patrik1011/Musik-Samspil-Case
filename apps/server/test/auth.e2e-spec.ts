@@ -3,12 +3,13 @@ import { type INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { AppModule } from "../src/app.module";
 import type { SignUpDto } from "../src/modules/auth/dto/signup.dto";
-import { PrismaService } from "../src/prisma/prisma.service";
-import { describe } from "node:test";
+import { getModelToken } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { User } from "../src/schemas/user.schema";
 
 describe("Auth API (e2e)", () => {
   let app: INestApplication;
-  let prisma: PrismaService;
+  let userModel: Model<typeof User>;
 
   const validUser: SignUpDto = {
     first_name: "John",
@@ -32,7 +33,7 @@ describe("Auth API (e2e)", () => {
   }
 
   async function deleteUserIfExists(email: string) {
-    await prisma.user.deleteMany({ where: { email } });
+    await userModel.deleteMany({ email });
   }
 
   function expectErrorResponse(res: request.Response, statusCode: number, errorMessage: string) {
@@ -54,7 +55,7 @@ describe("Auth API (e2e)", () => {
         transform: true,
       }),
     );
-    prisma = app.get(PrismaService);
+    userModel = moduleFixture.get<Model<typeof User>>(getModelToken("User"));
     await app.init();
   });
 
@@ -64,7 +65,7 @@ describe("Auth API (e2e)", () => {
 
   describe("Auth API (e2e) - SIGNUP", () => {
     afterEach(async () => {
-      await deleteUserIfExists(validUser.email as string);
+      await deleteUserIfExists(validUser.email);
     });
 
     it("should register a new user", async () => {
@@ -79,7 +80,7 @@ describe("Auth API (e2e)", () => {
       await sendSignUpRequest(validUser);
       const res = await sendSignUpRequest(validUser);
 
-      expectErrorResponse(res, 409, ERROR_MESSAGES.emailAlreadyExists(validUser.email as string));
+      expectErrorResponse(res, 409, ERROR_MESSAGES.emailAlreadyExists(validUser.email));
     });
 
     it("should not register a user with an invalid email", async () => {
@@ -97,14 +98,14 @@ describe("Auth API (e2e)", () => {
     });
 
     it("should not register a user with a missing firstname", async () => {
-      const invalidUser = { ...validUser, firstname: "" };
+      const invalidUser = { ...validUser, first_name: "" };
       const res = await sendSignUpRequest(invalidUser);
 
       expectErrorResponse(res, 400, ERROR_MESSAGES.missingFirstName);
     });
 
     it("should not register a user with a missing lastname", async () => {
-      const invalidUser = { ...validUser, lastname: "" };
+      const invalidUser = { ...validUser, last_name: "" };
       const res = await sendSignUpRequest(invalidUser);
 
       expectErrorResponse(res, 400, ERROR_MESSAGES.missingLastName);
@@ -127,7 +128,7 @@ describe("Auth API (e2e)", () => {
 
   describe("Auth API (e2e) - LOGIN", () => {
     afterEach(async () => {
-      await deleteUserIfExists(validUser.email as string);
+      await deleteUserIfExists(validUser.email);
     });
 
     it("should login a user", async () => {
