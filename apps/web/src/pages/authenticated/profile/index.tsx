@@ -74,7 +74,6 @@ const ProfilePage: React.FC = () => {
       setShowConfirmModal(false);
       setShowSuccess(true);
 
-      // Redirect after a short delay
       setTimeout(() => {
         navigate("/home");
       }, 2000);
