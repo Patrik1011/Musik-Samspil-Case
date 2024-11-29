@@ -1,14 +1,16 @@
 import { Test, type TestingModule } from "@nestjs/testing";
 import { type INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
-import { AppModule } from "../src/app.module";
-import type { SignUpDto } from "../src/modules/auth/dto/signup.dto";
-import { PrismaService } from "../src/prisma/prisma.service";
+import { AppModule } from "../../src/app.module";
+import type { SignUpDto } from "../../src/modules/auth/dto/signup.dto";
+import { Model } from "mongoose";
+import { getModelToken } from "@nestjs/mongoose";
+import { User } from "../../src/schemas/user.schema";
 import { describe } from "node:test";
 
 describe("Auth API (e2e)", () => {
   let app: INestApplication;
-  let prisma: PrismaService;
+  let userModel: Model<typeof User>;
 
   const validUser: SignUpDto = {
     first_name: "John",
@@ -32,7 +34,7 @@ describe("Auth API (e2e)", () => {
   }
 
   async function deleteUserIfExists(email: string) {
-    await prisma.user.deleteMany({ where: { email } });
+    await userModel.deleteMany({ email });
   }
 
   function expectErrorResponse(res: request.Response, statusCode: number, errorMessage: string) {
