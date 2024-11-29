@@ -10,6 +10,7 @@ import { EnsembleModule } from "./modules/ensemble/ensemble.module";
 import { EnsembleMembershipModule } from "./modules/ensemble-membership/ensemble-membership.module";
 import { PostModule } from "./modules/post/post.module";
 import { ApplicationModule } from "./modules/application/application.module";
+import { MongooseModule } from "@nestjs/mongoose";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ApplicationModule } from "./modules/application/application.module";
       envFilePath: resolve(__dirname, "../.env"),
       isGlobal: true,
     }),
+    MongooseModule.forRoot(process.env.MONGO_URI || ""),
     AuthModule,
     UsersModule,
     EnsembleModule,

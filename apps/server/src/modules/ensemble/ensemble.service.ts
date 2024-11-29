@@ -1,17 +1,16 @@
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  ForbiddenException,
 } from "@nestjs/common";
 
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Ensemble } from "../../schemas/ensemble.schema";
+import { Post } from "../../schemas/post.schema";
 import { CreateEnsembleDto } from "./dto/create-ensemble.dto";
 import { UpdateEnsembleDto } from "./dto/update-ensemble.dto";
-import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
-import mongoose from "mongoose";
-import { Post } from "../../schemas/post.schema";
 
 @Injectable()
 export class EnsembleService {
@@ -41,7 +40,7 @@ export class EnsembleService {
             description: createEnsembleDto.description,
             location: createEnsembleDto.location,
             open_positions: createEnsembleDto.open_positions || [],
-            is_active: createEnsembleDto.isActive,
+            is_active: createEnsembleDto.is_active,
           },
         ],
         { session },
