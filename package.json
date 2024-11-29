@@ -50,6 +50,6 @@
   },
   "lint-staged": {
     "*.{json,md,yml}": ["biome format --write"],
-    "apps/**/*.{ts,tsx}": ["pnpm biome", "pnpm lint:eslint"]
+    "apps/**/*.{ts,tsx}": ["biome format --write", "pnpm biome", "pnpm lint:eslint"]
   }
 }
