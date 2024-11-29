@@ -23,8 +23,4 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
 })
-export class AuthModule {
-  constructor() {
-    console.log("AuthModule initialized");
-  }
-}
+export class AuthModule {}

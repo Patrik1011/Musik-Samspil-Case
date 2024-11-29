@@ -49,7 +49,7 @@
     "react": "^18.3.1"
   },
   "lint-staged": {
-    "*.{json,md,yml}": ["biome format --write"],
-    "apps/**/*.{ts,tsx}": ["pnpm biome", "pnpm lint:eslint"]
+    "*.{json,md,yml}": ["biome check --apply"],
+    "apps/**/*.{ts,tsx}": ["biome check --apply", "eslint --fix"]
   }
 }

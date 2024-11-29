@@ -12,7 +12,7 @@ services:
     volumes:
       - ./apps/server:/usr/src/app
       - /usr/src/app/node_modules
-    command: sh -c "pnpx prisma generate && pnpm start:dev"
+    command: pnpm start
     networks:
       - app-network
 

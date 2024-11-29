@@ -8,11 +8,9 @@ async function main() {
   await mongoose.connect(process.env.MONGO_URI as string);
 
   try {
-    // 1. Clear existing ensemble memberships
     await EnsembleMembership.deleteMany({});
     console.log("Cleared existing ensemble memberships");
 
-    // 2. Get existing users and ensembles
     const users = await User.find();
     const ensembles = await Ensemble.find();
 
@@ -22,9 +20,7 @@ async function main() {
 
     console.log(`Found ${users.length} users and ${ensembles.length} ensembles`);
 
-    // 3. Create new ensemble memberships
     for (const ensemble of ensembles) {
-      // Select 2-5 random users for each ensemble
       const randomUsers = faker.helpers.arrayElements(users, { min: 2, max: 5 });
 
       for (const user of randomUsers) {
@@ -33,7 +29,7 @@ async function main() {
           ensemble_id: ensemble._id.toString(),
           member: user._id,
           member_id: user._id.toString(),
-          is_host: true, // All users are hosts now
+          is_host: true,
         });
       }
     }

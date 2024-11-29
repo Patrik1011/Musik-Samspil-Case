@@ -44,7 +44,6 @@ export const completeOnboarding =
       await onboardingService.onBoardingProcess(credentials);
       dispatch(onBoardingStatus(true));
       navigate("/home");
-      console.log("Onboarding completed successfully navigate to /home");
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(error.message);

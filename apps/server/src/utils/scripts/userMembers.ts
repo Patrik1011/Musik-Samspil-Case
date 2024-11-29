@@ -7,13 +7,10 @@ import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 async function main() {
   await mongoose.connect(process.env.DATABASE_URL || "");
 
-  // First, get all existing ensemble memberships
   const existingMemberships = await EnsembleMembership.find();
 
-  // Extract unique member IDs
   const uniqueMemberIds = [...new Set(existingMemberships.map((membership) => membership.member))];
 
-  // Create users for each unique member ID
   for (const memberId of uniqueMemberIds) {
     await User.create({
       _id: memberId,

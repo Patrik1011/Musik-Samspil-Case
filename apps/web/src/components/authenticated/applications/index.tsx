@@ -30,7 +30,6 @@ export const Applications = () => {
 
   const handleApplicationConfirm = async () => {
     if (!selectedApplicationId || !selectedStatus) return;
-    console.log(selectedApplicationId, selectedStatus);
     try {
       await applicationService.changeApplicationStatus(
         selectedApplicationId,
