@@ -23,7 +23,7 @@ export interface Ensemble {
     address: string;
   };
   open_positions: Instrument[];
-  isActive: boolean;
+  is_active: boolean;
   members: EnsembleMember[];
 }
 
@@ -36,7 +36,7 @@ export interface CreateEnsembleInput extends Record<string, unknown> {
     address: string;
   };
   open_positions: Instrument[];
-  isActive: boolean;
+  is_active: boolean;
 }
 
 export const ensembleService = {
