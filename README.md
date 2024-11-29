@@ -1,11 +1,11 @@
 # Musik Samspil
 
-A modern web application for managing music sessions built with Next.js and NestJS.
+A modern web application for managing music ensembles built with React and NestJS.
 
 ## Project Overview
 
 This project is a monorepo workspace containing:
-- Frontend: Next.js application with TypeScript and Tailwind CSS
+- Frontend: React application with TypeScript and Tailwind CSS
 - Backend: NestJS API with TypeScript
 
 ## Prerequisites
@@ -40,14 +40,19 @@ This project is a monorepo workspace containing:
 
    With Docker:
    ```bash
-   docker-compose up --build
+   pnpm dev:docker
    ```
 
    The applications will be available at:
-   - Frontend: http://localhost:8080
+   - Frontend: http://localhost:5173
    - Backend: http://localhost:3000
 
 ## Project Structure
+
+Monorepo setup using pnpm workspaces.
+
+- `apps/web`: React client application with TypeScript and Tailwind CSS
+- `apps/server`: NestJS server application with TypeScript
 
 ## Development Workflow
 
@@ -56,18 +61,13 @@ This project is a monorepo workspace containing:
    git checkout -b feature/your-feature-name
    ```
 
-2. Make your changes and ensure all tests pass:
-   ```bash
-   pnpm test
-   ```
-
-3. Commit your changes (this will trigger pre-commit hooks):
+2. Commit your changes (this will trigger pre-commit hooks):
    ```bash
    git add .
    git commit -m "feat: your feature description"
    ```
 
-4. Push your changes and create a pull request:
+3. Push your changes and create a pull request:
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -79,9 +79,3 @@ This project is a monorepo workspace containing:
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
-
-## Team
-
-- Patrick
-- Nayeem
-- Kengo
