@@ -19,12 +19,16 @@ const getHeaders = (): Record<string, string> => {
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    const localToken = localStorage.getItem("token");
+    if (localToken) {
+      headers["Authorization"] = `Bearer ${localToken}`;
+    }
   }
-
   return headers;
 };
 
-export const postRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
+export const postRequest = async <T>(endpoint: string, body?: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
     headers: getHeaders(),
@@ -67,6 +71,39 @@ export const getRequest = async <T>(endpoint: string): Promise<T> => {
   if (!response.ok) {
     const error = new Error(
       `Error from GetRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};
+
+export const patchRequest = async <T>(endpoint: string, body: RequestBody): Promise<T> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from PatchRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};
+
+export const deleteRequest = async (endpoint: string): Promise<void> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from DeleteRequest: ${response.status} ${response.statusText}`,
     ) as CustomError;
     error.response = response;
     throw error;

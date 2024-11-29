@@ -1,8 +1,10 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsObject, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsObject, IsString, IsEnum } from "class-validator";
+import { Instrument } from "../../../utils/types/enums";
 
 interface Location {
-  type: string;
-  coordinates: string[];
+  city: string;
+  country: string;
+  address: string;
 }
 
 export class CreateEnsembleDto {
@@ -19,9 +21,8 @@ export class CreateEnsembleDto {
   location!: Location;
 
   @IsArray()
-  @IsString({ each: true })
-  @IsNotEmpty()
-  open_positions?: string[];
+  @IsEnum(Instrument, { each: true })
+  open_positions?: Instrument[];
 
   @IsBoolean()
   @IsNotEmpty()

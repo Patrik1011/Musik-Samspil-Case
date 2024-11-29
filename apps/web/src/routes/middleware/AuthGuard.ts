@@ -7,12 +7,14 @@ interface AuthGuardProps {
   element: ReactElement;
   redirectTo: string;
   protected: boolean;
+  isPublic?: boolean;
 }
 
 export const AuthGuard = ({
   element,
   redirectTo,
   protected: isProtected,
+  isPublic = false,
 }: AuthGuardProps): ReactElement => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -22,10 +24,10 @@ export const AuthGuard = ({
       navigate(redirectTo);
     }
 
-    if (!isProtected && isAuthenticated) {
+    if (!isProtected && isAuthenticated && !isPublic) {
       navigate("/home");
     }
-  }, [isAuthenticated, isProtected, navigate, redirectTo]);
+  }, [isAuthenticated, isProtected, isPublic, navigate, redirectTo]);
 
   return element;
 };

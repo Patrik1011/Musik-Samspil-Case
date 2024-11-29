@@ -1,6 +1,6 @@
 export enum PostType {
-  recruitment = "recruitment",
-  event = "event",
+  Recruitment = "Recruitment",
+  Event = "Event",
 }
 
 export enum MatchStatus {
@@ -26,4 +26,10 @@ export enum Instrument {
   Harp = "Harp",
   Piano = "Piano",
   Saxophone = "Saxophone",
+}
+
+export enum ApplicationStatus {
+  pending = "pending",
+  approved = "approved",
+  rejected = "rejected",
 }
