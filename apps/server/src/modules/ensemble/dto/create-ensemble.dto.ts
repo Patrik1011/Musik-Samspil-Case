@@ -26,5 +26,5 @@ export class CreateEnsembleDto {
 
   @IsBoolean()
   @IsNotEmpty()
-  isActive!: boolean;
+  is_active!: boolean;
 }
