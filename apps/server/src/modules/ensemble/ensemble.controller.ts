@@ -25,7 +25,6 @@ export class EnsembleController {
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
   async getHostedEnsembles(@Request() req: AuthenticatedRequest) {
-    console.log(`Fetching hosted ensembles for user: ${req.user._id.toString()}`);
     return this.ensembleService.findUserHostedEnsembles(req.user._id.toString());
   }
 
@@ -58,7 +57,6 @@ export class EnsembleController {
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
   async delete(@Param("id") id: string, @Request() req: AuthenticatedRequest) {
-    console.log(`Deleting ensemble: ${id} for user: ${req.user._id.toString()}`);
     return this.ensembleService.delete(id, req.user._id.toString());
   }
 }

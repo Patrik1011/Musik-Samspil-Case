@@ -31,16 +31,16 @@ This project is a monorepo workspace containing:
    - Copy `.env.example` to `.env` in both `apps/web` and `apps/server` directories
    - Update the variables as needed
 
-4. Start the development servers:
-
-   Without Docker:
-   ```bash
-   pnpm dev
-   ```
+4. Start the development server & application:
 
    With Docker:
    ```bash
    pnpm dev:docker
+   ```         
+
+   Without Docker:
+   ```bash
+   pnpm dev
    ```
 
    The applications will be available at:

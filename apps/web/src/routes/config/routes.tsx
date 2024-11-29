@@ -50,6 +50,12 @@ export const routes: RouteConfig[] = [
     isPublic: true,
   },
   {
+    path: "/",
+    component: <Home />,
+    protected: false,
+    isPublic: true,
+  },
+  {
     path: "/profile",
     component: <Profile />,
     protected: true,
