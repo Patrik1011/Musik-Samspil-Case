@@ -22,7 +22,7 @@ export const CreateEnsembleModal = ({ isOpen, onClose, onSuccess, ensembles }: P
       address: "",
     },
     open_positions: [] as Instrument[],
-    isActive: true,
+    is_active: true,
   });
 
   const [error, setError] = useState<string | null>(null);

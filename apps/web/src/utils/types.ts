@@ -42,7 +42,7 @@ export type Ensemble = {
     address: string;
   };
   open_positions: Instrument[];
-  isActive: boolean;
+  is_active: boolean;
 };
 
 export type EnsembleMember = {
