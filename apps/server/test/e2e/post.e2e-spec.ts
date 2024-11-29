@@ -5,8 +5,8 @@ import {
 } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Types } from "mongoose";
-import { PostService } from "../src/modules/post/post.service";
-import { Post } from "../src/schemas/post.schema";
+import { PostService } from "../../src/modules/post/post.service";
+import { Post } from "../../src/schemas/post.schema";
 //   import { EnsembleMembership } from '../src/schemas/ensemble-membership.schema';
 
 // Mocking the Post and EnsembleMembership models

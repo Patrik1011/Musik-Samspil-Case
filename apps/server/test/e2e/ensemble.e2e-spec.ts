@@ -5,12 +5,12 @@ import {
 } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import mongoose, { Types } from "mongoose";
-import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
-import { Ensemble } from "../../schemas/ensemble.schema";
-import { EnsembleService } from "./ensemble.service";
+import { EnsembleMembership } from "../../src/schemas/ensemble-membership.schema";
+import { Ensemble } from "../../src/schemas/ensemble.schema";
+import { EnsembleService } from "../../src/modules/ensemble/ensemble.service";
 
-jest.mock("../../schemas/ensemble.schema");
-jest.mock("../../schemas/ensemble-membership.schema");
+jest.mock("../../src/schemas/ensemble.schema");
+jest.mock("../../src/schemas/ensemble-membership.schema");
 
 describe("EnsembleService", () => {
   let service: EnsembleService;
