@@ -5,6 +5,10 @@ import { ApplicationModal } from "../applications/modals/ApplicationModal.tsx";
 import { ApplicationRequest } from "../../../services/ApplicationService.ts";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store.ts";
+import homeImage from "../../../assets/images-svg/home.svg";
+import { Select } from "../../Select.tsx";
+import { Instrument } from "../../../enums/Instrument.ts";
+import { Button } from "../../Button.tsx";
 
 export const Posts = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
@@ -43,6 +47,19 @@ export const Posts = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div>
+        <div>
+          <p className="text-lg">
+            The place where amateur musicians find each other and play music together
+          </p>
+          <Select
+            onChange={() => console.log()}
+            options={Object.values(Instrument).map((type) => type.toString())}
+          />
+          <Button title="See posts" className="text-white bg-steel-blue" />
+        </div>
+        <img src={homeImage} alt="pale" />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
           <div key={post._id} className="bg-white rounded-lg shadow-md p-6 flex flex-col h-full">
