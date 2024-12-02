@@ -5,9 +5,10 @@ interface SelectProps {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: string[];
   errorMessages?: string;
+  className?: string;
 }
 
-export const Select = ({ label, onChange, options, errorMessages }: SelectProps) => {
+export const Select = ({ label, onChange, options, errorMessages, className }: SelectProps) => {
   const [selectedOption, setSelectedOption] = React.useState<string>("");
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -16,13 +17,13 @@ export const Select = ({ label, onChange, options, errorMessages }: SelectProps)
     onChange(e);
   };
   return (
-    <div className="mb-4">
+    <div>
       <label htmlFor="selectId" className="text-sm text-[14px] text-medium-gray">
         {label}
       </label>
       <select
         id="selectId"
-        className="block w-full p-2 mt-1 py-3 border border-soft-gray bg-transparent font-medium text-base text-medium-gray rounded-[10px] outline-none custom-select"
+        className={`block w-full p-2 py-[15px] border border-soft-gray bg-transparent font-medium text-base text-medium-gray rounded-[10px] outline-none custom-select shadow ${className}`}
         value={selectedOption}
         onChange={handleChange}
       >
