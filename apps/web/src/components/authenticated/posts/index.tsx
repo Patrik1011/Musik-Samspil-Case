@@ -46,25 +46,27 @@ export const Posts = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid flex-col grid-cols-2 items-center">
-        <div>
-          <p className="text-[50px] text-custom-red font-oswald leading-[54px] mb-14">
-            The place where amateur musicians find each other and play music together
-          </p>
-          <div className="flex items-center justify-between w-full">
-            <div className="w-1/2 mr-3">
-              <Select
-                onChange={() => console.log()}
-                options={Object.values(Instrument).map((type) => type.toString())}
-              />
-            </div>
-            <div className="w-1/2 ml-3">
-              <Button title="See posts" className="text-white bg-steel-blue w-full" />
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-16 flex items-center justify-center md:min-h-[70vh] md:mb-0">
+        <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full">
+          <div className="md:w-1/2">
+            <p className="text-[30px] leading-[34px] mt-12 mb-7 text-custom-red font-oswald md:leading-[54px] md:mt-0 md:mb-14 md:text-[50px]">
+              The place where amateur musicians find each other and play music together
+            </p>
+            <div className="flex flex-col space-y-2 md:flex-row items-center justify-between w-full md:space-y-0">
+              <div className="w-full  md:w-1/2 md:mr-3">
+                <Select
+                  onChange={() => console.log()}
+                  options={Object.values(Instrument).map((type) => type.toString())}
+                />
+              </div>
+              <div className="w-full md:w-1/2 md:ml-3">
+                <Button title="See posts" className="text-white bg-steel-blue w-full" />
+              </div>
             </div>
           </div>
+          <img src={homeImage} alt="home" className="w-full md:w-auto" />
         </div>
-        <img src={homeImage} alt="home" className="justify-self-end" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
