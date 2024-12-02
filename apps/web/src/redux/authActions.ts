@@ -1,7 +1,7 @@
 import { AppDispatch } from "./store";
 import { authService } from "../services/AuthService.ts";
 import { login, logout, onBoardingStatus } from "./authSlice.ts";
-import { onboardingService } from "../services/OnboardingService.ts";
+import { userService } from "../services/UserService.ts";
 import { OnboardingEntity } from "../utils/types.ts";
 
 export const loginUser =
@@ -41,7 +41,7 @@ export const completeOnboarding =
   (credentials: OnboardingEntity, navigate: (path: string) => void) =>
   async (dispatch: AppDispatch) => {
     try {
-      await onboardingService.onBoardingProcess(credentials);
+      await userService.onBoardingProcess(credentials);
       dispatch(onBoardingStatus(true));
       navigate("/home");
     } catch (error: unknown) {
