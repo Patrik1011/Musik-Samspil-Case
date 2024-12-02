@@ -47,20 +47,24 @@ export const Posts = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid flex-col grid-cols-2">
+      <div className="grid flex-col grid-cols-2 items-center">
         <div>
-          <p className="text-[50px] text-custom-red font-oswald">
+          <p className="text-[50px] text-custom-red font-oswald leading-[54px] mb-14">
             The place where amateur musicians find each other and play music together
           </p>
-          <div className="flex items-center justify-between">
-            <Select
-              onChange={() => console.log()}
-              options={Object.values(Instrument).map((type) => type.toString())}
-            />
-            <Button title="See posts" className="text-white bg-steel-blue" />
+          <div className="flex items-center justify-between w-full">
+            <div className="w-1/2 mr-3">
+              <Select
+                onChange={() => console.log()}
+                options={Object.values(Instrument).map((type) => type.toString())}
+              />
+            </div>
+            <div className="w-1/2 ml-3">
+              <Button title="See posts" className="text-white bg-steel-blue w-full" />
+            </div>
           </div>
         </div>
-        <img src={homeImage} alt="pale" className="justify-self-end" />
+        <img src={homeImage} alt="home" className="justify-self-end" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
