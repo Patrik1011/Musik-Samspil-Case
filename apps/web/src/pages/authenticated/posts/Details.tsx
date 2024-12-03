@@ -2,7 +2,7 @@ import { DetailsComponent } from "../../../components/authenticated/posts/detail
 
 const PostDetails: React.FC = () => {
   return (
-    <div>
+    <div className="bg-light-gray min-h-screen">
       <DetailsComponent />
     </div>
   );

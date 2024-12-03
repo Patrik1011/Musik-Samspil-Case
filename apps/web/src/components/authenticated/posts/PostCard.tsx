@@ -1,6 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faGlobe, faMusic } from "@fortawesome/free-solid-svg-icons";
 import musicImage from "../../../assets/images-svg/music.svg";
+import { DetailItem } from "../../DetailItem.tsx";
+import { SubHeadline } from "../../SubHeadline.tsx";
 
 interface PostCardProps {
   title: string;
@@ -29,57 +30,45 @@ export const PostCard = ({
       className={`bg-white rounded-[10px] border border-soft-gray shadow ${className}`}
     >
       <div className="px-4 pt-4">
-        <p className="text-base font-bold text-steel-blue">{title}</p>
+        <SubHeadline title={title} className="text-steel-blue" />
         <div className="mt-2">
-          <div className="flex items-start w-full">
-            <div>
-              <FontAwesomeIcon
-                icon={faUser}
-                className="text-medium-gray mr-3 text-sm"
-              />
-              <span className="text-medium-gray text-sm">{`${firstName} ${lastName}`}</span>
-            </div>
-          </div>
-          <div>
-            <FontAwesomeIcon
+          <div className="flex flex-col items-start w-full space-y-1">
+            <DetailItem icon={faUser} content={`${firstName} ${lastName}`} />
+            <DetailItem
               icon={faMusic}
-              className="text-medium-gray mr-3 text-sm"
+              content={instruments.map((instrument, index) => (
+                <span
+                  key={instrument}
+                  className="text-medium-gray text-sm mr-1"
+                >
+                  {instrument}
+                  {index < instruments.length - 1 && ", "}
+                </span>
+              ))}
             />
-            {instruments.map((instrument) => (
-              <span key={instrument} className="text-medium-gray text-sm mr-1">
-                {instrument}
-              </span>
-            ))}
-          </div>
-          <div>
-            <FontAwesomeIcon
+            <DetailItem
               icon={faGlobe}
-              className="text-medium-gray mr-3 text-sm"
+              content={
+                <a
+                  href={website}
+                  className="text-medium-gray text-sm hover:underline truncate"
+                  title={website}
+                >
+                  {website}
+                </a>
+              }
             />
-            <a
-              href={website}
-              className="text-medium-gray text-sm hover:underline truncate"
-              title={website}
-            >
-              {website}
-            </a>
           </div>
-          <div className="flex justify-between">
-            <div>
-              <span className="text-medium-gray font-semibold text-sm">
-                {type}
-              </span>
-            </div>
-            <div>
-              <img src={musicImage} alt="music" className="object-contain" />
-            </div>
+          <div className="flex justify-between mt-2">
+            <p className="text-medium-gray font-semibold text-sm">{type}</p>
+            <img src={musicImage} alt="music" className="object-contain" />
           </div>
         </div>
       </div>
 
       <div className="flex items-center bg-light-gray border-t rounded-b-[10px]">
         <div className="pl-4 py-2">
-          <span className="text-medium-gray text-sm">{location}</span>
+          <p className="text-medium-gray text-sm">{location}</p>
         </div>
       </div>
     </div>
