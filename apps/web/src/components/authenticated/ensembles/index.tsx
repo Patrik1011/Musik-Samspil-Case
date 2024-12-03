@@ -47,6 +47,7 @@ export const Ensembles = () => {
   const fetchEnsembles = useCallback(async () => {
     try {
       const data = await ensembleService.getHostedEnsembles();
+      console.log(data);
       setEnsembles(data);
       data.forEach((ensemble) => fetchEnsembleMembers(ensemble._id));
     } catch (error) {
@@ -83,82 +84,89 @@ export const Ensembles = () => {
         ensembles={ensembles}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {ensembles.map((ensemble) => (
-          <div
-            key={ensemble._id}
-            onClick={() => handleEnsembleClick(ensemble._id)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleEnsembleClick(ensemble._id);
-              }
-            }}
-            className="w-full text-left bg-white rounded-2xl shadow-sm overflow-hidden cursor-pointer transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-steel-blue flex flex-col h-fit"
-          >
-            <div className="px-6 py-4">
-              <h2 className="text-xl font-semibold text-gray-900 truncate">{ensemble.name}</h2>
-            </div>
-            <div className="px-6 pb-6">
-              <p className="text-gray-600 mb-8">{ensemble.description}</p>
+      {ensembles.length === 0 ? (
+        <div className="text-center text-gray-600">No ensembles found. Create a new one!</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {ensembles.map((ensemble) => (
+            <div
+              key={ensemble._id}
+              onClick={() => handleEnsembleClick(ensemble._id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleEnsembleClick(ensemble._id);
+                }
+              }}
+              className="w-full text-left bg-white rounded-2xl shadow-sm overflow-hidden cursor-pointer transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-steel-blue flex flex-col h-fit"
+            >
+              <div className="px-6 py-4">
+                <h2 className="text-xl font-semibold text-gray-900 truncate">{ensemble.name}</h2>
+              </div>
+              <div className="px-6 pb-6">
+                <p className="text-gray-600 mb-8">{ensemble.description}</p>
 
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-base font-bold text-gray-900 mb-2">Location</h4>
-                  <p className="text-gray-600">
-                    {ensemble.location.city}, {ensemble.location.country}
-                  </p>
-                </div>
-
-                {ensemble.open_positions.length > 0 && (
+                <div className="space-y-4">
                   <div>
-                    <h4 className="text-base font-bold text-gray-900 mb-2">Open Positions</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {ensemble.open_positions.map((position) => (
-                        <span
-                          key={position}
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-steel-blue bg-opacity-10 text-steel-blue"
+                    <h4 className="text-base font-bold text-gray-900 mb-2">Location</h4>
+                    <p className="text-gray-600">
+                      {ensemble.location.city}, {ensemble.location.country}
+                    </p>
+                  </div>
+
+                  {ensemble.open_positions.length > 0 && (
+                    <div>
+                      <h4 className="text-base font-bold text-gray-900 mb-2">Open Positions</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {ensemble.open_positions.map((position) => (
+                          <span
+                            key={position}
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-steel-blue bg-opacity-10 text-steel-blue"
+                          >
+                            {position}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <h4 className="text-base font-bold text-gray-900 mb-3">Members</h4>
+                    <div className="space-y-2">
+                      {members[ensemble._id]?.map((membership) => (
+                        <div
+                          key={membership._id}
+                          className="flex items-center justify-between py-2"
                         >
-                          {position}
-                        </span>
+                          <span className="text-gray-900">
+                            {membership.member.first_name} {membership.member.last_name}
+                          </span>
+                          {membership.is_host ? (
+                            <span className="text-sm bg-amber-50 text-amber-700 px-4 py-1 rounded-full">
+                              Host
+                            </span>
+                          ) : (
+                            <span className="text-sm bg-gray-100 text-gray-600 px-4 py-1 rounded-full">
+                              {membership.instrument}
+                            </span>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </div>
-                )}
+                </div>
 
-                <div>
-                  <h4 className="text-base font-bold text-gray-900 mb-3">Members</h4>
-                  <div className="space-y-2">
-                    {members[ensemble._id]?.map((membership) => (
-                      <div key={membership._id} className="flex items-center justify-between py-2">
-                        <span className="text-gray-900">
-                          {membership.member.first_name} {membership.member.last_name}
-                        </span>
-                        {membership.is_host ? (
-                          <span className="text-sm bg-amber-50 text-amber-700 px-4 py-1 rounded-full">
-                            Host
-                          </span>
-                        ) : (
-                          <span className="text-sm bg-gray-100 text-gray-600 px-4 py-1 rounded-full">
-                            {membership.instrument}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                <div className="mt-8">
+                  <CreatePostButton
+                    ensembleId={ensemble._id}
+                    existingPostId={ensemblesPosts[ensemble._id]}
+                  />
                 </div>
               </div>
-
-              <div className="mt-8">
-                <CreatePostButton
-                  ensembleId={ensemble._id}
-                  existingPostId={ensemblesPosts[ensemble._id]}
-                />
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

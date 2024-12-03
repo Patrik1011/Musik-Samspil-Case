@@ -9,6 +9,7 @@ interface Coordinates {
 
 export const matchmakingService = {
   getRecommendations: async ({ latitude, longitude }: Coordinates): Promise<Ensemble[]> => {
+    console.log("called with", latitude, longitude);
     const queryParams = new URLSearchParams({
       latitude: latitude.toString(),
       longitude: longitude.toString(),

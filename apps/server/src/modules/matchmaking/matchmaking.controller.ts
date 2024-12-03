@@ -17,10 +17,17 @@ export class MatchmakingController {
     @Query("latitude") latitude: string,
     @Query("longitude") longitude: string,
   ) {
-    return this.matchmakingService.getRecommendations(req.user._id.toString(), {
-      latitude: Number.parseFloat(latitude),
-      longitude: Number.parseFloat(longitude),
-    });
+    const recommendations = await this.matchmakingService.getRecommendations(
+      req.user._id.toString(),
+      {
+        latitude: Number.parseFloat(latitude),
+        longitude: Number.parseFloat(longitude),
+      },
+    );
+
+    console.log("recommendations", recommendations);
+
+    return recommendations;
   }
 
   @Post("match")
