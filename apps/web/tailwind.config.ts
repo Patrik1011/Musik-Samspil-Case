@@ -11,6 +11,7 @@ export default {
         "steel-blue": "#353A5D",
         "medium-gray": "#777777",
         "soft-gray": "#DDDDDD",
+        "light-gray": "#F9F9F9",
       },
     },
   },
