@@ -10,19 +10,24 @@ interface Coordinates {
 
 @Injectable()
 export class MatchmakingService {
-  async getRecommendations(userId: string, coordinates: Coordinates, radius = 50, limit = 10) {
+  async getRecommendations(coordinates: Coordinates, radius = 50, limit = 10) {
     const { latitude, longitude } = coordinates;
 
-    const ensembles = await Ensemble.find({
-      location: {
-        $geoWithin: {
-          $centerSphere: [[longitude, latitude], radius / 6378.1],
+    const ensembles = await Ensemble.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+          },
+          distanceField: "distance",
+          maxDistance: radius * 1000,
+          spherical: true,
         },
       },
-      is_active: true,
-    }).limit(limit);
-
-    console.log("Found ensembles:", ensembles.length);
+      { $match: { is_active: true } },
+      { $limit: limit },
+    ]);
 
     return ensembles;
   }

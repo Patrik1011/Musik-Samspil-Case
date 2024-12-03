@@ -34,8 +34,8 @@ export const Matchmaking = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-50">
-      <div className="relative w-full max-w-sm">
+    <div className="h-screen flex items-center justify-center bg-indigo-200">
+      <div className="relative w-full max-w-sm flex justify-center items-center">
         {ensembles.map((ensemble, index) => (
           <TinderCard
             key={ensemble._id}
@@ -43,7 +43,7 @@ export const Matchmaking = () => {
             preventSwipe={["up", "down"]}
             className={`absolute ${index === currentIndex ? "z-10" : "z-0"}`}
           >
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-80 h-[32rem]">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-80 h-[32rem] mx-auto">
               <div className="p-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">{ensemble.name}</h2>
                 <p className="text-gray-600 mb-4">{ensemble.description}</p>

@@ -10,15 +10,8 @@ const EnsembleSchema = new Schema(
       country: String,
       address: String,
       coordinates: {
-        type: {
-          type: String,
-          enum: ["Point"],
-          default: "Point",
-        },
-        coordinates: {
-          type: [Number],
-          index: "2dsphere",
-        },
+        type: String,
+        coordinates: [Number],
       },
     },
     open_positions: [
