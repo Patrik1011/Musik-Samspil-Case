@@ -12,6 +12,7 @@ import { ApplicationStatus, Instrument } from "../../utils/types/enums";
 import { Post } from "../../schemas/post.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { startSession } from "mongoose";
+import { Ensemble } from "../../schemas/ensemble.schema";
 
 @Injectable()
 export class ApplicationService {
@@ -105,6 +106,17 @@ export class ApplicationService {
         if (!post) {
           throw new NotFoundException("Post not found");
         }
+
+        const ensemble = await Ensemble.findById(post.ensemble_id);
+        if (!ensemble) {
+          throw new NotFoundException("Ensemble not found");
+        }
+
+        ensemble.open_positions = ensemble.open_positions.filter(
+          (position) => position !== application.instrument,
+        );
+
+        await ensemble.save({ session });
 
         await EnsembleMembership.create(
           [
