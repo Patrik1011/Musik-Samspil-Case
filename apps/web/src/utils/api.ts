@@ -28,6 +28,22 @@ const getHeaders = (): Record<string, string> => {
   return headers;
 };
 
+export const getRequest = async <T>(endpoint: string): Promise<T> => {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      `Error from GetRequest: ${response.status} ${response.statusText}`,
+    ) as CustomError;
+    error.response = response;
+    throw error;
+  }
+  return response.json();
+};
+
 export const postRequest = async <T>(endpoint: string, body?: RequestBody): Promise<T> => {
   const response = await fetch(`${API_URL}${endpoint}`, {
     method: "POST",
@@ -55,22 +71,6 @@ export const putRequest = async <T>(endpoint: string, body: RequestBody): Promis
   if (!response.ok) {
     const error = new Error(
       `Error from PutRequest: ${response.status} ${response.statusText}`,
-    ) as CustomError;
-    error.response = response;
-    throw error;
-  }
-  return response.json();
-};
-
-export const getRequest = async <T>(endpoint: string): Promise<T> => {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method: "GET",
-    headers: getHeaders(),
-  });
-
-  if (!response.ok) {
-    const error = new Error(
-      `Error from GetRequest: ${response.status} ${response.statusText}`,
     ) as CustomError;
     error.response = response;
     throw error;

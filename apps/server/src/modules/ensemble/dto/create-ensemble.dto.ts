@@ -5,6 +5,10 @@ interface Location {
   city: string;
   country: string;
   address: string;
+  coordinates: {
+    type: string;
+    coordinates: [number, number];
+  };
 }
 
 export class CreateEnsembleDto {
