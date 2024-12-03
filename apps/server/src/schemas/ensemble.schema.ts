@@ -9,6 +9,17 @@ const EnsembleSchema = new Schema(
       city: String,
       country: String,
       address: String,
+      coordinates: {
+        type: {
+          type: String,
+          enum: ["Point"],
+          default: "Point",
+        },
+        coordinates: {
+          type: [Number],
+          index: "2dsphere",
+        },
+      },
     },
     open_positions: [
       {
@@ -23,5 +34,7 @@ const EnsembleSchema = new Schema(
     timestamps: true,
   },
 );
+
+EnsembleSchema.index({ "location.coordinates": "2dsphere" });
 
 export const Ensemble = model("Ensemble", EnsembleSchema);
