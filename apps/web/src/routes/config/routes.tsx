@@ -9,6 +9,7 @@ import PostsApplications from "../../pages/authenticated/posts/applications";
 import React from "react";
 import PostDetails from "../../pages/authenticated/posts/Details.tsx";
 import Posts from "../../pages/authenticated/posts";
+import Matchmaking from "../../pages/authenticated/matchmaking";
 
 type RouteConfig = {
   path: string;
@@ -68,6 +69,11 @@ export const routes: RouteConfig[] = [
   {
     path: "/ensembles/:id",
     component: <EnsembleDetail />,
+    protected: true,
+  },
+  {
+    path: "/matchmaking",
+    component: <Matchmaking />,
     protected: true,
   },
   {

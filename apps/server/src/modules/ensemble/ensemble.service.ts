@@ -11,9 +11,12 @@ import { Ensemble } from "../../schemas/ensemble.schema";
 import { Post } from "../../schemas/post.schema";
 import { CreateEnsembleDto } from "./dto/create-ensemble.dto";
 import { UpdateEnsembleDto } from "./dto/update-ensemble.dto";
+import { GeocodingService } from "../geocoding/geocoding.service";
 
 @Injectable()
 export class EnsembleService {
+  constructor(private readonly GeocodingService: GeocodingService) {}
+
   async findUserHostedEnsembles(userId: string) {
     try {
       const hostMemberships = await EnsembleMembership.find({
@@ -21,7 +24,11 @@ export class EnsembleService {
         is_host: true,
       }).populate("ensemble");
 
-      return hostMemberships.map((membership) => membership.ensemble);
+      const validEnsembles = hostMemberships
+        .map((membership) => membership.ensemble)
+        .filter((ensemble) => ensemble !== null);
+
+      return validEnsembles;
     } catch (error) {
       console.error("Error in findUserHostedEnsembles:", error);
       throw new InternalServerErrorException(error);
@@ -33,12 +40,24 @@ export class EnsembleService {
     session.startTransaction();
 
     try {
+      const { latitude, longitude } = await this.GeocodingService.geocodeAddress(
+        `${createEnsembleDto.location.address}, ${createEnsembleDto.location.city}, ${createEnsembleDto.location.country}`,
+      );
+
+      console.log(latitude, longitude);
+
       const ensemble = await Ensemble.create(
         [
           {
             name: createEnsembleDto.name,
             description: createEnsembleDto.description,
-            location: createEnsembleDto.location,
+            location: {
+              ...createEnsembleDto.location,
+              coordinates: {
+                type: "Point",
+                coordinates: [longitude, latitude],
+              },
+            },
             open_positions: createEnsembleDto.open_positions || [],
             is_active: createEnsembleDto.is_active,
           },
