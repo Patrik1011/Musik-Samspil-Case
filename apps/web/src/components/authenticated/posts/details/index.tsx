@@ -1,10 +1,7 @@
 import { postService } from "../../../../services/PostService.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  applicationService,
-  ApplicationRequest,
-} from "../../../../services/ApplicationService.ts";
+import { applicationService, ApplicationRequest } from "../../../../services/ApplicationService.ts";
 import { PostDetails } from "../../../../services/PostService.ts";
 import { Button } from "../../../Button.tsx";
 import { PostDetailsInfo } from "./PostDetailsInfo.tsx";
@@ -19,9 +16,7 @@ export const DetailsComponent = () => {
   const [selectedPost, setSelectedPost] = useState<PostDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
     if (id) {
@@ -73,6 +68,9 @@ export const DetailsComponent = () => {
             lastName={selectedPost.author_id.last_name}
             website={selectedPost.website_url}
             location={selectedPost.ensemble_id.location}
+            ensembleName={selectedPost.ensemble_id.name}
+            email={selectedPost.author_id.email}
+            phoneNumber={selectedPost.author_id.phone_number}
             type={selectedPost.type}
             createdAt={selectedPost.created_at}
             instruments={selectedPost.ensemble_id.open_positions}
@@ -95,9 +93,7 @@ export const DetailsComponent = () => {
           title={isAuthenticated ? "Apply" : "Login to apply"}
           type="button"
           className="text-white bg-steel-blue my-8"
-          onClick={() =>
-            isAuthenticated ? setIsModalOpen(true) : navigate("/login")
-          }
+          onClick={() => (isAuthenticated ? setIsModalOpen(true) : navigate("/login"))}
         />
       </div>
       {selectedPost && (

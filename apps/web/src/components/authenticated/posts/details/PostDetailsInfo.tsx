@@ -5,6 +5,8 @@ import { Divider } from "../../../Divider.tsx";
 import { SubHeadline } from "../../../SubHeadline.tsx";
 import { DetailItem } from "../../../DetailItem.tsx";
 import { formatAndValidateURL } from "../../../../utils/validateUrl.ts";
+import { ContactModal } from "../modals/ContactModal.tsx";
+import { useState } from "react";
 
 interface PostDetailsInfoProps {
   title: string;
@@ -13,7 +15,10 @@ interface PostDetailsInfoProps {
   lastName: string;
   website: string;
   type: string;
+  email: string;
+  phoneNumber: string;
   instruments: string[];
+  ensembleName: string;
   location: {
     address?: string;
     city?: string;
@@ -28,11 +33,16 @@ export const PostDetailsInfo = ({
   firstName,
   lastName,
   website,
+  email,
+  ensembleName,
+  phoneNumber,
   type,
   location,
   instruments,
   createdAt,
 }: PostDetailsInfoProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleWebsiteRedirection = () => {
     const validatedUrl = formatAndValidateURL(website);
     if (validatedUrl) {
@@ -66,6 +76,7 @@ export const PostDetailsInfo = ({
             title="Contact"
             type="button"
             className="text-white bg-steel-blue mt-4"
+            onClick={() => setIsModalOpen(true)}
           />
         </div>
         <Divider className="my-4" />
@@ -89,6 +100,15 @@ export const PostDetailsInfo = ({
           className="mt-4 text-steel-blue border border-soft-gray"
         />
       </div>
+      <ContactModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        email={email}
+        ensembleName={ensembleName}
+        firstName={firstName}
+        lastName={lastName}
+        phone={phoneNumber}
+      />
     </div>
   );
 };
