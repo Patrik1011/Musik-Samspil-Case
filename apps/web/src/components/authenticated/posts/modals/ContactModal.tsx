@@ -3,6 +3,7 @@ import { Button } from "../../../Button.tsx";
 import contactIcon from "../../../../assets/images-svg/contact-icon.svg";
 import { Headline } from "../../../Headline.tsx";
 import { Paragraph } from "../../../Paragraph.tsx";
+import { ContactButton } from "../buttons/ContactButton.tsx";
 
 interface ContactModalProps {
   ensembleName: string;
@@ -32,31 +33,23 @@ export const ContactModal = ({
       <div className="fixed inset-0 bg-transparent-black" aria-hidden="true" />
       <Dialog.Panel className="bg-white p-6 z-50 rounded-[10px] shadow-lg max-w-lg flex flex-col items-center justify-center">
         <img src={contactIcon} alt="music" className="object-contain mb-4" />
+
         <Dialog.Title>
           <Headline
             title={`Contact ${ensembleName}`}
             textColor="text-steel-blue"
           />
         </Dialog.Title>
-        <div>
-          <Paragraph
-            content={`Contact person: ${firstName} ${lastName}`}
-            className="mt-1"
-          />
-        </div>
+
+        <Paragraph
+          content={`Contact person: ${firstName} ${lastName}`}
+          className="mt-1"
+        />
+
         <div className="space-y-2 mt-4 w-full">
-          <a
-            href={`tel:${phone}`}
-            className="block text-base text-center font-bold py-3 px-8 rounded-[10px] text-white bg-steel-blue"
-          >
-            {phone}
-          </a>
-          <a
-            href={`mailto:${email}`}
-            className="block text-base text-center font-bold py-3 px-8 rounded-[10px] text-white bg-steel-blue"
-          >
-            {email}
-          </a>
+          <ContactButton href={`tel:${phone}`} content={phone} />
+          <ContactButton href={`mailto:${email}`} content={email} />
+
           <Button
             onClick={onClose}
             className="text-steel-blue shadow-none border border-soft-gray w-full"

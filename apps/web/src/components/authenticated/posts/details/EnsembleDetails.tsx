@@ -24,29 +24,34 @@ export const EnsembleDetails = ({
   description,
 }: EnsembleDetailsProps) => {
   return (
-    <div className="bg-white border border-soft-gray p-8 rounded-[10px] shadow-lg h-full">
+    <section className="bg-white border border-soft-gray p-8 rounded-[10px] shadow-lg h-full">
       <Headline title="Ensemble Details" textColor="text-steel-blue" />
-      <div className="space-y-2">
-        <p className="text-base font-bold text-steel-blue mt-4">{name}</p>
-        <Paragraph content={description} />
-        <Paragraph content="Updated on" isDate={true} date={updatedAt} />
-      </div>
-      <div className="flex items-center justify-between mt-4">
+
+      <article>
+        <div className="space-y-2">
+          <p className="text-base font-bold text-steel-blue mt-4">{name}</p>
+          <Paragraph content={description || ""} />
+          <Paragraph content="Updated on" isDate={true} date={updatedAt} />
+        </div>
         <span
-          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mt-5 ${
             isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
           }`}
         >
           {isActive ? "Active" : "Inactive"}
         </span>
-      </div>
+      </article>
+
       <Divider className="my-4" />
-      <Headline title="Contact Information" textColor="text-steel-blue" />
-      <div className="space-y-2 mt-4">
-        <DetailItem icon={faUser} content={creator} />
-        <DetailItem icon={faPhone} content={creatorPhone} />
-        <DetailItem icon={faEnvelope} content={creatorEmail} />
-      </div>
-    </div>
+
+      <article>
+        <Headline title="Contact Information" textColor="text-steel-blue" />
+        <div className="space-y-2 mt-4">
+          <DetailItem icon={faUser} content={creator || ""} />
+          <DetailItem icon={faPhone} content={creatorPhone || ""} />
+          <DetailItem icon={faEnvelope} content={creatorEmail || ""} />
+        </div>
+      </article>
+    </section>
   );
 };

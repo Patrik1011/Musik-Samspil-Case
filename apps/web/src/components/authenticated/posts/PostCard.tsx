@@ -37,53 +37,51 @@ export const PostCard = ({
   });
 
   return (
-    <div
+    <article
       className={`bg-white rounded-[10px] border border-soft-gray shadow transition-transform transform hover:scale-105 ${className}`}
     >
-      <div className="px-4 pt-4">
+      <header className="px-4 pt-4">
         <SubHeadline title={title} className="text-steel-blue" />
-        <div className="mt-2">
-          <div className="flex flex-col items-start w-full space-y-1">
-            <DetailItem icon={faUser} content={`${firstName} ${lastName}`} />
-            <DetailItem
-              icon={faMusic}
-              content={instruments.map((instrument, index) => (
-                <span
-                  key={instrument}
-                  className="text-medium-gray text-sm mr-1"
-                >
-                  {instrument}
-                  {index < instruments.length - 1 && ", "}
-                </span>
-              ))}
-            />
-            <DetailItem
-              icon={faGlobe}
-              content={
-                <a
-                  href={formattedUrl || "#"}
-                  className="text-medium-gray text-sm hover:underline truncate"
-                  title={website}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {website}
-                </a>
-              }
-            />
-          </div>
-          <div className="flex justify-between mt-2">
-            <Paragraph content={type} className="font-semibold" />
-            <img src={musicImage} alt="music" className="object-contain" />
-          </div>
-        </div>
-      </div>
+      </header>
 
-      <div className="flex items-center bg-light-gray border-t rounded-b-[10px]">
+      <section className="px-4 mt-2">
+        <ul className="space-y-1">
+          <DetailItem icon={faUser} content={`${firstName} ${lastName}`} />
+          <DetailItem
+            icon={faMusic}
+            content={instruments.map((instrument, index) => (
+              <span key={instrument} className="text-medium-gray text-sm mr-1">
+                {instrument}
+                {index < instruments.length - 1 && ", "}
+              </span>
+            ))}
+          />
+          <DetailItem
+            icon={faGlobe}
+            content={
+              <a
+                href={formattedUrl || "#"}
+                className="text-medium-gray text-sm hover:underline truncate"
+                title={website}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {website}
+              </a>
+            }
+          />
+        </ul>
+        <div className="flex justify-between mt-2">
+          <Paragraph content={type} className="font-semibold" />
+          <img src={musicImage} alt="music" className="object-contain" />
+        </div>
+      </section>
+
+      <footer className="flex items-center bg-light-gray border-t rounded-b-[10px]">
         <div className="flex pl-4 py-2">
           <p className="text-sm text-medium-gray">{formattedDate} •</p>
           <Paragraph content={location} className="ml-1" />
         </div>
-      </div>
-    </div>
+      </footer>
+    </article>
   );
 };
