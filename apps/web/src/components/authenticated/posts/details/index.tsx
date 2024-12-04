@@ -12,6 +12,7 @@ import { EnsembleDetails } from "./EnsembleDetails.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store.ts";
 import { ApplicationModal } from "../../applications/modals/ApplicationModal.tsx";
+import { Container } from "../../../Container.tsx";
 
 export const DetailsComponent = () => {
   const { id } = useParams();
@@ -21,8 +22,6 @@ export const DetailsComponent = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
-
-  console.log("Posts from PostDetailsInfo.tsx", selectedPost);
 
   useEffect(() => {
     if (id) {
@@ -58,14 +57,14 @@ export const DetailsComponent = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto pt-10">
+    <Container className="pt-10">
       <Button
         title="Go back"
         type="button"
         className="text-steel-blue border border-soft-gray bg-white"
         onClick={() => navigate("/")}
       />
-      <div className="flex flex-col md:flex-row mt-8 justify-between w-full gap-x-3 items-stretch">
+      <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row mt-8 justify-between w-full gap-x-3 items-stretch">
         <div className="md:w-1/2 w-full flex flex-col">
           <PostDetailsInfo
             title={selectedPost.title}
@@ -95,7 +94,7 @@ export const DetailsComponent = () => {
         <Button
           title={isAuthenticated ? "Apply" : "Login to apply"}
           type="button"
-          className="text-white bg-steel-blue my-4"
+          className="text-white bg-steel-blue my-8"
           onClick={() =>
             isAuthenticated ? setIsModalOpen(true) : navigate("/login")
           }
@@ -111,6 +110,6 @@ export const DetailsComponent = () => {
           open_positions={selectedPost.ensemble_id.open_positions || []}
         />
       )}
-    </div>
+    </Container>
   );
 };
