@@ -2,6 +2,7 @@ import { faUser, faGlobe, faMusic } from "@fortawesome/free-solid-svg-icons";
 import musicImage from "../../../assets/images-svg/music.svg";
 import { DetailItem } from "../../DetailItem.tsx";
 import { SubHeadline } from "../../SubHeadline.tsx";
+import { formatAndValidateURL } from "../../../utils/validateUrl.ts";
 
 interface PostCardProps {
   title: string;
@@ -25,6 +26,8 @@ export const PostCard = ({
   location,
   className,
 }: PostCardProps) => {
+  const formattedUrl = formatAndValidateURL(website);
+
   return (
     <div
       className={`bg-white rounded-[10px] border border-soft-gray shadow transition-transform transform hover:scale-105 ${className}`}
@@ -37,7 +40,10 @@ export const PostCard = ({
             <DetailItem
               icon={faMusic}
               content={instruments.map((instrument, index) => (
-                <span key={instrument} className="text-medium-gray text-sm mr-1">
+                <span
+                  key={instrument}
+                  className="text-medium-gray text-sm mr-1"
+                >
                   {instrument}
                   {index < instruments.length - 1 && ", "}
                 </span>
@@ -47,9 +53,10 @@ export const PostCard = ({
               icon={faGlobe}
               content={
                 <a
-                  href={website}
+                  href={formattedUrl || "#"}
                   className="text-medium-gray text-sm hover:underline truncate"
                   title={website}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   {website}
                 </a>

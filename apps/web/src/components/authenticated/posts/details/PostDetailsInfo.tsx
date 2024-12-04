@@ -4,6 +4,7 @@ import { faLocationDot, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Divider } from "../../../Divider.tsx";
 import { SubHeadline } from "../../../SubHeadline.tsx";
 import { DetailItem } from "../../../DetailItem.tsx";
+import { formatAndValidateURL } from "../../../../utils/validateUrl.ts";
 
 interface PostDetailsInfoProps {
   title: string;
@@ -32,6 +33,13 @@ export const PostDetailsInfo = ({
   instruments,
   createdAt,
 }: PostDetailsInfoProps) => {
+  const handleWebsiteRedirection = () => {
+    const validatedUrl = formatAndValidateURL(website);
+    if (validatedUrl) {
+      window.location.replace(validatedUrl);
+    }
+  };
+
   return (
     <div>
       <div className="bg-white border border-soft-gray p-8 rounded-[10px] shadow-lg h-full">
@@ -77,7 +85,7 @@ export const PostDetailsInfo = ({
         <Button
           title="Visit website"
           type="button"
-          onClick={() => (window.location.href = website)}
+          onClick={handleWebsiteRedirection}
           className="mt-4 text-steel-blue border border-soft-gray"
         />
       </div>
