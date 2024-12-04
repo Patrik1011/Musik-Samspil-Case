@@ -27,7 +27,7 @@ export const PostCard = ({
 }: PostCardProps) => {
   return (
     <div
-      className={`bg-white rounded-[10px] border border-soft-gray shadow ${className}`}
+      className={`bg-white rounded-[10px] border border-soft-gray shadow transition-transform transform hover:scale-105 ${className}`}
     >
       <div className="px-4 pt-4">
         <SubHeadline title={title} className="text-steel-blue" />
@@ -37,10 +37,7 @@ export const PostCard = ({
             <DetailItem
               icon={faMusic}
               content={instruments.map((instrument, index) => (
-                <span
-                  key={instrument}
-                  className="text-medium-gray text-sm mr-1"
-                >
+                <span key={instrument} className="text-medium-gray text-sm mr-1">
                   {instrument}
                   {index < instruments.length - 1 && ", "}
                 </span>
