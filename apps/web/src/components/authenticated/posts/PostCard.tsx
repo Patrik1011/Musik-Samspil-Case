@@ -3,6 +3,7 @@ import musicImage from "../../../assets/images-svg/music.svg";
 import { DetailItem } from "../../DetailItem.tsx";
 import { SubHeadline } from "../../SubHeadline.tsx";
 import { formatAndValidateURL } from "../../../utils/validateUrl.ts";
+import { Paragraph } from "../../Paragraph.tsx";
 
 interface PostCardProps {
   title: string;
@@ -64,7 +65,7 @@ export const PostCard = ({
             />
           </div>
           <div className="flex justify-between mt-2">
-            <p className="text-medium-gray font-semibold text-sm">{type}</p>
+            <Paragraph content={type} className="font-semibold" />
             <img src={musicImage} alt="music" className="object-contain" />
           </div>
         </div>
@@ -72,7 +73,7 @@ export const PostCard = ({
 
       <div className="flex items-center bg-light-gray border-t rounded-b-[10px]">
         <div className="pl-4 py-2">
-          <p className="text-medium-gray text-sm">{location}</p>
+          <Paragraph content={location} />
         </div>
       </div>
     </div>

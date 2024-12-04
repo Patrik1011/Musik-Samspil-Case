@@ -2,6 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { Button } from "../../../Button.tsx";
 import contactIcon from "../../../../assets/images-svg/contact-icon.svg";
 import { Headline } from "../../../Headline.tsx";
+import { Paragraph } from "../../../Paragraph.tsx";
 
 interface ContactModalProps {
   ensembleName: string;
@@ -32,12 +33,16 @@ export const ContactModal = ({
       <Dialog.Panel className="bg-white p-6 z-50 rounded-[10px] shadow-lg max-w-lg flex flex-col items-center justify-center">
         <img src={contactIcon} alt="music" className="object-contain mb-4" />
         <Dialog.Title>
-          <Headline title={`Contact ${ensembleName}`} textColor="text-steel-blue" />
+          <Headline
+            title={`Contact ${ensembleName}`}
+            textColor="text-steel-blue"
+          />
         </Dialog.Title>
         <div>
-          <p className="text-medium-gray text-sm mt-1">
-            Contact person: {firstName} {lastName}
-          </p>
+          <Paragraph
+            content={`Contact person: ${firstName} ${lastName}`}
+            className="mt-1"
+          />
         </div>
         <div className="space-y-2 mt-4 w-full">
           <a

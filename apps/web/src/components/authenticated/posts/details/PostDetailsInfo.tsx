@@ -7,6 +7,7 @@ import { DetailItem } from "../../../DetailItem.tsx";
 import { formatAndValidateURL } from "../../../../utils/validateUrl.ts";
 import { ContactModal } from "../modals/ContactModal.tsx";
 import { useState } from "react";
+import { Paragraph } from "../../../Paragraph.tsx";
 
 interface PostDetailsInfoProps {
   title: string;
@@ -56,20 +57,13 @@ export const PostDetailsInfo = ({
         <Headline title="Post Details" textColor="text-steel-blue" />
         <div className="space-y-2">
           <p className="text-base font-bold text-steel-blue mt-4">{title}</p>
-          <p className="text-medium-gray text-sm">
-            Posted on{" "}
-            {new Date(createdAt).toLocaleDateString("en-GB", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </p>
+          <Paragraph content="Posted on" isDate={true} date={createdAt} />
           <DetailItem icon={faUser} content={`${firstName} ${lastName}`} />
           <DetailItem
             icon={faLocationDot}
             content={`${location.address}, ${location.city}, ${location.country}`}
           />
-          <p className="text-medium-gray font-semibold text-sm">{type}</p>
+          <Paragraph content={type} className="font-semibold" />
         </div>
         <div>
           <Button
@@ -91,7 +85,7 @@ export const PostDetailsInfo = ({
         </div>
         <div className="mt-4">
           <SubHeadline title="Description" className="text-steel-blue" />
-          <p className="text-medium-gray text-sm">{description}</p>
+          <Paragraph content={description} />
         </div>
         <Button
           title="Visit website"

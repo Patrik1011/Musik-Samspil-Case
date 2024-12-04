@@ -2,6 +2,7 @@ import { Divider } from "../../../Divider.tsx";
 import { DetailItem } from "../../../DetailItem.tsx";
 import { faUser, faPhone, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { Headline } from "../../../Headline.tsx";
+import { Paragraph } from "../../../Paragraph.tsx";
 
 interface EnsembleDetailsProps {
   name: string;
@@ -27,16 +28,8 @@ export const EnsembleDetails = ({
       <Headline title="Ensemble Details" textColor="text-steel-blue" />
       <div className="space-y-2">
         <p className="text-base font-bold text-steel-blue mt-4">{name}</p>
-        <p className="text-medium-gray text-sm">{description}</p>
-
-        <p className="text-medium-gray text-sm">
-          Updated on{" "}
-          {new Date(updatedAt).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </p>
+        <Paragraph content={description} />
+        <Paragraph content="Updated on" isDate={true} date={updatedAt} />
       </div>
       <div className="flex items-center justify-between mt-4">
         <span
