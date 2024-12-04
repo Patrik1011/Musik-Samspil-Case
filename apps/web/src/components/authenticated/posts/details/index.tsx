@@ -5,21 +5,24 @@ import {
   applicationService,
   ApplicationRequest,
 } from "../../../../services/ApplicationService.ts";
-import { ApplicationModal } from "../../../../components/authenticated/applications/modals/ApplicationModal";
+import { PostDetails } from "../../../../services/PostService.ts";
 import { Button } from "../../../Button.tsx";
-import { Headline } from "../../../Headline.tsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faUser } from "@fortawesome/free-solid-svg-icons";
-import { Divider } from "../../../Divider.tsx";
-import { PostDetails } from "./PostDetails.tsx";
+import { PostDetailsInfo } from "./PostDetailsInfo.tsx";
 import { EnsembleDetails } from "./EnsembleDetails.tsx";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store.ts";
+import { ApplicationModal } from "../../applications/modals/ApplicationModal.tsx";
+
 export const DetailsComponent = () => {
   const { id } = useParams();
-  const [post, setPost] = useState<PostDetails | null>(null);
+  const [selectedPost, setSelectedPost] = useState<PostDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
 
-  console.log("Posts from PostDetails.tsx", post);
+  console.log("Posts from PostDetailsInfo.tsx", selectedPost);
 
   useEffect(() => {
     if (id) {
@@ -30,18 +33,28 @@ export const DetailsComponent = () => {
   const fetchPost = async (postId: string) => {
     try {
       const data = await postService.getPostById(postId);
-      setPost(data);
+      setSelectedPost(data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleApplyForPost = async (data: ApplicationRequest) => {
-    if (!post) return;
-    await applicationService.applyForPost(post._id, data);
+  // const handleApplyForPost = async (data: ApplicationRequest) => {
+  //   if (!selectedPost) return;
+  //   await applicationService.applyForPost(selectedPost._id, data);
+  // };
+
+  const handleApplicationSubmit = async (data: ApplicationRequest) => {
+    if (!selectedPost) return;
+    try {
+      await applicationService.applyForPost(selectedPost._id, data);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to submit application:", error);
+    }
   };
 
-  if (!post) {
+  if (!selectedPost) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-steel-blue" />
@@ -59,37 +72,50 @@ export const DetailsComponent = () => {
       />
       <div className="flex flex-col md:flex-row mt-8 justify-between w-full gap-x-3 items-stretch">
         <div className="md:w-1/2 w-full flex flex-col">
-          <PostDetails
-            title={post.title}
-            description={post.description}
-            firstName={post.author_id.first_name}
-            lastName={post.author_id.last_name}
-            website={post.website_url}
-            location={post.ensemble_id.location}
-            type={post.type}
-            createdAt={post.created_at}
-            instruments={post.ensemble_id.open_positions}
+          <PostDetailsInfo
+            title={selectedPost.title}
+            description={selectedPost.description}
+            firstName={selectedPost.author_id.first_name}
+            lastName={selectedPost.author_id.last_name}
+            website={selectedPost.website_url}
+            location={selectedPost.ensemble_id.location}
+            type={selectedPost.type}
+            createdAt={selectedPost.created_at}
+            instruments={selectedPost.ensemble_id.open_positions}
           />
         </div>
         <div className="md:w-1/2 w-full flex flex-col">
           <EnsembleDetails
-            name={post.ensemble_id.name}
-            creator={`${post.author_id.first_name} ${post.author_id.last_name}`}
-            creatorPhone={post.author_id.phone_number}
-            creatorEmail={post.author_id.email}
-            description={post.ensemble_id.description}
-            isActive={post.ensemble_id.is_active}
-            updatedAt={post.ensemble_id.updatedAt}
+            name={selectedPost.ensemble_id.name}
+            creator={`${selectedPost.author_id.first_name} ${selectedPost.author_id.last_name}`}
+            creatorPhone={selectedPost.author_id.phone_number}
+            creatorEmail={selectedPost.author_id.email}
+            description={selectedPost.ensemble_id.description}
+            isActive={selectedPost.ensemble_id.is_active}
+            updatedAt={selectedPost.ensemble_id.updatedAt}
           />
         </div>
       </div>
       <div className="flex justify-end">
         <Button
-          title="Apply Now"
+          title={isAuthenticated ? "Apply" : "Login to apply"}
           type="button"
           className="text-white bg-steel-blue my-4"
+          onClick={() =>
+            isAuthenticated ? setIsModalOpen(true) : navigate("/login")
+          }
         />
       </div>
+      {selectedPost && (
+        <ApplicationModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
+          onConfirm={handleApplicationSubmit}
+          open_positions={selectedPost.ensemble_id.open_positions || []}
+        />
+      )}
     </div>
   );
 };
