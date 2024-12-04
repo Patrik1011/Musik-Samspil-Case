@@ -69,6 +69,7 @@ export const Posts = () => {
               description={post.description}
               type={post.type}
               website={post.website_url}
+              createdAt={post.created_at}
               instruments={post.ensemble_id.open_positions}
               location={`${post.ensemble_id.location.city}, ${post.ensemble_id.location.country}`}
             />

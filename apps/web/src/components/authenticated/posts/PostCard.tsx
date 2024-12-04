@@ -12,6 +12,7 @@ interface PostCardProps {
   lastName: string;
   website: string;
   type: string;
+  createdAt: string;
   instruments: string[];
   location: string;
   className?: string;
@@ -25,9 +26,15 @@ export const PostCard = ({
   instruments,
   type,
   location,
+  createdAt,
   className,
 }: PostCardProps) => {
   const formattedUrl = formatAndValidateURL(website);
+
+  const formattedDate = new Date(createdAt).toLocaleDateString("da-DK", {
+    day: "numeric",
+    month: "long",
+  });
 
   return (
     <div
@@ -72,8 +79,9 @@ export const PostCard = ({
       </div>
 
       <div className="flex items-center bg-light-gray border-t rounded-b-[10px]">
-        <div className="pl-4 py-2">
-          <Paragraph content={location} />
+        <div className="flex pl-4 py-2">
+          <p className="text-sm text-medium-gray">{formattedDate} •</p>
+          <Paragraph content={location} className="ml-1" />
         </div>
       </div>
     </div>
