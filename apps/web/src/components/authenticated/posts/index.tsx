@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
 import { PostDetails, postService } from "../../../services/PostService.ts";
-import { applicationService } from "../../../services/ApplicationService.ts";
-import { ApplicationModal } from "../applications/modals/ApplicationModal.tsx";
-import { ApplicationRequest } from "../../../services/ApplicationService.ts";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store.ts";
 import homeImage from "../../../assets/images-svg/home.svg";
 import { Select } from "../../Select.tsx";
 import { Instrument } from "../../../enums/Instrument.ts";
 import { Button } from "../../Button.tsx";
+import { PostCard } from "./PostCard.tsx";
+import { useNavigate } from "react-router-dom";
 
 export const Posts = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
-  const [selectedPost, setSelectedPost] = useState<PostDetails | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPosts();
@@ -24,25 +19,14 @@ export const Posts = () => {
     try {
       const data = await postService.getPosts();
       setPosts(data);
+      console.log(data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
   };
 
-  const handleApply = (post: PostDetails) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-  };
-
-  const handleApplicationSubmit = async (data: ApplicationRequest) => {
-    if (!selectedPost) return;
-    try {
-      await applicationService.applyForPost(selectedPost._id, data);
-      setIsModalOpen(false);
-      setSelectedPost(null);
-    } catch (error) {
-      console.error("Failed to submit application:", error);
-    }
+  const handlePostClick = (id: string) => {
+    navigate(`/post-details/${id}`);
   };
 
   return (
@@ -51,17 +35,23 @@ export const Posts = () => {
         <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full">
           <div className="md:w-1/2">
             <p className="text-[30px] leading-[34px] mt-12 mb-7 text-custom-red font-oswald md:leading-[54px] md:mt-0 md:mb-14 md:text-[50px]">
-              The place where amateur musicians find each other and play music together
+              The place where amateur musicians find each other and play music
+              together
             </p>
             <div className="flex flex-col space-y-2 md:flex-row items-center justify-between w-full md:space-y-0">
               <div className="w-full  md:w-1/2 md:mr-3">
                 <Select
                   onChange={() => console.log()}
-                  options={Object.values(Instrument).map((type) => type.toString())}
+                  options={Object.values(Instrument).map((type) =>
+                    type.toString(),
+                  )}
                 />
               </div>
               <div className="w-full md:w-1/2 md:ml-3">
-                <Button title="See posts" className="text-white bg-steel-blue w-full" />
+                <Button
+                  title="See posts"
+                  className="text-white bg-steel-blue w-full"
+                />
               </div>
             </div>
           </div>
@@ -70,75 +60,22 @@ export const Posts = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {posts.map((post) => (
-          <div key={post._id} className="bg-white rounded-lg shadow-md p-6 flex flex-col h-full">
-            <div className="flex-grow">
-              <h2 className="text-xl font-semibold mb-4">{post.title}</h2>
-              <p className="text-gray-600 mb-4">{post.description}</p>
-              <div className="space-y-2">
-                <div className="flex items-start w-full">
-                  <span className="text-gray-500 font-medium w-20 flex-shrink-0">Website:</span>
-                  <a
-                    href={post.website_url}
-                    className="text-steel-blue hover:underline ml-2 truncate"
-                    title={post.website_url}
-                  >
-                    {post.website_url}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-gray-500 font-medium w-20 flex-shrink-0">Type:</span>
-                  <span className="capitalize">{post.type}</span>
-                </div>
-              </div>
-
-              {post.ensemble_id && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-medium mb-2">Open Positions</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {post.ensemble_id.open_positions.map((position) => (
-                      <span
-                        key={position}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-steel-blue bg-opacity-10 text-steel-blue"
-                      >
-                        {position}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {isAuthenticated ? (
-              <button
-                type="button"
-                onClick={() => handleApply(post)}
-                className="mt-6 w-full bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-opacity-90"
-              >
-                Apply
-              </button>
-            ) : (
-              <a
-                href="/login"
-                className="mt-6 w-full bg-steel-blue text-white px-4 py-2 rounded-md hover:bg-opacity-90 text-center block"
-              >
-                Sign in
-              </a>
-            )}
+          <div key={post._id} onClick={() => handlePostClick(post._id)}>
+            <PostCard
+              key={post._id}
+              title={post.title}
+              firstName={post.author_id.first_name}
+              lastName={post.author_id.last_name}
+              description={post.description}
+              type={post.type}
+              website={post.website_url}
+              createdAt={post.created_at}
+              instruments={post.ensemble_id.open_positions}
+              location={`${post.ensemble_id.location.city}, ${post.ensemble_id.location.country}`}
+            />
           </div>
         ))}
       </div>
-
-      {selectedPost && (
-        <ApplicationModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedPost(null);
-          }}
-          onConfirm={handleApplicationSubmit}
-          open_positions={selectedPost.ensemble_id?.open_positions || []}
-        />
-      )}
     </div>
   );
 };

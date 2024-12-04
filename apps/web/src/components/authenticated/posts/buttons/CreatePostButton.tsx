@@ -8,7 +8,7 @@ interface Props {
   existingPostId?: string;
 }
 
-const CreatePostButton = ({ ensembleId, existingPostId }: Props) => {
+export const CreatePostButton = ({ ensembleId, existingPostId }: Props) => {
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -39,5 +39,3 @@ const CreatePostButton = ({ ensembleId, existingPostId }: Props) => {
     </div>
   );
 };
-
-export default CreatePostButton;

@@ -42,7 +42,6 @@ export class PostController {
   }
 
   @Get(":id")
-  @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
   async getPostById(@Param("id") postId: string) {
     if (!Types.ObjectId.isValid(postId)) {
