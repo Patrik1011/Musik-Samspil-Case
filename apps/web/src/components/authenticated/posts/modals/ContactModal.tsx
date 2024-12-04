@@ -35,18 +35,12 @@ export const ContactModal = ({
         <img src={contactIcon} alt="music" className="object-contain mb-4" />
 
         <Dialog.Title>
-          <Headline
-            title={`Contact ${ensembleName}`}
-            textColor="text-steel-blue"
-          />
+          <Headline title={`Contact ${ensembleName}`} textColor="text-steel-blue" />
         </Dialog.Title>
 
-        <Paragraph
-          content={`Contact person: ${firstName} ${lastName}`}
-          className="mt-1"
-        />
+        <Paragraph content={`Contact person: ${firstName} ${lastName}`} className="mt-1" />
 
-        <div className="space-y-2 mt-4 w-full">
+        <div className="space-y-3 mt-4 w-full">
           <ContactButton href={`tel:${phone}`} content={phone} />
           <ContactButton href={`mailto:${email}`} content={email} />
 
