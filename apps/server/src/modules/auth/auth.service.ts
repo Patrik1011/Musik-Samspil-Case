@@ -48,7 +48,7 @@ export class AuthService {
 
       if (!isValidPassword(signUpDto.password)) {
         throw new BadRequestException(
-          "Password must contain at least 8 characters, including uppercase, lowercase, number",
+          "Password must contain at least 6 characters, including uppercase, lowercase, number",
         );
       }
 

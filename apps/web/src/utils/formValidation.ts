@@ -11,7 +11,10 @@ const errorMessages = {
   EMAIL_REQUIRED: "Email is required",
   INVALID_EMAIL: "Invalid email format",
   PASSWORD_REQUIRED: "Password is required",
-  PASSWORD_LENGTH: "Password must be at least 8 characters",
+  PASSWORD_LENGTH: "Password must be at least 6 characters long",
+  PASSWORD_UPPERCASE: "Password must contain at least one uppercase letter",
+  PASSWORD_LOWERCASE: "Password must contain at least one lowercase letter",
+  PASSWORD_NUMBER: "Password must contain at least one number",
   NAME_REQUIRED: "Name is required",
   NAME_LENGTH: "Name must be at least 2 characters",
 };
@@ -30,17 +33,29 @@ const validatePassword = (password: string): string | undefined => {
   if (!password) {
     return errorMessages.PASSWORD_REQUIRED;
   }
-  if (password.length < 8) {
+  if (password.length < 6) {
     return errorMessages.PASSWORD_LENGTH;
   }
+
+  // if (!/[A-Z]/.test(password)) {
+  //   return errorMessages.PASSWORD_UPPERCASE;
+  // }
+  //
+  // if (!/[a-z]/.test(password)) {
+  //   return errorMessages.PASSWORD_LOWERCASE;
+  // }
+  //
+  // if (!/[0-9]/.test(password)) {
+  //   return errorMessages.PASSWORD_NUMBER;
+  // }
   return undefined;
 };
 
-const validateFirstName = (name: string): string | undefined => {
-  if (!name) {
+const validateFirstName = (firstName: string): string | undefined => {
+  if (!firstName) {
     return errorMessages.NAME_REQUIRED;
   }
-  if (name.length < 2) {
+  if (firstName.length < 2) {
     return errorMessages.NAME_LENGTH;
   }
   return undefined;

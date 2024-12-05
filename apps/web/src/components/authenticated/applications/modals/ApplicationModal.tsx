@@ -35,7 +35,7 @@ export const ApplicationModal = ({ isOpen, onClose, onConfirm, open_positions }:
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 bg-transparent-black" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="mx-auto w-full max-w-2xl rounded bg-white p-8">
           <Dialog.Title className="text-xl font-medium mb-6">Apply for Position</Dialog.Title>
