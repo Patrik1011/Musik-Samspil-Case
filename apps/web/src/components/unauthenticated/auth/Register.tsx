@@ -5,6 +5,7 @@ import { validateForm } from "../../../utils/formValidation.ts";
 import { InputField } from "../../InputField.tsx";
 import { authService } from "../../../services/AuthService.ts";
 import { useNavigate } from "react-router-dom";
+import { CustomError } from "../../../utils/api.ts";
 
 interface RegisterData {
   first_name: string;
@@ -60,8 +61,8 @@ const Register: React.FC = () => {
         console.error("Registration failed");
       }
     } catch (error: unknown) {
-      const err = error as { response: { status: number } };
-      if (err.response.status === 409) {
+      const err = error as CustomError;
+      if (err.response?.status === 409) {
         setErrors({ general: "Email already exists" });
       } else {
         setErrors({ general: "An unexpected error occurred" });
