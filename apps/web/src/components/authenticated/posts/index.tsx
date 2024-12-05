@@ -20,7 +20,6 @@ export const Posts = () => {
     try {
       const data = await postService.getLatestPosts();
       setPosts(data);
-      console.log(data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
