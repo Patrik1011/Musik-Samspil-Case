@@ -3,9 +3,11 @@ import { Button } from "../../Button.tsx";
 import { Headline } from "./Headline.tsx";
 import { validateForm } from "../../../utils/formValidation.ts";
 import { InputField } from "../../InputField.tsx";
-import { authService } from "../../../services/AuthService.ts";
 import { useNavigate } from "react-router-dom";
 import { CustomError } from "../../../utils/api.ts";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store.ts";
+import { registerUser } from "../../../redux/authActions.ts";
 
 interface RegisterData {
   first_name: string;
@@ -17,8 +19,8 @@ interface RegisterData {
 interface Errors {
   email?: string;
   password?: string;
-  firstName?: string;
-  lastName?: string;
+  first_name?: string;
+  last_name?: string;
   general?: string;
 }
 
@@ -30,6 +32,7 @@ const Register: React.FC = () => {
     email: "",
   });
   const [errors, setErrors] = useState<Errors>({});
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,27 +50,19 @@ const Register: React.FC = () => {
     }
 
     try {
-      const result = await authService.register(registerData);
-      if (result) {
-        setErrors({});
-        setRegisterData({
-          first_name: "",
-          last_name: "",
-          password: "",
-          email: "",
-        });
-        navigate("/login");
-      } else {
-        console.error("Registration failed");
-      }
+      await dispatch(registerUser(registerData));
+      setErrors({});
+      setRegisterData({
+        first_name: "",
+        last_name: "",
+        password: "",
+        email: "",
+      });
+      console.log("Login successful navigating to onboarding");
+      navigate("/onboarding");
     } catch (error: unknown) {
       const err = error as CustomError;
-      if (err.response?.status === 409) {
-        setErrors({ general: "Email already exists" });
-      } else {
-        setErrors({ general: "An unexpected error occurred" });
-        console.error("Error during registration:", error);
-      }
+      setErrors({ general: err.message });
     }
   };
 
@@ -77,7 +72,7 @@ const Register: React.FC = () => {
       <div className="space-y-4">
         <InputField
           id="first_name"
-          errorMessages={errors.firstName}
+          errorMessages={errors.first_name}
           name="first_name"
           type="text"
           placeholder="Firstname"
@@ -87,7 +82,7 @@ const Register: React.FC = () => {
         />
         <InputField
           id="last_name"
-          errorMessages={errors.lastName}
+          errorMessages={errors.last_name}
           name="last_name"
           type="text"
           placeholder="Lastname"

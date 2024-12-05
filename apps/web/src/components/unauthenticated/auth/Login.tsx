@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store.ts";
 import { loginUser } from "../../../redux/authActions.ts";
 import { useNavigate } from "react-router-dom";
+import { CustomError } from "../../../utils/api.ts";
 
 interface FormData {
   email: string;
@@ -46,12 +47,8 @@ const Login: React.FC = () => {
       setFormData({ email: "", password: "" });
       navigate("/onboarding");
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrors({ general: error.message });
-      } else {
-        setErrors({ general: "An unexpected error occurred" });
-        console.error("Error during login:", error);
-      }
+      const err = error as CustomError;
+      setErrors({ general: err.message });
     }
   };
 
