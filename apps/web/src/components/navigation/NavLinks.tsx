@@ -16,6 +16,7 @@ export function NavLinks({ isMobile }: Props) {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+
   const handleLogout = () => {
     dispatch(logoutUser());
   };
