@@ -56,7 +56,7 @@ export const CreatePostModal = ({ isOpen, onClose, ensembleId }: Props) => {
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div
-        className="fixed inset-0 bg-black/30"
+        className="fixed inset-0 bg-transparent-black"
         aria-hidden="true"
         onKeyDown={handleOverlayKeyDown}
       />

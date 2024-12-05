@@ -28,9 +28,9 @@ export const ContactModal = ({
     <Dialog
       onClose={onClose}
       open={isOpen}
-      className="fixed inset-0 flex items-center justify-center"
+      className="fixed inset-0 flex items-center justify-center z-50"
     >
-      <div className="fixed inset-0 bg-transparent-black" aria-hidden="true" />
+      <div className="fixed z-20 inset-0 bg-transparent-black" aria-hidden="true" />
       <Dialog.Panel className="bg-white p-6 z-50 rounded-[10px] shadow-lg max-w-lg flex flex-col items-center justify-center">
         <img src={contactIcon} alt="music" className="object-contain mb-4" />
 

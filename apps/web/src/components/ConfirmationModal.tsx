@@ -16,7 +16,7 @@ export const ConfirmationModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent-black">
       <div className="w-11/12 max-w-md bg-white rounded-lg shadow-lg">
         <div className="px-4 py-2 border-b">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
