@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronUpIcon } from "./ChevronUp";
 import { MenuIcon } from "./MenuIcon";
@@ -15,6 +15,7 @@ interface Props {
 export function NavLinks({ isMobile }: Props) {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -22,18 +23,39 @@ export function NavLinks({ isMobile }: Props) {
 
   const currentLinks = isAuthenticated ? Links.authenticated : Links.unauthenticated;
 
+  const getLinkStyles = (label: string, href: string) => {
+    const isActive = location.pathname === href;
+    const isNoBorder = label === "My posts" || label === "Ensembles";
+    const isExcludedFromUnderline =
+      label === "Sign in" || label === "Sign up" || label === "Profile";
+
+    return {
+      isActive,
+      isNoBorder,
+      isExcludedFromUnderline,
+    };
+  };
+
   const renderLinks = (links: NavLink[]) =>
-    links.map(({ label, href, bgColor, spanColor }) => (
-      <PopoverButton
-        key={label}
-        as={Link}
-        to={href}
-        className={`flex items-center justify-center rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor}`}
-        onClick={label === "Logout" ? handleLogout : undefined}
-      >
-        <span className={`text-base ${spanColor}`}>{label}</span>
-      </PopoverButton>
-    ));
+    links.map(({ label, href, bgColor, spanColor }) => {
+      const { isActive, isNoBorder, isExcludedFromUnderline } = getLinkStyles(label, href);
+
+      const paddingClass = isNoBorder ? "py-4" : "px-7 py-4";
+
+      return (
+        <PopoverButton
+          key={label}
+          as={Link}
+          to={href}
+          className={`flex items-center justify-center rounded-xl ${paddingClass} font-semibold text-sm ${
+            isNoBorder ? "" : "border border-gray-500"
+          } ${bgColor} ${isActive && !isExcludedFromUnderline ? "underline decoration-2 decoration-steel-blue" : ""}`}
+          onClick={label === "Logout" ? handleLogout : undefined}
+        >
+          <span className={`text-base ${spanColor}`}>{label}</span>
+        </PopoverButton>
+      );
+    });
 
   if (isMobile) {
     return (
@@ -82,14 +104,20 @@ export function NavLinks({ isMobile }: Props) {
     );
   }
 
-  return currentLinks.map(({ label, href, bgColor, spanColor }) => (
-    <Link
-      key={label}
-      className={`relative rounded-xl px-7 py-4 text-sm border border-gray-500 ${bgColor}`}
-      to={href}
-      onClick={label === "Logout" ? handleLogout : undefined}
-    >
-      <span className={`text-base ${spanColor}`}>{label}</span>
-    </Link>
-  ));
+  return currentLinks.map(({ label, href, bgColor, spanColor }) => {
+    const { isActive, isNoBorder, isExcludedFromUnderline } = getLinkStyles(label, href);
+    const paddingClass = isNoBorder ? "py-4" : "px-7 py-4";
+    return (
+      <Link
+        key={label}
+        className={`relative rounded-xl ${paddingClass} font-semibold text-sm ${
+          isNoBorder ? "" : "border border-gray-500"
+        } ${bgColor} ${isActive && !isExcludedFromUnderline ? "underline underline-offset-4 decoration-2 decoration-steel-blue" : ""}`}
+        to={href}
+        onClick={label === "Logout" ? handleLogout : undefined}
+      >
+        <span className={`text-base ${spanColor}`}>{label}</span>
+      </Link>
+    );
+  });
 }

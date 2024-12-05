@@ -41,6 +41,12 @@ export class PostController {
     return this.postService.getAllPosts();
   }
 
+  @Get("latest")
+  @ApiOkResponse()
+  async getLatestPosts() {
+    return this.postService.getLatestPosts();
+  }
+
   @Get(":id")
   @ApiOkResponse()
   async getPostById(@Param("id") postId: string) {

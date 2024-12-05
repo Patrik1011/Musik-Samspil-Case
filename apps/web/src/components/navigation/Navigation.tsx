@@ -17,7 +17,7 @@ export const Navigation = () => {
                 </p>
               </Link>
             </div>
-            <div className="hidden lg:flex lg:gap-10">
+            <div className="hidden lg:flex lg:gap-5">
               <NavLinks isMobile={false} />
             </div>
           </div>

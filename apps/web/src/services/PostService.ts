@@ -63,4 +63,9 @@ export const postService = {
   deletePost: async (id: string): Promise<void> => {
     await deleteRequest(`/post/${id}`);
   },
+
+  getLatestPosts: async (): Promise<PostDetails[]> => {
+    const response = await getRequest("/post/latest");
+    return response as PostDetails[];
+  },
 };
