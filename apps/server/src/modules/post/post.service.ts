@@ -73,4 +73,15 @@ export class PostService {
     await post.deleteOne();
     return { message: "Post deleted successfully" };
   }
+
+  async getLatestPosts() {
+    try {
+      return await Post.find()
+        .sort({ created_at: -1 })
+        .limit(6)
+        .populate(["ensemble_id", "author_id"]);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
 }

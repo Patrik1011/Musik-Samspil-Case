@@ -18,7 +18,7 @@ export const Posts = () => {
 
   const fetchPosts = async () => {
     try {
-      const data = await postService.getPosts();
+      const data = await postService.getLatestPosts();
       setPosts(data);
       console.log(data);
     } catch (error) {
