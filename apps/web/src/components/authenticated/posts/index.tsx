@@ -30,7 +30,7 @@ export const Posts = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <section className="mb-16 flex items-center justify-center md:min-h-[70vh] md:mb-0">
         <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full">
           <div className="md:w-1/2">
