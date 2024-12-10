@@ -9,6 +9,8 @@ import { UserEntity } from "../../../utils/types.ts";
 import { PostCard } from "../posts/PostCard.tsx";
 import { PostDetails, postService } from "../../../services/PostService.ts";
 import { ConfirmationModal } from "../../ConfirmationModal.tsx";
+import { Container } from "../../Container.tsx";
+import { EmptyState } from "../../EmptyState.tsx";
 
 export const Profile = () => {
   const [user, setUser] = useState<UserEntity | null>(null);
@@ -72,14 +74,17 @@ export const Profile = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-10">
+    <Container className="my-10">
       <section>
         <div className="flex flex-row items-center">
-          <div className="flex items-center justify-center w-[98px] h-[98px] p-4 rounded-[20px] bg-light-gray border-4 border-white shadow-lg">
+          <div className="flex items-center justify-center w-[98px] h-[98px] p-4 rounded-[20px] bg-pale-gray border-4 border-white shadow-lg">
             <img src={userImage} alt="user" />
           </div>
           <div className="ml-8">
-            <Headline title={`${user.first_name} ${user.last_name}`} textColor="text-custom-red" />
+            <Headline
+              title={`${user.first_name} ${user.last_name}`}
+              textColor="text-custom-red"
+            />
             <Paragraph content={user.email} className="mt-4" />
             <Paragraph content={user.phone_number} />
           </div>
@@ -90,37 +95,50 @@ export const Profile = () => {
           className="text-steel-blue bg-white shadow border border-soft-gray mt-8"
         />
       </section>
-      <section>
-        <Headline title="My Posts" textColor="text-steel-blue" className="text-4xl font-oswald" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {userPosts.map((post) => (
-            <div
-              key={post._id}
-              onClick={() => handlePostClick(post._id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handlePostClick(post._id);
-                }
-              }}
-            >
-              <PostCard
+      <section className="mt-8 md:mt-12">
+        <Headline
+          title="My Posts"
+          textColor="text-steel-blue"
+          className="font-oswald"
+        />
+        {userPosts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            {userPosts.map((post) => (
+              <div
                 key={post._id}
-                postId={post._id}
-                title={post.title}
-                firstName={post.author_id.first_name}
-                lastName={post.author_id.last_name}
-                description={post.description}
-                type={post.type}
-                website={post.website_url}
-                createdAt={post.created_at}
-                instruments={post.ensemble_id.open_positions}
-                location={`${post.ensemble_id.location.city}, ${post.ensemble_id.location.country}`}
-                isPostCardAdmin={true}
-                onDeleteButtonClick={() => handleDeletePostClick(post._id)}
-              />
-            </div>
-          ))}
-        </div>
+                onClick={() => handlePostClick(post._id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handlePostClick(post._id);
+                  }
+                }}
+              >
+                <PostCard
+                  key={post._id}
+                  postId={post._id}
+                  title={post.title}
+                  firstName={post.author_id.first_name}
+                  lastName={post.author_id.last_name}
+                  description={post.description}
+                  type={post.type}
+                  website={post.website_url}
+                  createdAt={post.created_at}
+                  instruments={post.ensemble_id.open_positions}
+                  location={`${post.ensemble_id.location.city}, ${post.ensemble_id.location.country}`}
+                  isPostCardAdmin={true}
+                  onDeleteButtonClick={() => handleDeletePostClick(post._id)}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex justify-center items-center mt-8">
+            <EmptyState
+              message="posts"
+              onClick={() => navigate("/ensembles")}
+            />
+          </div>
+        )}
       </section>
       {showDeleteModal && (
         <ConfirmationModal
@@ -131,6 +149,6 @@ export const Profile = () => {
           onCancel={handleCancelDelete}
         />
       )}
-    </div>
+    </Container>
   );
 };

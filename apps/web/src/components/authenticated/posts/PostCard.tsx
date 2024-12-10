@@ -96,7 +96,10 @@ export const PostCard = ({
           <Paragraph content={location} className="ml-1" />
         </div>
         {isPostCardAdmin && (
-          <DeleteButton onClick={handleDeleteClick} className={deleteButtonClassName} />
+          <DeleteButton
+            onClick={handleDeleteClick}
+            className={`ml-auto ${deleteButtonClassName}`}
+          />
         )}
       </footer>
     </article>

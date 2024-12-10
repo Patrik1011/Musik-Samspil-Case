@@ -13,6 +13,7 @@ export default {
         "soft-gray": "#DDDDDD",
         "light-gray": "#F9F9F9",
         "transparent-black": "#00000099",
+        "pale-gray": "#eaebee",
       },
     },
   },

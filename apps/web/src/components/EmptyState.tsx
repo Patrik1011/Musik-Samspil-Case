@@ -12,13 +12,13 @@ interface EmptyStateProps {
 
 export const EmptyState = ({
   message,
-  description = `Create a ${message} so you can find, or be found by other musicians.`,
+  description = `Create ${message} so you can find, or be found by other musicians.`,
   onClick,
   imageSrc = noteImage,
   buttonTitle = `Create ${message}`,
 }: EmptyStateProps) => {
   return (
-    <div className="flex flex-col justify-center items-center h-full">
+    <div className="flex flex-col justify-center items-center max-w-96">
       <img
         src={imageSrc}
         alt={`${message} illustration`}
