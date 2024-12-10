@@ -1,10 +1,10 @@
 import { faUser, faGlobe, faMusic } from "@fortawesome/free-solid-svg-icons";
-import musicImage from "../../../assets/images-svg/music.svg";
-import { DetailItem } from "../../DetailItem.tsx";
-import { SubHeadline } from "../../SubHeadline.tsx";
-import { formatAndValidateURL } from "../../../utils/validateUrl.ts";
-import { Paragraph } from "../../Paragraph.tsx";
-import { DeleteButton } from "../../DeleteButton.tsx";
+import musicImage from "../../../../assets/images-svg/music.svg";
+import { DetailItem } from "../../../DetailItem.tsx";
+import { SubHeadline } from "../../../SubHeadline.tsx";
+import { formatAndValidateURL } from "../../../../utils/validateUrl.ts";
+import { Paragraph } from "../../../Paragraph.tsx";
+import { DeleteButton } from "../../../DeleteButton.tsx";
 
 interface PostCardProps {
   postId?: string;

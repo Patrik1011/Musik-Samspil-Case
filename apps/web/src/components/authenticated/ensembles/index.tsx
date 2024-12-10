@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { CreatePostButton } from "../posts/buttons/CreatePostButton";
 import { Headline } from "../../Headline";
 import { EnsembleMember } from "../../../utils/types";
+import { Container } from "../../Container.tsx";
 
 export const Ensembles = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
@@ -67,7 +68,7 @@ export const Ensembles = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Container className="my-10">
       <div className="flex justify-between items-center mb-8">
         <Headline title="Your Ensembles" textColor="text-steel-blue" />
         <button
@@ -180,6 +181,6 @@ export const Ensembles = () => {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 };
