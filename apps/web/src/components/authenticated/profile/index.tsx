@@ -7,13 +7,19 @@ import { useEffect, useState } from "react";
 import { userService } from "../../../services/UserService.ts";
 import { UserEntity } from "../../../utils/types.ts";
 import { PostCard } from "../posts/PostCard.tsx";
+import { PostDetails, postService } from "../../../services/PostService.ts";
+import { ConfirmationModal } from "../../ConfirmationModal.tsx";
 
 export const Profile = () => {
   const [user, setUser] = useState<UserEntity | null>(null);
+  const [userPosts, setUserPosts] = useState<PostDetails[]>([]);
+  const [postToDelete, setPostToDelete] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchUser();
+    fetchPosts();
   }, []);
 
   const fetchUser = async () => {
@@ -25,8 +31,40 @@ export const Profile = () => {
     }
   };
 
+  const fetchPosts = async () => {
+    const posts = await postService.getPostsByUserId();
+    setUserPosts(posts);
+  };
+
+  const handleDeletePostClick = (postId: string) => {
+    setPostToDelete(postId);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeletePost = async () => {
+    if (!postToDelete) return;
+
+    try {
+      await postService.deletePost(postToDelete);
+      setUserPosts(userPosts.filter((post) => post._id !== postToDelete));
+      setShowDeleteModal(false);
+      setPostToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setPostToDelete(null);
+  };
+
   const handleUpdateProfile = () => {
     navigate("/update-profile");
+  };
+
+  const handlePostClick = (postId: string) => {
+    navigate(`/post-application/${postId}`);
   };
 
   if (!user) {
@@ -53,36 +91,46 @@ export const Profile = () => {
         />
       </section>
       <section>
-        <div className="flex flex-col space-y-4 mb-4 md:flex-row md:justify-between md:items-baseline md:mt-8 md:mb-14">
-          <Headline title="My Posts" textColor="text-steel-blue" className="text-4xl font-oswald" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post) => (
-              <div
+        <Headline title="My Posts" textColor="text-steel-blue" className="text-4xl font-oswald" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {userPosts.map((post) => (
+            <div
+              key={post._id}
+              onClick={() => handlePostClick(post._id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handlePostClick(post._id);
+                }
+              }}
+            >
+              <PostCard
                 key={post._id}
-                onClick={() => handlePostClick(post._id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handlePostClick(post._id);
-                  }
-                }}
-              >
-                <PostCard
-                  key={post._id}
-                  title={post.title}
-                  firstName={post.author_id.first_name}
-                  lastName={post.author_id.last_name}
-                  description={post.description}
-                  type={post.type}
-                  website={post.website_url}
-                  createdAt={post.created_at}
-                  instruments={post.ensemble_id.open_positions}
-                  location={`${post.ensemble_id.location.city}, ${post.ensemble_id.location.country}`}
-                />
-              </div>
-            ))}
-          </div>
+                postId={post._id}
+                title={post.title}
+                firstName={post.author_id.first_name}
+                lastName={post.author_id.last_name}
+                description={post.description}
+                type={post.type}
+                website={post.website_url}
+                createdAt={post.created_at}
+                instruments={post.ensemble_id.open_positions}
+                location={`${post.ensemble_id.location.city}, ${post.ensemble_id.location.country}`}
+                isPostCardAdmin={true}
+                onDeleteButtonClick={() => handleDeletePostClick(post._id)}
+              />
+            </div>
+          ))}
         </div>
       </section>
+      {showDeleteModal && (
+        <ConfirmationModal
+          isOpen={showDeleteModal}
+          title="Delete Post"
+          message="Are you sure you want to delete this post? This action cannot be undone."
+          onConfirm={handleDeletePost}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </div>
   );
 };
