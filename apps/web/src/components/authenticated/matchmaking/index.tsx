@@ -34,7 +34,7 @@ export const Matchmaking = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-indigo-200">
+    <div className="h-screen flex items-center justify-center">
       <div className="relative w-full max-w-sm flex justify-center items-center">
         {ensembles.map((ensemble, index) => (
           <TinderCard
@@ -45,12 +45,16 @@ export const Matchmaking = () => {
           >
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-80 h-[32rem] mx-auto">
               <div className="p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">{ensemble.name}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {ensemble.name}
+                </h2>
                 <p className="text-gray-600 mb-4">{ensemble.description}</p>
 
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-900">Location</h4>
+                    <h4 className="text-sm font-semibold text-gray-900">
+                      Location
+                    </h4>
                     <p className="text-gray-600">
                       {ensemble.location.city}, {ensemble.location.country}
                     </p>
@@ -58,7 +62,9 @@ export const Matchmaking = () => {
 
                   {ensemble.open_positions.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-semibold text-gray-900">Open Positions</h4>
+                      <h4 className="text-sm font-semibold text-gray-900">
+                        Open Positions
+                      </h4>
                       <div className="flex flex-wrap gap-2 mt-1">
                         {ensemble.open_positions.map((position) => (
                           <span

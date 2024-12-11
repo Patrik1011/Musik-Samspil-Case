@@ -1,11 +1,13 @@
 import { faUser, faGlobe, faMusic } from "@fortawesome/free-solid-svg-icons";
-import musicImage from "../../../assets/images-svg/music.svg";
-import { DetailItem } from "../../DetailItem.tsx";
-import { SubHeadline } from "../../SubHeadline.tsx";
-import { formatAndValidateURL } from "../../../utils/validateUrl.ts";
-import { Paragraph } from "../../Paragraph.tsx";
+import musicImage from "../../../../assets/images-svg/music.svg";
+import { DetailItem } from "../../../DetailItem.tsx";
+import { SubHeadline } from "../../../SubHeadline.tsx";
+import { formatAndValidateURL } from "../../../../utils/validateUrl.ts";
+import { Paragraph } from "../../../Paragraph.tsx";
+import { DeleteButton } from "../../../DeleteButton.tsx";
 
 interface PostCardProps {
+  postId?: string;
   title: string;
   description: string;
   firstName: string;
@@ -16,9 +18,13 @@ interface PostCardProps {
   instruments: string[];
   location: string;
   className?: string;
+  isPostCardAdmin?: boolean;
+  onDeleteButtonClick?: (id: string) => void;
+  deleteButtonClassName?: string;
 }
 
 export const PostCard = ({
+  postId,
   title,
   website,
   firstName,
@@ -28,6 +34,9 @@ export const PostCard = ({
   location,
   createdAt,
   className,
+  isPostCardAdmin = false,
+  onDeleteButtonClick,
+  deleteButtonClassName,
 }: PostCardProps) => {
   const formattedUrl = formatAndValidateURL(website);
 
@@ -35,6 +44,11 @@ export const PostCard = ({
     day: "numeric",
     month: "long",
   });
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDeleteButtonClick?.(postId ?? "");
+  };
 
   return (
     <article
@@ -81,6 +95,12 @@ export const PostCard = ({
           <p className="text-sm text-medium-gray">{formattedDate} •</p>
           <Paragraph content={location} className="ml-1" />
         </div>
+        {isPostCardAdmin && (
+          <DeleteButton
+            onClick={handleDeleteClick}
+            className={`ml-auto ${deleteButtonClassName}`}
+          />
+        )}
       </footer>
     </article>
   );

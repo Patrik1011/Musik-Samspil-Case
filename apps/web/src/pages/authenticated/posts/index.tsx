@@ -1,5 +1,5 @@
 import React from "react";
-import { UserPosts } from "../../../components/authenticated/posts/applications";
+import { UserPosts } from "../../../components/authenticated/posts";
 
 const Posts: React.FC = () => {
   return (

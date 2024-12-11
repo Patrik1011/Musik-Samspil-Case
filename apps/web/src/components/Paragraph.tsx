@@ -5,6 +5,7 @@ interface ParagraphProps {
   className?: string;
   isDate?: boolean;
   date?: string;
+  textSizes?: string;
 }
 
 export const Paragraph = ({
@@ -12,6 +13,7 @@ export const Paragraph = ({
   className,
   isDate,
   date,
+  textSizes = "text-sm",
 }: ParagraphProps) => {
   let displayedContent = content;
 
@@ -32,7 +34,7 @@ export const Paragraph = ({
   }
 
   return (
-    <p className={`text-medium-gray text-sm ${className}`}>
+    <p className={`text-medium-gray ${textSizes} ${className}`}>
       {displayedContent}
     </p>
   );

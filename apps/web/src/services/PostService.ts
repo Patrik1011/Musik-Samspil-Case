@@ -55,9 +55,9 @@ export const postService = {
     return response as PostDetails;
   },
 
-  getPostsByUserId: async (): Promise<Post[]> => {
+  getPostsByUserId: async (): Promise<PostDetails[]> => {
     const response = await getRequest("/post/user/posts");
-    return response as Post[];
+    return response as PostDetails[];
   },
 
   deletePost: async (id: string): Promise<void> => {

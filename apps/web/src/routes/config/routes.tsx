@@ -10,6 +10,7 @@ import React from "react";
 import PostDetails from "../../pages/authenticated/posts/Details.tsx";
 import Posts from "../../pages/authenticated/posts";
 import Matchmaking from "../../pages/authenticated/matchmaking";
+import UpdateProfile from "../../pages/authenticated/profile/UpdateProfile.tsx";
 
 type RouteConfig = {
   path: string;
@@ -52,14 +53,13 @@ export const routes: RouteConfig[] = [
     isPublic: true,
   },
   {
-    path: "/",
-    component: <Home />,
-    protected: false,
-    isPublic: true,
-  },
-  {
     path: "/profile",
     component: <Profile />,
+    protected: true,
+  },
+  {
+    path: "/update-profile",
+    component: <UpdateProfile />,
     protected: true,
   },
   {

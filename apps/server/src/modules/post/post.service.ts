@@ -27,7 +27,7 @@ export class PostService {
 
   async getAllPosts() {
     try {
-      return await Post.find().populate(["ensemble_id", "author_id"]);
+      return await Post.find().sort({ created_at: -1 }).populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

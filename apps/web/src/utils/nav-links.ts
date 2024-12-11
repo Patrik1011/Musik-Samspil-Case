@@ -8,7 +8,7 @@ export interface NavLink {
 export const Links: { authenticated: NavLink[]; unauthenticated: NavLink[] } = {
   authenticated: [
     {
-      label: "My posts",
+      label: "Posts",
       href: "/posts",
       bgColor: "",
       spanColor: "text-steel-blue",
