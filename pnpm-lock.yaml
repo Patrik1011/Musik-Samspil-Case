@@ -216,7 +216,7 @@ importers:
         version: 9.7.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@reduxjs/toolkit':
         specifier: ^2.3.0
-        version: 2.4.0(react-redux@9.1.2(@types/react@19.0.1)(react@19.0.0)(redux@5.0.1))(react@19.0.0)
+        version: 2.5.0(react-redux@9.1.2(@types/react@19.0.1)(react@19.0.0)(redux@5.0.1))(react@19.0.0)
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.1
         version: 3.7.2(@swc/helpers@0.5.15)(vite@6.0.3(@types/node@22.10.1)(jiti@1.21.6)(terser@5.36.0)(yaml@2.6.1))
@@ -1568,10 +1568,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@reduxjs/toolkit@2.4.0':
-    resolution: {integrity: sha512-wJZEuSKj14tvNfxiIiJws0tQN77/rDqucBq528ApebMIRHyWpCanJVQRxQ8WWZC19iCDKxDsGlbAir3F1layxA==}
+  '@reduxjs/toolkit@2.5.0':
+    resolution: {integrity: sha512-awNe2oTodsZ6LmRqmkFhtb/KH03hUhxOamEQy411m3Njj3BbFvoBovxo4Q1cBWnV1ErprVj9MlF0UPXkng0eyg==}
     peerDependencies:
-      react: ^16.9.0 || ^17.0.0 || ^18
+      react: ^16.9.0 || ^17.0.0 || ^18 || ^19
       react-redux: ^7.2.1 || ^8.1.3 || ^9.0.0
     peerDependenciesMeta:
       react:
@@ -6675,7 +6675,7 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  '@reduxjs/toolkit@2.4.0(react-redux@9.1.2(@types/react@19.0.1)(react@19.0.0)(redux@5.0.1))(react@19.0.0)':
+  '@reduxjs/toolkit@2.5.0(react-redux@9.1.2(@types/react@19.0.1)(react@19.0.0)(redux@5.0.1))(react@19.0.0)':
     dependencies:
       immer: 10.1.1
       redux: 5.0.1
