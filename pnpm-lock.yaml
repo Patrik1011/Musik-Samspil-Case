@@ -231,7 +231,7 @@ importers:
         version: 4.0.0
       motion:
         specifier: ^11.11.15
-        version: 11.13.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 11.13.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -2957,8 +2957,8 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
-  framer-motion@11.13.1:
-    resolution: {integrity: sha512-F40tpGTHByhn9h3zdBQPcEro+pSLtzARcocbNqAyfBI+u9S+KZuHH/7O9+z+GEkoF3eqFxfvVw0eBDytohwqmQ==}
+  framer-motion@11.13.3:
+    resolution: {integrity: sha512-3ZSNuYpDFeNxqVKUyYipOm5A1fXSbMje1XIfEWxKTJ4ughl5FEjvkp6gKmFHLjzwijCVU/PjsMNlTMVCmi+Twg==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0
@@ -3882,8 +3882,8 @@ packages:
   motion-utils@11.13.0:
     resolution: {integrity: sha512-lq6TzXkH5c/ysJQBxgLXgM01qwBH1b4goTPh57VvZWJbVJZF/0SB31UWEn4EIqbVPf3au88n2rvK17SpDTja1A==}
 
-  motion@11.13.1:
-    resolution: {integrity: sha512-64+QpZQv8WJJFn+tEEzX04il9s6ReA6lhKRZaxzD6SunGqoaq5g+AFVfcKWme8N83eytUOpGp7mpfJ9cyZlhAA==}
+  motion@11.13.3:
+    resolution: {integrity: sha512-7WCtns1245mdDRpm50PpIGrRySmIfXDFDmWJtVO+zoevwGTOR4gw3irsA7TIdJzbBKptDaZ26Fk2c4v4z/Da/g==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0
@@ -8281,7 +8281,7 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@11.13.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  framer-motion@11.13.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       motion-dom: 11.13.0
       motion-utils: 11.13.0
@@ -9339,9 +9339,9 @@ snapshots:
 
   motion-utils@11.13.0: {}
 
-  motion@11.13.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  motion@11.13.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
-      framer-motion: 11.13.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      framer-motion: 11.13.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tslib: 2.8.1
     optionalDependencies:
       react: 19.0.0
