@@ -2,19 +2,21 @@ import React, { useEffect, useState } from "react";
 import { UserEntity } from "../../../../utils/types.ts";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../../../services/UserService.ts";
+import { Headline } from "../../../unauthenticated/auth/Headline.tsx";
+import { InputField } from "../../../InputField.tsx";
+import { TextArea } from "../../../TextArea.tsx";
+import { Button } from "../../../Button.tsx";
 
 export const UpdateProfile = () => {
   const [user, setUser] = useState<UserEntity | null>(null);
   const [formData, setFormData] = useState<Partial<UserEntity>>({});
   const [error, setError] = useState<string>("");
-  const [instruments, setInstruments] = useState<string[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchUser();
-    fetchInstruments();
   }, []);
 
   const fetchUser = async () => {
@@ -25,15 +27,6 @@ export const UpdateProfile = () => {
     } catch (err) {
       setError("Failed to load user profile");
       console.error(err);
-    }
-  };
-
-  const fetchInstruments = async () => {
-    try {
-      const instrumentsList = await userService.getInstruments();
-      setInstruments(instrumentsList);
-    } catch (err) {
-      console.error("Failed to load instruments", err);
     }
   };
 
@@ -93,114 +86,58 @@ export const UpdateProfile = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div>
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="first_name" className="block text-sm font-medium">
-            First Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="first_name"
-            type="text"
-            name="first_name"
-            value={formData.first_name || ""}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded text-medium-gray"
-            required
-            placeholder={user.first_name || ""}
-          />
-        </div>
+        <Headline title="Update Profile" className="mb-6" />
+        <InputField
+          id="first_name"
+          type="text"
+          name="first_name"
+          value={formData.first_name || ""}
+          placeholder={user.first_name || ""}
+          label="First Name"
+          onChange={handleInputChange}
+          required
+        />
+        <InputField
+          id="last_name"
+          type="text"
+          name="last_name"
+          value={formData.last_name || ""}
+          placeholder={user.last_name || ""}
+          label="Last Name"
+          onChange={handleInputChange}
+          required
+        />
+        <InputField
+          id="email"
+          type="email"
+          value={user.email}
+          disabled
+          label="Email"
+          className="bg-light-gray"
+        />
+        <InputField
+          id="phone_number"
+          type="tel"
+          name="phone_number"
+          value={formData.phone_number || ""}
+          placeholder={user.phone_number || ""}
+          label="Phone Number"
+          onChange={handleInputChange}
+        />
 
-        <div className="space-y-2">
-          <label htmlFor="last_name" className="block text-sm font-medium">
-            Last Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="last_name"
-            type="text"
-            name="last_name"
-            value={formData.last_name || ""}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded text-medium-gray"
-            required
-            placeholder={user.last_name || ""}
-          />
-        </div>
+        <TextArea
+          name="bio"
+          value={formData.bio || ""}
+          onChange={handleInputChange}
+          label="Bio"
+          placeholder={user.bio || ""}
+        />
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={user.email}
-            disabled
-            className="w-full p-2 border rounded bg-gray-100 text-medium-gray"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="phone_number" className="block text-sm font-medium">
-            Phone Number
-          </label>
-          <input
-            id="phone_number"
-            type="tel"
-            name="phone_number"
-            value={formData.phone_number || ""}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded text-medium-gray"
-            placeholder={user.phone_number || ""}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="bio" className="block text-sm font-medium">
-            Bio
-          </label>
-          <textarea
-            id="bio"
-            name="bio"
-            value={formData.bio || ""}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded text-medium-gray"
-            rows={4}
-            placeholder={user.bio || ""}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="instrument" className="block text-sm font-medium">
-            Instrument
-          </label>
-          <select
-            id="instrument"
-            name="instrument"
-            value={formData.instrument || ""}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none"
-          >
-            <option value="">{user.instrument || "Select an instrument"}</option>
-            {instruments.map((instrument) => (
-              <option key={instrument} value={instrument}>
-                {instrument}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex justify-end space-x-4 mt-6">
-          <button
-            type="submit"
-            className="w-full lg:mx-0 text-base font-bold bg-steel-blue text-white mt-2 py-4 px-8 rounded-[10px] shadow-custom focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-200 ease-in-out"
-          >
-            Save
-          </button>
-        </div>
+        <Button title="Update Profile" type="submit" className="w-full bg-steel-blue text-white" />
       </form>
 
       {showConfirmModal && (

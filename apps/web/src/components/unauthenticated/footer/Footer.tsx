@@ -19,8 +19,8 @@ export const Footer = () => {
             <div className="space-y-6 md:space-y-8">
               <Headline title="musik samspil" textColor="text-white" className="uppercase" />
               <div className="flex flex-col md:flex-row md:space-x-8">
-                <StyledLink href="/profile" label="See posts" />
-                <StyledLink href="/login" label="Profile" />
+                <StyledLink href="/posts" label="See posts" />
+                <StyledLink href="/profile" label="Profile" />
               </div>
               <div className="text-white space-x-3 text-xl">
                 <FontAwesomeIcon icon={faSquareInstagram} />

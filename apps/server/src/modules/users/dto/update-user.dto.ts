@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MinLength, IsEnum } from "class-validator";
-import { Instrument } from "../../../utils/types/enums";
+import { IsOptional, IsString, MinLength } from "class-validator";
 
 export class UpdateUserDto {
   @IsOptional()
@@ -29,9 +28,4 @@ export class UpdateUserDto {
   @IsString()
   @ApiProperty({ required: false })
   bio?: string;
-
-  @IsOptional()
-  @IsEnum(Instrument)
-  @ApiProperty({ required: false, enum: Instrument })
-  instrument?: Instrument;
 }
