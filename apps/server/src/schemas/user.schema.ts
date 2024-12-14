@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { Instrument } from "../utils/types/enums";
 
 export const UserSchema = new Schema(
   {
@@ -8,6 +9,12 @@ export const UserSchema = new Schema(
     password: { type: String, required: true },
     phone_number: String,
     bio: String,
+    instruments: [
+      {
+        type: String,
+        enum: Object.values(Instrument),
+      },
+    ],
   },
   { collection: "User" },
 );

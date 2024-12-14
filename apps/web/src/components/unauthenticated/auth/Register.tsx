@@ -62,6 +62,7 @@ const Register: React.FC = () => {
       navigate("/onboarding");
     } catch (error: unknown) {
       const err = error as CustomError;
+      console.log(err);
       setErrors({ general: err.message });
     }
   };
