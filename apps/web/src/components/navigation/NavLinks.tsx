@@ -1,10 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import {
-  Popover,
-  PopoverBackdrop,
-  PopoverButton,
-  PopoverPanel,
-} from "@headlessui/react";
+import { Popover, PopoverBackdrop, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { ChevronUpIcon } from "./ChevronUp";
 import { MenuIcon } from "./MenuIcon";
 import { AnimatePresence, motion } from "framer-motion";
@@ -18,9 +13,7 @@ interface Props {
   isMobile: boolean;
 }
 export function NavLinks({ isMobile }: Props) {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
 
@@ -28,13 +21,11 @@ export function NavLinks({ isMobile }: Props) {
     dispatch(logoutUser());
   };
 
-  const currentLinks = isAuthenticated
-    ? Links.authenticated
-    : Links.unauthenticated;
+  const currentLinks = isAuthenticated ? Links.authenticated : Links.unauthenticated;
 
   const getLinkStyles = (label: string, href: string) => {
     const isActive = location.pathname === href;
-    const isNoBorder = label === "Posts" || label === "Ensembles";
+    const isNoBorder = label === "Posts" || label === "Ensembles" || label === "Swipe";
     const isExcludedFromUnderline =
       label === "Sign in" || label === "Sign up" || label === "Profile";
 
@@ -47,10 +38,7 @@ export function NavLinks({ isMobile }: Props) {
 
   const renderLinks = (links: NavLink[]) =>
     links.map(({ label, href, bgColor, spanColor }) => {
-      const { isActive, isNoBorder, isExcludedFromUnderline } = getLinkStyles(
-        label,
-        href,
-      );
+      const { isActive, isNoBorder, isExcludedFromUnderline } = getLinkStyles(label, href);
 
       const paddingClass = isNoBorder ? "py-4" : "px-7 py-4";
 
@@ -79,11 +67,7 @@ export function NavLinks({ isMobile }: Props) {
               className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none"
             >
               {({ open }) =>
-                open ? (
-                  <ChevronUpIcon className="h-6 w-6" />
-                ) : (
-                  <MenuIcon className="h-6 w-6" />
-                )
+                open ? <ChevronUpIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />
               }
             </PopoverButton>
             <AnimatePresence initial={false}>
@@ -121,10 +105,7 @@ export function NavLinks({ isMobile }: Props) {
   }
 
   return currentLinks.map(({ label, href, bgColor, spanColor }) => {
-    const { isActive, isNoBorder, isExcludedFromUnderline } = getLinkStyles(
-      label,
-      href,
-    );
+    const { isActive, isNoBorder, isExcludedFromUnderline } = getLinkStyles(label, href);
     const paddingClass = isNoBorder ? "py-4" : "px-7 py-4";
     return (
       <Link
