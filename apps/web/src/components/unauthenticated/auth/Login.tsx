@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { InputField } from "../../InputField.tsx";
-import { validateForm } from "../../../utils/formValidation";
 import { Headline } from "./Headline";
 import { Button } from "../../Button.tsx";
 import { useDispatch } from "react-redux";
@@ -35,11 +34,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formErrors = validateForm(formData);
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-    }
 
     try {
       await dispatch(loginUser(formData));
