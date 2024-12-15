@@ -10,16 +10,23 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
-import { PostService } from "./post.service";
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { CreatePostDto } from "./dto/create-post.dto";
 import { Types } from "mongoose";
 import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { SearchPostsDto } from "./dto/search-posts.dto";
+import { PostService } from "./post.service";
 
 @Controller("post")
 @ApiTags("post")
 export class PostController {
   constructor(private readonly postService: PostService) {}
+
+  @Post("searchPost")
+  @ApiOkResponse()
+  async searchPosts(@Body() searchCriteria: SearchPostsDto) {
+    return this.postService.searchPosts(searchCriteria);
+  }
 
   @Post(":ensembleId")
   @UseGuards(JwtAuthGuard)

@@ -1,13 +1,14 @@
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  ForbiddenException,
 } from "@nestjs/common";
 import { Types } from "mongoose";
-import { CreatePostDto } from "./dto/create-post.dto";
-import { Post } from "../../schemas/post.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
+import { Post } from "../../schemas/post.schema";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { SearchPostsDto } from "./dto/search-posts.dto";
 
 @Injectable()
 export class PostService {
@@ -82,6 +83,36 @@ export class PostService {
         .populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
+    }
+  }
+
+  async searchPosts(searchCriteria: SearchPostsDto) {
+    try {
+      const query = {};
+
+      // Add search criteria dynamically
+      if (searchCriteria.title) {
+        query.title = { $regex: searchCriteria.title, $options: "i" };
+      }
+
+      if (searchCriteria.description) {
+        query.description = { $regex: searchCriteria.description, $options: "i" };
+      }
+
+      if (searchCriteria.type) {
+        query.type = searchCriteria.type;
+      }
+
+      if (searchCriteria.ensembleId) {
+        query.ensemble_id = new Types.ObjectId(searchCriteria.ensembleId);
+      }
+
+      // Fetch posts with population for related fields
+      return await Post.find(query).populate(["ensemble_id", "author_id"]);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new InternalServerErrorException(`Failed to search posts: ${error.message}`);
+      }
     }
   }
 }
