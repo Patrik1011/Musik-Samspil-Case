@@ -4,7 +4,9 @@ import { MatchStatus } from "../utils/types/enums";
 const MatchmakingSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user_id: { type: String, required: true },
     ensemble: { type: Schema.Types.ObjectId, ref: "Ensemble", required: true },
+    ensemble_id: { type: String, required: true },
     status: {
       type: String,
       enum: Object.values(MatchStatus),

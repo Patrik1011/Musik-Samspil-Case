@@ -11,6 +11,7 @@ import { Types } from "mongoose";
 import { startSession } from "mongoose";
 import { User } from "../../schemas/user.schema";
 import { calculateDistance } from "../../utils/location/calculate-distance";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 
 interface Coordinates {
   latitude: number;
@@ -62,6 +63,82 @@ export class MatchmakingService {
     ]);
 
     return ensembles;
+  }
+
+  async getMatches(userId: string) {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+
+    // Get all ensembles where user is a member
+    const memberships = await EnsembleMembership.find({
+      member_id: userId,
+      is_host: true,
+    });
+
+    const hostedEnsembleIds = memberships.map((membership) => membership.ensemble_id);
+    console.log("hostedEnsembleIds", hostedEnsembleIds);
+
+    const matches = await Matchmaking.aggregate([
+      {
+        $match: {
+          $or: [
+            // Outgoing matches (where I liked others)
+            {
+              user_id: userId,
+              liked: true,
+              status: { $in: ["matched", "pending"] },
+            },
+            // Incoming matches (where others liked my ensembles)
+            {
+              ensemble_id: { $in: hostedEnsembleIds },
+              liked: true,
+              status: { $in: ["matched", "pending"] },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user", // ObjectId reference
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+      {
+        $lookup: {
+          from: "ensembles",
+          localField: "ensemble", // ObjectId reference
+          foreignField: "_id",
+          as: "ensembleData",
+        },
+      },
+      {
+        $unwind: "$userData",
+      },
+      {
+        $unwind: "$ensembleData",
+      },
+      {
+        $project: {
+          _id: 1,
+          ensemble_id: 1,
+          created_at: "$matched_at",
+          status: 1,
+          "user.first_name": "$userData.first_name",
+          "user.last_name": "$userData.last_name",
+          "user.email": "$userData.email",
+          "user.phone_number": "$userData.phone_number",
+          "ensemble.name": "$ensembleData.name",
+          "ensemble.description": "$ensembleData.description",
+        },
+      },
+    ]);
+
+    console.log("matches", matches);
+
+    return matches;
   }
 
   async createMatch(userId: string, ensembleId: string, liked: boolean) {

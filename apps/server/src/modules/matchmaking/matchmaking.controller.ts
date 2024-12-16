@@ -29,6 +29,13 @@ export class MatchmakingController {
     return recommendations;
   }
 
+  @Get("matches")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getMatches(@Request() req: AuthenticatedRequest) {
+    return this.matchmakingService.getMatches(req.user._id.toString());
+  }
+
   @Post("match")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()

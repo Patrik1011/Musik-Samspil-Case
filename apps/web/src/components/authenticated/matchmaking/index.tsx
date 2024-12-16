@@ -37,8 +37,8 @@ export const Matchmaking = () => {
               longitude: position.coords.longitude,
             });
             setEnsembles(recommendations);
-          } catch (error) {
-            setErrorMessage(error as string);
+          } catch {
+            setErrorMessage("Error fetching ensembles");
           } finally {
             setIsLoading(false);
           }
