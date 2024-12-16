@@ -7,9 +7,10 @@ import {
 } from "@nestjs/common";
 import { Matchmaking } from "../../schemas/matchmaking.schema";
 import { Ensemble } from "../../schemas/ensemble.schema";
-import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Types } from "mongoose";
 import { startSession } from "mongoose";
+import { User } from "../../schemas/user.schema";
+import { calculateDistance } from "../../utils/location/calculate-distance";
 
 interface Coordinates {
   latitude: number;
@@ -30,8 +31,15 @@ interface Result {
 
 @Injectable()
 export class MatchmakingService {
-  async getRecommendations(coordinates: Coordinates, radius = 50, limit = 10) {
+  async getRecommendations(coordinates: Coordinates, userId: string, radius = 50, limit = 10) {
     const { latitude, longitude } = coordinates;
+
+    // Get all ensemble IDs that the user has already matched with
+    const existingMatches = await Matchmaking.find({
+      user: new Types.ObjectId(userId),
+    }).select("ensemble");
+
+    const matchedEnsembleIds = existingMatches.map((match) => match.ensemble);
 
     const ensembles = await Ensemble.aggregate([
       {
@@ -45,7 +53,12 @@ export class MatchmakingService {
           spherical: true,
         },
       },
-      { $match: { is_active: true } },
+      {
+        $match: {
+          is_active: true,
+          _id: { $nin: matchedEnsembleIds },
+        },
+      },
       { $limit: limit },
     ]);
 
@@ -61,7 +74,6 @@ export class MatchmakingService {
     session.startTransaction();
 
     try {
-      // Check if a match already exists
       const existingMatch = await Matchmaking.findOne({
         user: new Types.ObjectId(userId),
         ensemble: new Types.ObjectId(ensembleId),
@@ -71,20 +83,26 @@ export class MatchmakingService {
         throw new ConflictException("Match already exists for this user and ensemble");
       }
 
-      const ensemble = await Ensemble.findById(ensembleId).session(session);
-      if (!ensemble) throw new NotFoundException("Ensemble not found");
+      const [user, ensemble] = await Promise.all([
+        User.findById(userId).session(session),
+        Ensemble.findById(ensembleId).session(session),
+      ]);
 
-      // If the user liked the ensemble, check if they're already a member
-      if (liked) {
-        const existingMembership = await EnsembleMembership.findOne({
-          member: new Types.ObjectId(userId),
-          ensemble: new Types.ObjectId(ensembleId),
-        }).session(session);
+      if (!user || !ensemble) throw new NotFoundException("User or Ensemble not found");
 
-        if (existingMembership) {
-          throw new ConflictException("User is already a member of this ensemble");
-        }
-      }
+      if (!user.location?.coordinates || !ensemble.location?.coordinates)
+        throw new BadRequestException("User or ensemble location not found");
+
+      const distanceCalc = calculateDistance(
+        {
+          type: "Point",
+          coordinates: user.location.coordinates.coordinates,
+        },
+        {
+          type: "Point",
+          coordinates: ensemble.location.coordinates.coordinates,
+        },
+      );
 
       const match = await Matchmaking.create(
         [
@@ -93,7 +111,7 @@ export class MatchmakingService {
             ensemble: new Types.ObjectId(ensembleId),
             status: liked ? "pending" : "rejected",
             seen: false,
-            // distance: ensemble.distance,
+            distance: distanceCalc,
             liked,
             created_at: new Date(),
           },
@@ -103,7 +121,6 @@ export class MatchmakingService {
 
       let result: Result;
       if (liked) {
-        // For likes, populate the match with ensemble data
         result = await match[0].populate([
           {
             path: "ensemble",

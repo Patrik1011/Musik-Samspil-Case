@@ -35,4 +35,6 @@ export const UserSchema = new Schema(
   { collection: "User" },
 );
 
+UserSchema.index({ "location.coordinates": "2dsphere" });
+
 export const User = model("User", UserSchema);
