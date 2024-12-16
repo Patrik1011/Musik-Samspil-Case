@@ -34,7 +34,6 @@ export class MatchmakingService {
   async getRecommendations(coordinates: Coordinates, userId: string, radius = 50, limit = 10) {
     const { latitude, longitude } = coordinates;
 
-    // Get all ensemble IDs that the user has already matched with
     const existingMatches = await Matchmaking.find({
       user: new Types.ObjectId(userId),
     }).select("ensemble");
