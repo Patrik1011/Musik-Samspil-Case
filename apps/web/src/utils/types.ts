@@ -61,3 +61,16 @@ export type EnsembleMember = {
   instrument: Instrument;
   is_host: boolean;
 };
+
+export type Match = {
+  _id: string;
+  user: UserEntity;
+  ensemble_id: string;
+  created_at: string;
+};
+
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+  radius?: number;
+};
