@@ -3,9 +3,12 @@ import { User } from "../../schemas/user.schema";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { OnboardingDto } from "./dto/onboarding.dto";
 import { Types } from "mongoose";
+import { GeocodingService } from "../geocoding/geocoding.service";
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly geocodingService: GeocodingService) {}
+
   private async validateAndGetUser(userId: string) {
     if (!userId || !Types.ObjectId.isValid(userId)) {
       throw new BadRequestException("Invalid user ID");
@@ -26,7 +29,35 @@ export class UsersService {
     if (!Types.ObjectId.isValid(userId)) {
       throw new BadRequestException("Invalid user ID");
     }
-    const user = await User.findByIdAndUpdate(userId, { $set: updateUserDto }, { new: true });
+
+    let locationUpdate = {};
+    if (updateUserDto.location) {
+      const { latitude, longitude } = await this.geocodingService.geocodeAddress(
+        `${updateUserDto.location.address}, ${updateUserDto.location.city}, ${updateUserDto.location.country}`,
+      );
+
+      locationUpdate = {
+        location: {
+          ...updateUserDto.location,
+          coordinates: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+          },
+        },
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          ...updateUserDto,
+          ...locationUpdate,
+        },
+      },
+      { new: true },
+    );
+
     if (!user) {
       throw new NotFoundException(`User with id: ${userId} was not found`);
     }

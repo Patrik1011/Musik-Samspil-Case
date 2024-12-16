@@ -37,7 +37,7 @@ export const Matchmaking = () => {
 
   const onSwipe = async (direction: string, ensembleId: string) => {
     const liked = direction === "right";
-    setSwipeMessage(liked ? "Liked!" : "Passed!");
+    setSwipeMessage(liked ? "Not interested!" : "Interested!");
 
     try {
       await matchmakingService.createMatch(ensembleId, liked);

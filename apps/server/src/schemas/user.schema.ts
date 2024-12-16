@@ -15,6 +15,22 @@ export const UserSchema = new Schema(
         enum: Object.values(Instrument),
       },
     ],
+    location: {
+      city: String,
+      country: String,
+      address: String,
+      coordinates: {
+        type: {
+          type: String,
+          enum: ["Point"],
+          required: true,
+        },
+        coordinates: {
+          type: [Number],
+          required: true,
+        },
+      },
+    },
   },
   { collection: "User" },
 );

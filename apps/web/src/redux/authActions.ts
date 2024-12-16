@@ -75,7 +75,7 @@ export const completeOnboarding =
     try {
       await userService.onBoardingProcess(credentials);
       dispatch(onBoardingStatus(true));
-      navigate("/home");
+      navigate("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new Error(error.message);

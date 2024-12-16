@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MinLength } from "class-validator";
+import { IsOptional, IsString, MinLength, IsObject } from "class-validator";
 
 export class UpdateUserDto {
   @IsOptional()
@@ -28,4 +28,13 @@ export class UpdateUserDto {
   @IsString()
   @ApiProperty({ required: false })
   bio?: string;
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({ required: false })
+  location?: {
+    city: string;
+    country: string;
+    address: string;
+  };
 }

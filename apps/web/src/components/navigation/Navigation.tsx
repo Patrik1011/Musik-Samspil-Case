@@ -10,7 +10,7 @@ export const Navigation = () => {
         <Container className="relative flex justify-between py-5">
           <div className="relative flex items-center w-full justify-between">
             <div>
-              <Link to="/home">
+              <Link to="/">
                 <Headline title="Musik Samspil" textColor="text-custom-red" />
                 <p className="text-steel-blue text-[10px]">
                   Skabt af DAOS - Dansk Amatørorkester Samvirke

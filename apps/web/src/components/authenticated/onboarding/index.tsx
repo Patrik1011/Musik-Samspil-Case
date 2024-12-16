@@ -33,7 +33,7 @@ export const Onboarding = () => {
 
   useEffect(() => {
     if (isAuthenticated && isOnBoarded) {
-      navigate("/home");
+      navigate("/");
     }
   }, [isAuthenticated, isOnBoarded, navigate]);
 

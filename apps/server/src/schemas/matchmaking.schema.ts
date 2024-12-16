@@ -10,10 +10,11 @@ const MatchmakingSchema = new Schema(
       enum: Object.values(MatchStatus),
       default: MatchStatus.new,
     },
-    distance: { type: Number },
+    distance: { type: Number, required: true },
     seen: { type: Boolean, default: false },
     liked: { type: Boolean, required: true },
     matched_at: { type: Date, default: Date.now },
+    created_at: { type: Date, default: Date.now },
   },
   {
     collection: "Match",

@@ -25,6 +25,11 @@ export interface UserEntity {
   phone_number?: string;
   bio?: string;
   instrument?: string;
+  location: {
+    city: string;
+    country: string;
+    address: string;
+  };
 }
 
 export type OnboardingEntity = {

@@ -15,7 +15,7 @@ import { GeocodingService } from "../geocoding/geocoding.service";
 
 @Injectable()
 export class EnsembleService {
-  constructor(private readonly GeocodingService: GeocodingService) {}
+  constructor(private readonly geocodingService: GeocodingService) {}
 
   async findUserHostedEnsembles(userId: string) {
     try {
@@ -40,7 +40,7 @@ export class EnsembleService {
     session.startTransaction();
 
     try {
-      const { latitude, longitude } = await this.GeocodingService.geocodeAddress(
+      const { latitude, longitude } = await this.geocodingService.geocodeAddress(
         `${createEnsembleDto.location.address}, ${createEnsembleDto.location.city}, ${createEnsembleDto.location.country}`,
       );
 
