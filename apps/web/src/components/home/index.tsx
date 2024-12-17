@@ -56,7 +56,8 @@ export const Home = () => {
         <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full">
           <div className="md:w-1/1">
             <p className="text-[30px] leading-[34px] mt-12 mb-7 text-custom-red font-oswald md:leading-[54px] md:mt-0 md:mb-14 md:text-[50px]">
-              The place where amateur musicians find each other and play music together
+              The place where amateur musicians find each other and play music together The place
+              where amateur musicians find each other and play music together
             </p>
             <div className="flex flex-col space-y-2 md:flex-row items-center justify-between w-full md:space-y-0">
               <div className="w-full  md:w-1/2 md:mr-3">

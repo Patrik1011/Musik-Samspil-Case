@@ -65,6 +65,10 @@ export type EnsembleMember = {
 export type Match = {
   _id: string;
   user: UserEntity;
+  ensemble: {
+    name: string;
+    description: string;
+  };
   ensemble_id: string;
   created_at: string;
 };

@@ -19,23 +19,16 @@ export const Paragraph = ({
 
   if (isDate && date) {
     const formattedDate = new Date(date);
-    if (!isNaN(formattedDate.getTime())) {
-      displayedContent = `${content} ${formattedDate.toLocaleDateString(
-        "en-GB",
-        {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        },
-      )}`;
+    if (!Number.isNaN(formattedDate.getTime())) {
+      displayedContent = `${content} ${formattedDate.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`;
     } else {
       displayedContent = "Invalid Date";
     }
   }
 
-  return (
-    <p className={`text-medium-gray ${textSizes} ${className}`}>
-      {displayedContent}
-    </p>
-  );
+  return <p className={`text-medium-gray ${textSizes} ${className}`}>{displayedContent}</p>;
 };

@@ -10,6 +10,7 @@ import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Post } from "../../schemas/post.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { MongoSearchPostsDto, SearchPostsDto } from "./dto/search-posts.dto";
+import { Application } from "../../schemas/application.schema";
 
 @Injectable()
 export class PostService {
@@ -73,6 +74,8 @@ export class PostService {
     }
 
     await post.deleteOne();
+    await Application.deleteMany({ post_id: post._id });
+
     return { message: "Post deleted successfully" };
   }
 
