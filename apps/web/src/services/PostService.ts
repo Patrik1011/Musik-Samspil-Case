@@ -39,15 +39,17 @@ export interface CreatePostInput extends Record<string, string> {
   type: string;
 }
 
-export interface searchCriteria extends Record<string, string> {
-  instrument: string;
+export interface SearchCriteria {
+  instrument?: string;
+  location?: string;
 }
 
 export const postService = {
-  searchPost: async (data: searchCriteria): Promise<PostDetails[]> => {
+  searchPost: async (data: { instrument?: string; location?: string }): Promise<PostDetails[]> => {
     const response = await postRequest("/post/searchPost", data);
     return response as PostDetails[];
   },
+
   createPost: async (data: CreatePostInput, ensembleId: string): Promise<Post> => {
     const response = await postRequest(`/post/${ensembleId}`, data);
     return response as Post;

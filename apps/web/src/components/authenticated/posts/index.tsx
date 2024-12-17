@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostDetails, postService, searchCriteria } from "../../../services/PostService.ts";
+import { PostDetails, postService, SearchCriteria } from "../../../services/PostService.ts";
 import { Container } from "../../Container.tsx";
 import { Headline } from "../../Headline.tsx";
 import { PostGrid } from "./post-card/PostGrid.tsx";
@@ -10,6 +10,11 @@ export const UserPosts = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
   const [showingPosts, setShowingPosts] = useState<PostDetails[]>([]);
   const [selectedInstrument, setSelectedInstrument] = useState<string | null>(null);
+  const [searchObj, setSearchObj] = useState<object | null>({
+    location: "",
+    instrument: "",
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +29,10 @@ export const UserPosts = () => {
     setPosts(posts);
   };
 
-  const searchPostBasedOnInstrument = async (instrument: searchCriteria) => {
+  const searchPost = async (searchCriteria: SearchCriteria) => {
+    console.log(searchCriteria);
     try {
-      const data = await postService.searchPost(instrument);
+      const data = await postService.searchPost(searchCriteria);
       setShowingPosts(data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
@@ -39,7 +45,9 @@ export const UserPosts = () => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedInstrument(event.target.value);
-    searchPostBasedOnInstrument({ instrument: event.target.value });
+    searchPost({ instrument: event.target.value });
+
+    setSearchObj({ ...searchObj, [event.target.name]: event.target.value });
   };
 
   return (
@@ -50,6 +58,7 @@ export const UserPosts = () => {
           selectedInstrument={selectedInstrument}
           handleSelectChange={handleSelectChange}
           setSelectedInstrument={setSelectedInstrument}
+          searchPost={searchPost}
         />
       </Container>
 

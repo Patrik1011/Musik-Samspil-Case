@@ -1,17 +1,27 @@
 import { faLocationDot, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { Instrument } from "../../../enums/Instrument";
 import { Button } from "../../Button";
 import { InputField } from "../../InputField";
 import { Select } from "../../Select";
+import { SearchCriteria } from "../../../services/PostService";
 
 interface Props {
   selectedInstrument: string | null;
   setSelectedInstrument: (instrument: string | null) => void;
   handleSelectChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  searchPost: (searchCriteria: SearchCriteria) => void;
 }
 
-function SearchPosts({ selectedInstrument, setSelectedInstrument, handleSelectChange }: Props) {
+function SearchPosts({
+  selectedInstrument,
+  setSelectedInstrument,
+  handleSelectChange,
+  searchPost,
+}: Props) {
+  const [location, SetLocation] = useState("");
+
   return (
     <div className="flex flex-col space-y-6 md:space-y-0 md:flex-col items-start w-full bg-white">
       {/* top side */}
@@ -93,6 +103,12 @@ function SearchPosts({ selectedInstrument, setSelectedInstrument, handleSelectCh
               type="text"
               placeholder="By, postnr. eller adresse"
               className="w-full h-10 px-4 border border-soft-gray bg-transparent font-medium text-base text-medium-gray rounded-[10px] outline-none"
+              value={location}
+              onChange={(e) => {
+                console.log(e.target.value);
+                SetLocation(e.target.value);
+                searchPost({ location: e.target.value });
+              }}
             />
 
             {/* Distance Slider */}

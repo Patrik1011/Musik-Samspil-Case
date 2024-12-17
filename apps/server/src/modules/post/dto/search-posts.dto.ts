@@ -20,6 +20,10 @@ export class SearchPostsDto {
   instrument?: string;
 
   @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
   @IsEnum(PostType)
   type?: PostType;
 

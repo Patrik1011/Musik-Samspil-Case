@@ -102,6 +102,24 @@ export class PostService {
         query.ensemble_id = { $in: ensembleIds };
       }
 
+      if (searchCriteria.location) {
+        const locationPattern = new RegExp(searchCriteria.location, "i"); // 'i' for case-insensitive matching
+
+        const matchingEnsembleIds = await Ensemble.find(
+          {
+            $or: [
+              { "location.city": locationPattern },
+              { "location.country": locationPattern },
+              { "location.address": locationPattern },
+            ],
+          },
+          { _id: 1 },
+        ).lean();
+
+        const ensembleIds = matchingEnsembleIds.map((ensemble) => ensemble._id);
+        query.ensemble_id = { $in: ensembleIds };
+      }
+
       // Add additional filters dynamically
       if (searchCriteria.title) {
         query.title = { $regex: searchCriteria.title, $options: "i" };

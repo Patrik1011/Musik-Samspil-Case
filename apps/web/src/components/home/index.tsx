@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import homeImage from "../../assets/images-svg/home.svg";
-import { PostDetails, postService, searchCriteria } from "../../services/PostService.ts";
+import { Instrument } from "../../enums/Instrument.ts";
+import { PostDetails, postService, SearchCriteria } from "../../services/PostService.ts";
 import { PostGrid } from "../authenticated/posts/post-card/PostGrid.tsx";
+import { Button } from "../Button.tsx";
 import { Container } from "../Container.tsx";
 import { Headline } from "../Headline.tsx";
 import { Select } from "../Select.tsx";
-import { Instrument } from "../../enums/Instrument.ts";
-import { Button } from "../Button.tsx";
 
 export const Home = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
@@ -37,7 +37,7 @@ export const Home = () => {
     }
   };
 
-  const searchPostBasedOnInstrument = async (instrument: searchCriteria) => {
+  const searchPostBasedOnInstrument = async (instrument: SearchCriteria) => {
     try {
       const data = await postService.searchPost(instrument);
       setShowingPosts(data);
