@@ -25,7 +25,7 @@ export const AuthGuard = ({
     }
 
     if (!isProtected && isAuthenticated && !isPublic) {
-      navigate("/home");
+      navigate("/");
     }
   }, [isAuthenticated, isProtected, isPublic, navigate, redirectTo]);
 

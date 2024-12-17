@@ -23,6 +23,7 @@
     "services:up": "docker-compose up database",
     "services:down": "docker-compose down",
     "seed": "ts-node apps/server/src/utils/scripts/seed.ts",
+    "seed:copenhagen": "ts-node apps/server/src/utils/scripts/copenhagen-ensembles.ts",
     "user-members": "ts-node apps/server/src/utils/scripts/userMembers.ts"
   },
   "dependencies": {

@@ -10,7 +10,7 @@ import { Container } from "../../Container.tsx";
 
 export const Ensembles = () => {
   const [ensembles, setEnsembles] = useState<Ensemble[]>([]);
-  const [members, setMembers] = useState<Record<string, EnsembleMember[]>>({});
+  const [members] = useState<Record<string, EnsembleMember[]>>({});
   const [ensemblesPosts, setEnsemblesPosts] = useState<Record<string, string>>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -33,28 +33,14 @@ export const Ensembles = () => {
     }
   }, []);
 
-  const fetchEnsembleMembers = useCallback(async (ensembleId: string) => {
-    try {
-      const memberData = await ensembleService.getEnsembleMembers(ensembleId);
-      setMembers((prev) => ({
-        ...prev,
-        [ensembleId]: memberData,
-      }));
-    } catch (error) {
-      console.error("Failed to fetch ensemble members:", error);
-    }
-  }, []);
-
   const fetchEnsembles = useCallback(async () => {
     try {
       const data = await ensembleService.getHostedEnsembles();
-      console.log(data);
       setEnsembles(data);
-      data.forEach((ensemble) => fetchEnsembleMembers(ensemble._id));
     } catch (error) {
       console.error("Failed to fetch ensembles:", error);
     }
-  }, [fetchEnsembleMembers]);
+  }, []);
 
   useEffect(() => {
     fetchEnsembles();

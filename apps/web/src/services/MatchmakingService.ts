@@ -1,11 +1,6 @@
 import { getRequest, postRequest } from "../utils/api";
 import { Ensemble } from "./EnsembleService";
-
-interface Coordinates {
-  latitude: number;
-  longitude: number;
-  radius?: number;
-}
+import { Match, Coordinates } from "../utils/types";
 
 export const matchmakingService = {
   getRecommendations: async ({ latitude, longitude }: Coordinates): Promise<Ensemble[]> => {
@@ -24,5 +19,10 @@ export const matchmakingService = {
       ensembleId,
       liked,
     });
+  },
+
+  getMatches: async (): Promise<Match[]> => {
+    const response = await getRequest("/matchmaking/matches");
+    return response as Match[];
   },
 };

@@ -5,8 +5,12 @@ export enum PostType {
 
 export enum MatchStatus {
   new = "new",
+  pending = "pending",
+  rejected = "rejected",
+  matched = "matched",
   messaged = "messaged",
   joined = "joined",
+  seen = "seen",
 }
 
 export enum Instrument {

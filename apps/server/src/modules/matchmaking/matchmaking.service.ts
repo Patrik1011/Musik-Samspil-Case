@@ -1,17 +1,45 @@
-import { Injectable, BadRequestException } from "@nestjs/common";
+import {
+  Injectable,
+  BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { Matchmaking } from "../../schemas/matchmaking.schema";
 import { Ensemble } from "../../schemas/ensemble.schema";
 import { Types } from "mongoose";
+import { startSession } from "mongoose";
+import { User } from "../../schemas/user.schema";
+import { calculateDistance } from "../../utils/location/calculate-distance";
+import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 
 interface Coordinates {
   latitude: number;
   longitude: number;
 }
 
+interface Result {
+  _id: string;
+  user: Types.ObjectId;
+  ensemble: Types.ObjectId;
+  status: string;
+  seen: boolean;
+  liked: boolean;
+  distance: number;
+  matched_at: Date;
+  created_at: Date;
+}
+
 @Injectable()
 export class MatchmakingService {
-  async getRecommendations(coordinates: Coordinates, radius = 50, limit = 10) {
+  async getRecommendations(coordinates: Coordinates, userId: string, radius = 50, limit = 10) {
     const { latitude, longitude } = coordinates;
+
+    const existingMatches = await Matchmaking.find({
+      user: new Types.ObjectId(userId),
+    }).select("ensemble");
+
+    const matchedEnsembleIds = existingMatches.map((match) => match.ensemble);
 
     const ensembles = await Ensemble.aggregate([
       {
@@ -25,11 +53,93 @@ export class MatchmakingService {
           spherical: true,
         },
       },
-      { $match: { is_active: true } },
+      {
+        $match: {
+          is_active: true,
+          _id: { $nin: matchedEnsembleIds },
+        },
+      },
       { $limit: limit },
     ]);
 
     return ensembles;
+  }
+
+  async getMatches(userId: string) {
+    console.log("userId", userId);
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+
+    // Get all ensembles where user is a member
+    const memberships = await EnsembleMembership.find({
+      member_id: userId,
+      is_host: true,
+    });
+
+    const hostedEnsembleIds = memberships.map((membership) => membership.ensemble_id);
+    console.log("hostedEnsembleIds", hostedEnsembleIds);
+
+    const matches = await Matchmaking.aggregate([
+      {
+        $match: {
+          $or: [
+            // Outgoing matches (where I liked others)
+            {
+              user_id: userId,
+              liked: true,
+              status: { $in: ["matched", "pending"] },
+            },
+            // Incoming matches (where others liked my ensembles)
+            {
+              ensemble_id: { $in: hostedEnsembleIds },
+              liked: true,
+              status: { $in: ["matched", "pending"] },
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user", // ObjectId reference
+          foreignField: "_id",
+          as: "userData",
+        },
+      },
+      {
+        $lookup: {
+          from: "ensembles",
+          localField: "ensemble", // ObjectId reference
+          foreignField: "_id",
+          as: "ensembleData",
+        },
+      },
+      {
+        $unwind: "$userData",
+      },
+      {
+        $unwind: "$ensembleData",
+      },
+      {
+        $project: {
+          _id: 1,
+          ensemble_id: 1,
+          created_at: "$matched_at",
+          status: 1,
+          "user.first_name": "$userData.first_name",
+          "user.last_name": "$userData.last_name",
+          "user.email": "$userData.email",
+          "user.phone_number": "$userData.phone_number",
+          "ensemble.name": "$ensembleData.name",
+          "ensemble.description": "$ensembleData.description",
+        },
+      },
+    ]);
+
+    console.log("matches", matches);
+
+    return matches;
   }
 
   async createMatch(userId: string, ensembleId: string, liked: boolean) {
@@ -37,14 +147,81 @@ export class MatchmakingService {
       throw new BadRequestException("Invalid ensemble ID");
     }
 
-    const match = new Matchmaking({
-      user: new Types.ObjectId(userId),
-      ensemble: new Types.ObjectId(ensembleId),
-      liked,
-      status: liked ? "new" : "rejected",
-    });
+    const session = await startSession();
+    session.startTransaction();
 
-    await match.save();
-    return match;
+    try {
+      const existingMatch = await Matchmaking.findOne({
+        user: new Types.ObjectId(userId),
+        ensemble: new Types.ObjectId(ensembleId),
+      }).session(session);
+
+      if (existingMatch) {
+        throw new ConflictException("Match already exists for this user and ensemble");
+      }
+
+      const [user, ensemble] = await Promise.all([
+        User.findById(userId).session(session),
+        Ensemble.findById(ensembleId).session(session),
+      ]);
+
+      if (!user || !ensemble) throw new NotFoundException("User or Ensemble not found");
+
+      if (!user.location?.coordinates || !ensemble.location?.coordinates)
+        throw new BadRequestException("User or ensemble location not found");
+
+      const distanceCalc = calculateDistance(
+        {
+          type: "Point",
+          coordinates: user.location.coordinates.coordinates,
+        },
+        {
+          type: "Point",
+          coordinates: ensemble.location.coordinates.coordinates,
+        },
+      );
+
+      const match = await Matchmaking.create(
+        [
+          {
+            user: new Types.ObjectId(userId),
+            ensemble: new Types.ObjectId(ensembleId),
+            status: liked ? "pending" : "rejected",
+            seen: false,
+            distance: distanceCalc,
+            liked,
+            created_at: new Date(),
+          },
+        ],
+        { session },
+      );
+
+      let result: Result;
+      if (liked) {
+        result = await match[0].populate([
+          {
+            path: "ensemble",
+            select: "name description location open_positions",
+          },
+          {
+            path: "user",
+            select: "first_name last_name email",
+          },
+        ]);
+      } else {
+        result = { ...match[0].toObject(), _id: match[0]._id.toString() };
+      }
+
+      await session.commitTransaction();
+      return result;
+    } catch (error) {
+      await session.abortTransaction();
+      if (error instanceof ConflictException || error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(error);
+    } finally {
+      session.endSession();
+    }
   }
 }

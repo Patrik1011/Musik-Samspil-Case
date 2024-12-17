@@ -20,6 +20,12 @@ export const Links: { authenticated: NavLink[]; unauthenticated: NavLink[] } = {
       spanColor: "text-steel-blue",
     },
     {
+      label: "Swipe",
+      href: "/matchmaking",
+      bgColor: "",
+      spanColor: "text-steel-blue",
+    },
+    {
       label: "Profile",
       href: "/profile",
       bgColor: "bg-steel-blue",
