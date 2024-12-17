@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { Instrument } from "../utils/types/enums";
 
 export const UserSchema = new Schema(
   {
@@ -8,8 +9,32 @@ export const UserSchema = new Schema(
     password: { type: String, required: true },
     phone_number: String,
     bio: String,
+    instruments: [
+      {
+        type: String,
+        enum: Object.values(Instrument),
+      },
+    ],
+    location: {
+      city: String,
+      country: String,
+      address: String,
+      coordinates: {
+        type: {
+          type: String,
+          enum: ["Point"],
+          required: true,
+        },
+        coordinates: {
+          type: [Number],
+          required: true,
+        },
+      },
+    },
   },
   { collection: "User" },
 );
+
+UserSchema.index({ "location.coordinates": "2dsphere" });
 
 export const User = model("User", UserSchema);

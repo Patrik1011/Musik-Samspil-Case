@@ -34,10 +34,23 @@ export const UpdateProfile = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    if (name === "city" || name === "country" || name === "address") {
+      setFormData((prev) => ({
+        ...prev,
+        location: {
+          city: prev.location?.city ?? "",
+          country: prev.location?.country ?? "",
+          address: prev.location?.address ?? "",
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,6 +73,11 @@ export const UpdateProfile = () => {
         phone_number: formData.phone_number?.trim(),
         bio: formData.bio?.trim(),
         instrument: formData.instrument?.trim(),
+        location: {
+          city: formData.location?.city?.trim() as string,
+          country: formData.location?.country?.trim() as string,
+          address: formData.location?.address?.trim() as string,
+        },
       });
 
       setUser(updatedUser);
@@ -68,7 +86,7 @@ export const UpdateProfile = () => {
       setShowSuccess(true);
 
       setTimeout(() => {
-        navigate("/home");
+        navigate("/");
       }, 2000);
     } catch (err) {
       if (err instanceof Error) {
@@ -126,6 +144,33 @@ export const UpdateProfile = () => {
           value={formData.phone_number || ""}
           placeholder={user.phone_number || ""}
           label="Phone Number"
+          onChange={handleInputChange}
+        />
+        <InputField
+          id="city"
+          type="text"
+          name="city"
+          value={formData.location?.city || ""}
+          placeholder={user.location?.city || "Enter your city"}
+          label="City"
+          onChange={handleInputChange}
+        />
+        <InputField
+          id="country"
+          type="text"
+          name="country"
+          value={formData.location?.country || ""}
+          placeholder={user.location?.country || "Enter your country"}
+          label="Country"
+          onChange={handleInputChange}
+        />
+        <InputField
+          id="address"
+          type="text"
+          name="address"
+          value={formData.location?.address || ""}
+          placeholder={user.location?.address || "Enter your address: e.g. 123 Main St"}
+          label="Address"
           onChange={handleInputChange}
         />
 

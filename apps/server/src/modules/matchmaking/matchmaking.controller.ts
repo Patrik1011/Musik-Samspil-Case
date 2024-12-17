@@ -3,6 +3,7 @@ import { MatchmakingService } from "./matchmaking.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { Types } from "mongoose";
 
 @Controller("matchmaking")
 @ApiTags("matchmaking")
@@ -17,14 +18,22 @@ export class MatchmakingController {
     @Query("latitude") latitude: string,
     @Query("longitude") longitude: string,
   ) {
-    const recommendations = await this.matchmakingService.getRecommendations({
-      latitude: Number.parseFloat(latitude),
-      longitude: Number.parseFloat(longitude),
-    });
-
-    console.log("recommendations", recommendations);
+    const recommendations = await this.matchmakingService.getRecommendations(
+      {
+        latitude: Number.parseFloat(latitude),
+        longitude: Number.parseFloat(longitude),
+      },
+      req.user._id.toString(),
+    );
 
     return recommendations;
+  }
+
+  @Get("matches")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getMatches(@Request() req: AuthenticatedRequest) {
+    return this.matchmakingService.getMatches(req.user._id.toString());
   }
 
   @Post("match")
@@ -33,7 +42,17 @@ export class MatchmakingController {
   async createMatch(
     @Request() req: AuthenticatedRequest,
     @Body() body: { ensembleId: string; liked: boolean },
-  ) {
+  ): Promise<{
+    _id: string;
+    user: Types.ObjectId;
+    ensemble: Types.ObjectId;
+    status: string;
+    seen: boolean;
+    liked: boolean;
+    distance: number;
+    matched_at: Date;
+    created_at: Date;
+  }> {
     return this.matchmakingService.createMatch(
       req.user._id.toString(),
       body.ensembleId,

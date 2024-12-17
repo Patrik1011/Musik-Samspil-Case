@@ -1,10 +1,7 @@
 import { postService } from "../../../../services/PostService.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  applicationService,
-  ApplicationRequest,
-} from "../../../../services/ApplicationService.ts";
+import { applicationService, ApplicationRequest } from "../../../../services/ApplicationService.ts";
 import { PostDetails } from "../../../../services/PostService.ts";
 import { Button } from "../../../Button.tsx";
 import { PostDetailsInfo } from "./PostDetailsInfo.tsx";
@@ -19,9 +16,7 @@ export const DetailsComponent = () => {
   const [selectedPost, setSelectedPost] = useState<PostDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
     if (id) {
@@ -62,7 +57,7 @@ export const DetailsComponent = () => {
         title="Go back"
         type="button"
         className="text-steel-blue border border-soft-gray bg-white"
-        onClick={() => navigate("/home")}
+        onClick={() => navigate("/")}
       />
       <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row mt-8 justify-between w-full gap-x-3 items-stretch">
         <div className="md:w-1/2 w-full flex flex-col">
@@ -98,9 +93,7 @@ export const DetailsComponent = () => {
           title={isAuthenticated ? "Apply" : "Login to apply"}
           type="button"
           className="text-white bg-steel-blue my-8"
-          onClick={() =>
-            isAuthenticated ? setIsModalOpen(true) : navigate("/login")
-          }
+          onClick={() => (isAuthenticated ? setIsModalOpen(true) : navigate("/login"))}
         />
       </div>
       {selectedPost && (

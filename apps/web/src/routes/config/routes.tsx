@@ -47,7 +47,7 @@ export const routes: RouteConfig[] = [
     protected: true,
   },
   {
-    path: "/home",
+    path: "/",
     component: <Home />,
     protected: false,
     isPublic: true,

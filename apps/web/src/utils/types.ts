@@ -25,6 +25,11 @@ export interface UserEntity {
   phone_number?: string;
   bio?: string;
   instrument?: string;
+  location: {
+    city: string;
+    country: string;
+    address: string;
+  };
 }
 
 export type OnboardingEntity = {
@@ -55,4 +60,17 @@ export type EnsembleMember = {
   };
   instrument: Instrument;
   is_host: boolean;
+};
+
+export type Match = {
+  _id: string;
+  user: UserEntity;
+  ensemble_id: string;
+  created_at: string;
+};
+
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
+  radius?: number;
 };

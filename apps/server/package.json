@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:e2e:auth": "jest --config ./test/jest-e2e.json apps/server/test/auth.e2e-spec.ts",
-    "seed": "ts-node src/utils/scripts/seed.ts"
+    "seed": "ts-node src/utils/scripts/seed.ts",
+    "seed:copenhagen": "ts-node src/utils/scripts/copenhagen-ensembles.ts"
   },
   "jest": {
     "moduleFileExtensions": ["js", "json", "ts"],

@@ -37,17 +37,17 @@ const validatePassword = (password: string): string | undefined => {
     return errorMessages.PASSWORD_LENGTH;
   }
 
-  // if (!/[A-Z]/.test(password)) {
-  //   return errorMessages.PASSWORD_UPPERCASE;
-  // }
-  //
-  // if (!/[a-z]/.test(password)) {
-  //   return errorMessages.PASSWORD_LOWERCASE;
-  // }
-  //
-  // if (!/[0-9]/.test(password)) {
-  //   return errorMessages.PASSWORD_NUMBER;
-  // }
+  if (!/[A-Z]/.test(password)) {
+    return errorMessages.PASSWORD_UPPERCASE;
+  }
+
+  if (!/[a-z]/.test(password)) {
+    return errorMessages.PASSWORD_LOWERCASE;
+  }
+
+  if (!/[0-9]/.test(password)) {
+    return errorMessages.PASSWORD_NUMBER;
+  }
   return undefined;
 };
 
