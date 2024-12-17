@@ -1,5 +1,6 @@
-import { IsOptional, IsString, IsEnum, IsMongoId } from "class-validator";
+import { IsEnum, IsMongoId, IsOptional, IsString } from "class-validator";
 import { PostType } from "../../../utils/types/enums";
+import { Types } from "mongoose";
 
 export class SearchPostsDto {
   @IsOptional()
@@ -11,6 +12,10 @@ export class SearchPostsDto {
   description?: string;
 
   @IsOptional()
+  @IsString()
+  instrument?: string;
+
+  @IsOptional()
   @IsEnum(PostType)
   type?: PostType;
 
@@ -18,3 +23,11 @@ export class SearchPostsDto {
   @IsMongoId()
   ensembleId?: string;
 }
+
+export type MongoSearchPostsDto = Partial<
+  Omit<SearchPostsDto, "title" | "description"> & {
+    title?: string | { $regex: string; $options: string };
+    description?: string | { $regex: string; $options: string };
+    ensemble_id?: { $in: Types.ObjectId[] };
+  }
+>;

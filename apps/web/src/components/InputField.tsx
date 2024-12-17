@@ -36,7 +36,7 @@ export const InputField = ({
       )}
       <input
         id={id}
-        className={`${className} w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none`}
+        className={`w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none ${className}`}
         type={type}
         name={name}
         placeholder={placeholder}

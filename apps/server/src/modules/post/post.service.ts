@@ -5,10 +5,11 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { Types } from "mongoose";
+import { Ensemble } from "src/schemas/ensemble.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Post } from "../../schemas/post.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
-import { SearchPostsDto } from "./dto/search-posts.dto";
+import { MongoSearchPostsDto, SearchPostsDto } from "./dto/search-posts.dto";
 
 @Injectable()
 export class PostService {
@@ -86,33 +87,71 @@ export class PostService {
     }
   }
 
+  // async searchPosts(searchCriteria: SearchPostsDto) {
+  //   try {
+  //     const query: any = {};
+
+  //     // Handle instrument filtering
+  //     if (searchCriteria.instrument) {
+  //       const matchingEnsembleIds = await Ensemble.find(
+  //         { open_positions: searchCriteria.instrument },
+  //         { _id: 1 } // Select only the _id field
+  //       ).lean();
+
+  //       const ensembleIds = matchingEnsembleIds.map((ensemble) => ensemble._id);
+  //       query.ensemble_id = { $in: ensembleIds };
+  //     }
+
+  //     // Add additional filters dynamically
+  //     if (searchCriteria.title) {
+  //       query.title = { $regex: searchCriteria.title, $options: "i" };
+  //     }
+  //     if (searchCriteria.description) {
+  //       query.description = { $regex: searchCriteria.description, $options: "i" };
+  //     }
+  //     if (searchCriteria.type) {
+  //       query.type = searchCriteria.type;
+  //     }
+  //     if (searchCriteria.ensembleId) {
+  //       query.ensemble_id = new Types.ObjectId(searchCriteria.ensembleId);
+  //     }
+
+  //     // Fetch posts with related fields populated
+  //     return await Post.find(query).populate(["ensemble_id", "author_id"]);
+  //   } catch (error) {
+  //     throw new InternalServerErrorException(error);
+  //   }
+  // }
+
   async searchPosts(searchCriteria: SearchPostsDto) {
     try {
-      const query = {};
+      const query: MongoSearchPostsDto = {};
 
-      // Add search criteria dynamically
+      // Handle instrument filtering
+      if (searchCriteria.instrument) {
+        const matchingEnsembleIds = await Ensemble.find(
+          { open_positions: searchCriteria.instrument },
+          { _id: 1 },
+        ).lean();
+
+        const ensembleIds = matchingEnsembleIds.map((ensemble) => ensemble._id);
+        query.ensemble_id = { $in: ensembleIds };
+      }
+
+      // Add additional filters dynamically
       if (searchCriteria.title) {
         query.title = { $regex: searchCriteria.title, $options: "i" };
       }
-
       if (searchCriteria.description) {
         query.description = { $regex: searchCriteria.description, $options: "i" };
       }
-
       if (searchCriteria.type) {
         query.type = searchCriteria.type;
       }
 
-      if (searchCriteria.ensembleId) {
-        query.ensemble_id = new Types.ObjectId(searchCriteria.ensembleId);
-      }
-
-      // Fetch posts with population for related fields
       return await Post.find(query).populate(["ensemble_id", "author_id"]);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new InternalServerErrorException(`Failed to search posts: ${error.message}`);
-      }
+      throw new InternalServerErrorException(error);
     }
   }
 }
