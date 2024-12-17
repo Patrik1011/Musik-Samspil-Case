@@ -22,13 +22,37 @@ export class EnsembleService {
       const hostMemberships = await EnsembleMembership.find({
         member: new Types.ObjectId(userId),
         is_host: true,
-      }).populate("ensemble");
+      })
+        .populate([
+          {
+            path: "ensemble",
+          },
+          {
+            path: "member",
+            select: "first_name last_name email instrument",
+          },
+        ])
+        .lean();
 
-      const validEnsembles = hostMemberships
-        .map((membership) => membership.ensemble)
-        .filter((ensemble) => ensemble !== null);
+      const ensemblesWithMembers = await Promise.all(
+        hostMemberships.map(async (hostMembership) => {
+          const ensemble = hostMembership.ensemble;
+          if (!ensemble) return null;
 
-      return validEnsembles;
+          const members = await EnsembleMembership.find({
+            ensemble: ensemble._id,
+          })
+            .populate("member", "first_name last_name email instrument")
+            .lean();
+
+          return {
+            ...ensemble,
+            members: members,
+          };
+        }),
+      );
+
+      return ensemblesWithMembers.filter((e) => e !== null);
     } catch (error) {
       console.error("Error in findUserHostedEnsembles:", error);
       throw new InternalServerErrorException(error);

@@ -66,6 +66,7 @@ export class MatchmakingService {
   }
 
   async getMatches(userId: string) {
+    console.log("userId", userId);
     if (!Types.ObjectId.isValid(userId)) {
       throw new BadRequestException("Invalid user ID");
     }
