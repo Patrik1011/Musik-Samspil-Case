@@ -39,7 +39,15 @@ export class MatchmakingService {
       user: new Types.ObjectId(userId),
     }).select("ensemble");
 
-    const matchedEnsembleIds = existingMatches.map((match) => match.ensemble);
+    const hostedEnsembles = await EnsembleMembership.find({
+      member_id: userId,
+      is_host: true,
+    }).select("ensemble_id");
+
+    const excludeEnsembleIds = [
+      ...existingMatches.map((match) => match.ensemble),
+      ...hostedEnsembles.map((membership) => membership.ensemble_id),
+    ];
 
     const ensembles = await Ensemble.aggregate([
       {
@@ -56,7 +64,7 @@ export class MatchmakingService {
       {
         $match: {
           is_active: true,
-          _id: { $nin: matchedEnsembleIds },
+          _id: { $nin: excludeEnsembleIds },
         },
       },
       { $limit: limit },
@@ -66,51 +74,37 @@ export class MatchmakingService {
   }
 
   async getMatches(userId: string) {
-    console.log("userId", userId);
     if (!Types.ObjectId.isValid(userId)) {
       throw new BadRequestException("Invalid user ID");
     }
 
-    // Get all ensembles where user is a member
     const memberships = await EnsembleMembership.find({
       member_id: userId,
       is_host: true,
     });
 
     const hostedEnsembleIds = memberships.map((membership) => membership.ensemble_id);
-    console.log("hostedEnsembleIds", hostedEnsembleIds);
 
     const matches = await Matchmaking.aggregate([
       {
         $match: {
-          $or: [
-            // Outgoing matches (where I liked others)
-            {
-              user_id: userId,
-              liked: true,
-              status: { $in: ["matched", "pending"] },
-            },
-            // Incoming matches (where others liked my ensembles)
-            {
-              ensemble_id: { $in: hostedEnsembleIds },
-              liked: true,
-              status: { $in: ["matched", "pending"] },
-            },
-          ],
+          ensemble: { $in: hostedEnsembleIds.map((id) => new Types.ObjectId(id)) },
+          liked: true,
+          status: { $in: ["matched", "pending"] },
         },
       },
       {
         $lookup: {
-          from: "users",
-          localField: "user", // ObjectId reference
+          from: "User",
+          localField: "user",
           foreignField: "_id",
           as: "userData",
         },
       },
       {
         $lookup: {
-          from: "ensembles",
-          localField: "ensemble", // ObjectId reference
+          from: "Ensemble",
+          localField: "ensemble",
           foreignField: "_id",
           as: "ensembleData",
         },
@@ -124,8 +118,8 @@ export class MatchmakingService {
       {
         $project: {
           _id: 1,
-          ensemble_id: 1,
-          created_at: "$matched_at",
+          ensemble_id: "$ensemble",
+          created_at: "$created_at",
           status: 1,
           "user.first_name": "$userData.first_name",
           "user.last_name": "$userData.last_name",
@@ -136,8 +130,6 @@ export class MatchmakingService {
         },
       },
     ]);
-
-    console.log("matches", matches);
 
     return matches;
   }
@@ -185,10 +177,12 @@ export class MatchmakingService {
         [
           {
             user: new Types.ObjectId(userId),
+            user_id: userId,
             ensemble: new Types.ObjectId(ensembleId),
+            ensemble_id: ensembleId,
             status: liked ? "pending" : "rejected",
-            seen: false,
             distance: distanceCalc,
+            seen: false,
             liked,
             created_at: new Date(),
           },
