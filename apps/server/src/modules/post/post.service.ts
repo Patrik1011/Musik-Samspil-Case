@@ -87,42 +87,6 @@ export class PostService {
     }
   }
 
-  // async searchPosts(searchCriteria: SearchPostsDto) {
-  //   try {
-  //     const query: any = {};
-
-  //     // Handle instrument filtering
-  //     if (searchCriteria.instrument) {
-  //       const matchingEnsembleIds = await Ensemble.find(
-  //         { open_positions: searchCriteria.instrument },
-  //         { _id: 1 } // Select only the _id field
-  //       ).lean();
-
-  //       const ensembleIds = matchingEnsembleIds.map((ensemble) => ensemble._id);
-  //       query.ensemble_id = { $in: ensembleIds };
-  //     }
-
-  //     // Add additional filters dynamically
-  //     if (searchCriteria.title) {
-  //       query.title = { $regex: searchCriteria.title, $options: "i" };
-  //     }
-  //     if (searchCriteria.description) {
-  //       query.description = { $regex: searchCriteria.description, $options: "i" };
-  //     }
-  //     if (searchCriteria.type) {
-  //       query.type = searchCriteria.type;
-  //     }
-  //     if (searchCriteria.ensembleId) {
-  //       query.ensemble_id = new Types.ObjectId(searchCriteria.ensembleId);
-  //     }
-
-  //     // Fetch posts with related fields populated
-  //     return await Post.find(query).populate(["ensemble_id", "author_id"]);
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error);
-  //   }
-  // }
-
   async searchPosts(searchCriteria: SearchPostsDto) {
     try {
       const query: MongoSearchPostsDto = {};

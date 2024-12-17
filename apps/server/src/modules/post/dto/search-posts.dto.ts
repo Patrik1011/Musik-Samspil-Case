@@ -5,6 +5,10 @@ import { Types } from "mongoose";
 export class SearchPostsDto {
   @IsOptional()
   @IsString()
+  genericText?: string | { $regex: string; $options: string };
+
+  @IsOptional()
+  @IsString()
   title?: string;
 
   @IsOptional()
@@ -29,5 +33,7 @@ export type MongoSearchPostsDto = Partial<
     title?: string | { $regex: string; $options: string };
     description?: string | { $regex: string; $options: string };
     ensemble_id?: { $in: Types.ObjectId[] };
+    instrument?: string | { $regex: string; $options: string };
+    $or?: Array<Partial<Pick<MongoSearchPostsDto, "title" | "description" | "instrument">>>;
   }
 >;
