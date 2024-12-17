@@ -2,22 +2,7 @@ import { useState, useEffect } from "react";
 import { matchmakingService } from "../../../services/MatchmakingService";
 import { LoadingState } from "../applications/states/LoadingState";
 import { StatusMessage } from "./StatusMessage";
-
-interface Match {
-  _id: string;
-  user: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone_number: string;
-  };
-  ensemble: {
-    name: string;
-    description: string;
-  };
-  ensemble_id: string;
-  created_at: string;
-}
+import { Match } from "../../../utils/types";
 
 export const Matches = () => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -44,11 +29,11 @@ export const Matches = () => {
   if (matches.length === 0) return <StatusMessage message="No matches found yet" />;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+    <div className="grid grid-cols-1 gap-6 p-4 max-w-7xl mx-auto">
       {matches.map((match) => (
         <div
           key={match._id}
-          className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+          className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden w-full max-w-md mx-auto"
         >
           {/* Ensemble Section */}
           <div className="p-6 bg-steel-blue bg-opacity-5">

@@ -8,6 +8,7 @@ import { Types } from "mongoose";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Post } from "../../schemas/post.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
+import { Application } from "../../schemas/application.schema";
 
 @Injectable()
 export class PostService {
@@ -71,6 +72,8 @@ export class PostService {
     }
 
     await post.deleteOne();
+    await Application.deleteMany({ post_id: post._id });
+
     return { message: "Post deleted successfully" };
   }
 
