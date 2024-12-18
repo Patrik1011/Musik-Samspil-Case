@@ -125,11 +125,19 @@ export class MatchmakingService {
           "user.last_name": "$userData.last_name",
           "user.email": "$userData.email",
           "user.phone_number": "$userData.phone_number",
+          "user.bio": "$userData.bio",
+          "user.instruments": "$userData.instruments",
+          "user.location.city": "$userData.location.city",
+          "user.location.country": "$userData.location.country",
+          "user.location.address": "$userData.location.address",
           "ensemble.name": "$ensembleData.name",
           "ensemble.description": "$ensembleData.description",
+          "ensemble.open_positions": "$ensembleData.open_positions",
         },
       },
     ]);
+
+    console.log(matches);
 
     return matches;
   }

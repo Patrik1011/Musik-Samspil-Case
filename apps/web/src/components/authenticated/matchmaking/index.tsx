@@ -10,7 +10,7 @@ import { Matches } from "./Matches";
 type Tab = "feed" | "matches";
 
 const tabs = [
-  { name: "Feed", current: true, count: 0 },
+  { name: "Feed", current: true },
   { name: "Matches", current: false, count: 0 },
 ] as const;
 
@@ -25,7 +25,7 @@ export const Matchmaking = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [swipeMessage, setSwipeMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [tabCounts, setTabCounts] = useState({ feed: 0, matches: 0 });
+  const [tabCounts, setTabCounts] = useState({ matches: 0 });
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -53,12 +53,6 @@ export const Matchmaking = () => {
       setIsLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    if (ensembles.length > currentIndex) {
-      setTabCounts((prev) => ({ ...prev, feed: ensembles.length - currentIndex }));
-    }
-  }, [ensembles.length, currentIndex]);
 
   useEffect(() => {
     const fetchMatchesCount = async () => {
@@ -128,7 +122,7 @@ export const Matchmaking = () => {
             const tabKey = tab.name.toLowerCase() as Tab;
             return (
               <option key={tabKey} value={tabKey}>
-                {tab.name} ({tabCounts[tabKey]})
+                {tab.name} {tabKey === "matches" && `(${tabCounts.matches})`}
               </option>
             );
           })}
@@ -164,16 +158,18 @@ export const Matchmaking = () => {
                   type="button"
                 >
                   {tab.name}
-                  <span
-                    className={classNames(
-                      activeTab === tabKey
-                        ? "bg-steel-blue bg-opacity-10 text-steel-blue"
-                        : "bg-gray-100 text-gray-900",
-                      "ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block",
-                    )}
-                  >
-                    {tabCounts[tabKey]}
-                  </span>
+                  {tabKey === "matches" && (
+                    <span
+                      className={classNames(
+                        activeTab === tabKey
+                          ? "bg-steel-blue bg-opacity-10 text-steel-blue"
+                          : "bg-gray-100 text-gray-900",
+                        "ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block",
+                      )}
+                    >
+                      {tabCounts.matches}
+                    </span>
+                  )}
                 </button>
               );
             })}

@@ -16,6 +16,7 @@ export const Matches = () => {
   const fetchMatches = async () => {
     try {
       const data = await matchmakingService.getMatches();
+      console.log(data);
       setMatches(data);
     } catch (error) {
       setError(error as string);
@@ -44,12 +45,24 @@ export const Matches = () => {
           {/* User Match Section */}
           <div className="p-6">
             <div className="space-y-4">
-              <div>
-                <h4 className="text-lg font-medium text-gray-900 mb-1">Matched with</h4>
-                <p className="text-steel-blue font-medium">
+              <h4 className="text-lg font-medium text-gray-900">Matched with</h4>
+              <div className="flex items-center space-x-2">
+                <p className="text-steel-blue font-medium mt-2">
                   {match.user.first_name} {match.user.last_name}
                 </p>
+                {match.user.instruments && (
+                  <span className="inline-block mt-2 px-3 py-1 bg-steel-blue bg-opacity-10 text-steel-blue rounded-full text-sm">
+                    {match.user.instruments.join(", ")}
+                  </span>
+                )}
               </div>
+
+              {match.user.bio && (
+                <div>
+                  <h4 className="text-base font-medium text-gray-900 mb-1">About</h4>
+                  <p className="text-gray-600 text-sm">{match.user.bio}</p>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-gray-600">

@@ -24,7 +24,7 @@ export interface UserEntity {
   email: string;
   phone_number?: string;
   bio?: string;
-  instrument?: string;
+  instruments?: Instrument[];
   location: {
     city: string;
     country: string;
@@ -68,6 +68,7 @@ export type Match = {
   ensemble: {
     name: string;
     description: string;
+    open_positions: Instrument[];
   };
   ensemble_id: string;
   created_at: string;
