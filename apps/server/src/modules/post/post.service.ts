@@ -1,16 +1,11 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Types } from "mongoose";
 import { Ensemble } from "src/schemas/ensemble.schema";
+import { Application } from "../../schemas/application.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Post } from "../../schemas/post.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { MongoSearchPostsDto, SearchPostsDto } from "./dto/search-posts.dto";
-import { Application } from "../../schemas/application.schema";
 
 @Injectable()
 export class PostService {
@@ -81,10 +76,7 @@ export class PostService {
 
   async getLatestPosts() {
     try {
-      return await Post.find()
-        .sort({ created_at: -1 })
-        .limit(6)
-        .populate(["ensemble_id", "author_id"]);
+      return await Post.find().sort({ created_at: -1 }).limit(6).populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -96,31 +88,63 @@ export class PostService {
 
       // Handle instrument filtering
       if (searchCriteria.instrument) {
-        const matchingEnsembleIds = await Ensemble.find(
-          { open_positions: searchCriteria.instrument },
-          { _id: 1 },
-        ).lean();
+        const matchingEnsembleIds = await Ensemble.find({ open_positions: searchCriteria.instrument }, { _id: 1 }).lean();
 
-        const ensembleIds = matchingEnsembleIds.map((ensemble) => ensemble._id);
+        const ensembleIds = matchingEnsembleIds.map(ensemble => ensemble._id);
         query.ensemble_id = { $in: ensembleIds };
       }
 
+      // Handle location filtering
       if (searchCriteria.location) {
-        const locationPattern = new RegExp(searchCriteria.location, "i"); // 'i' for case-insensitive matching
+        const locationPattern = new RegExp(searchCriteria.location, "i");
 
         const matchingEnsembleIds = await Ensemble.find(
           {
-            $or: [
-              { "location.city": locationPattern },
-              { "location.country": locationPattern },
-              { "location.address": locationPattern },
-            ],
+            $or: [{ "location.city": locationPattern }, { "location.country": locationPattern }, { "location.address": locationPattern }],
           },
           { _id: 1 },
         ).lean();
 
-        const ensembleIds = matchingEnsembleIds.map((ensemble) => ensemble._id);
+        const ensembleIds = matchingEnsembleIds.map(ensemble => ensemble._id);
         query.ensemble_id = { $in: ensembleIds };
+      }
+
+      if (searchCriteria.genericText) {
+        // Generic text search for title and description
+        const genericTextRegex = { $regex: searchCriteria.genericText as string, $options: "i" };
+
+        type QueryCondition =
+          | { title?: { $regex: string; $options: string } }
+          | { description?: { $regex: string; $options: string } }
+          | { type?: { $regex: string; $options: string } }
+          | { ensemble_id?: { $in: Types.ObjectId[] } };
+
+        // Add initial $or conditions for title and description
+        const genericTextConditions: QueryCondition[] = [{ title: genericTextRegex }, { description: genericTextRegex }, { type: genericTextRegex }];
+
+        // Fetch ensemble IDs based on location criteria
+        const locationPattern = genericTextRegex;
+        const locationCriteria = {
+          $or: [{ "location.city": locationPattern }, { "location.country": locationPattern }, { "location.address": locationPattern }],
+        };
+        const matchingLocationEnsembles = await Ensemble.find(locationCriteria, { _id: 1 }).lean();
+        const locationEnsembleIds = matchingLocationEnsembles.map(ensemble => ensemble._id);
+
+        // Fetch ensemble IDs based on open positions
+        const openPositionsCriteria = { open_positions: genericTextRegex };
+        const matchingPositionEnsembles = await Ensemble.find(openPositionsCriteria, { _id: 1 }).lean();
+        const positionEnsembleIds = matchingPositionEnsembles.map(ensemble => ensemble._id);
+
+        // Combine ensemble IDs from both location and open positions
+        const combinedEnsembleIds = [...new Set([...locationEnsembleIds, ...positionEnsembleIds])];
+
+        // Add ensemble-related conditions if any ensemble IDs were found
+        if (combinedEnsembleIds.length > 0) {
+          genericTextConditions.push({ ensemble_id: { $in: combinedEnsembleIds } });
+        }
+
+        // Apply the combined $or conditions to the query
+        query.$or = genericTextConditions;
       }
 
       // Add additional filters dynamically

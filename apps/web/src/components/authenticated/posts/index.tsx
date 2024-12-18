@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostDetails, postService, SearchCriteria } from "../../../services/PostService.ts";
+import {
+  PostDetails,
+  postService,
+  SearchCriteria,
+} from "../../../services/PostService.ts";
 import { Container } from "../../Container.tsx";
 import { Headline } from "../../Headline.tsx";
 import { PostGrid } from "./post-card/PostGrid.tsx";
 import SearchPosts from "./SearchPosts.tsx";
 
 export const UserPosts = () => {
-  const [posts, setPosts] = useState<PostDetails[]>([]);
+  const [allPosts, setAllPosts] = useState<PostDetails[]>([]);
   const [showingPosts, setShowingPosts] = useState<PostDetails[]>([]);
-  const [selectedInstrument, setSelectedInstrument] = useState<string | null>(null);
-  const [searchObj, setSearchObj] = useState<object | null>({
+  const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({
     location: "",
     instrument: "",
+    genericText: "",
   });
 
   const navigate = useNavigate();
@@ -20,19 +24,34 @@ export const UserPosts = () => {
   useEffect(() => {
     fetchPosts();
   }, []);
+
   useEffect(() => {
-    setShowingPosts(posts);
-  }, [posts]);
+    setShowingPosts(allPosts);
+  }, [allPosts]);
 
   const fetchPosts = async () => {
-    const posts = await postService.getPosts();
-    setPosts(posts);
+    try {
+      const posts = await postService.getPosts();
+      setAllPosts(posts);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
   };
 
-  const searchPost = async (searchCriteria: SearchCriteria) => {
-    console.log(searchCriteria);
+  const searchPost = async (
+    criteria: Partial<SearchCriteria>,
+    callingFor?: string,
+  ) => {
     try {
-      const data = await postService.searchPost(searchCriteria);
+      if (callingFor === "clear") {
+        const data = await postService.searchPost(criteria);
+        setShowingPosts(data);
+        return;
+      }
+      const updatedCriteria = { ...searchCriteria, ...criteria };
+      setSearchCriteria(updatedCriteria);
+      console.log(searchCriteria);
+      const data = await postService.searchPost(updatedCriteria);
       setShowingPosts(data);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
@@ -43,11 +62,16 @@ export const UserPosts = () => {
     navigate(`/post-details/${id}`);
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedInstrument(event.target.value);
-    searchPost({ instrument: event.target.value });
+  const clearSearchCriteria = (field: keyof SearchCriteria) => {
+    setSearchCriteria((prev) => ({ ...prev, [field]: "" }));
 
-    setSearchObj({ ...searchObj, [event.target.name]: event.target.value });
+    if (searchCriteria.genericText) {
+      console.log("fetching posts based on generic text");
+      searchPost({ genericText: searchCriteria.genericText }, "clear");
+    } else {
+      console.log("fetching all posts");
+      fetchPosts();
+    }
   };
 
   return (
@@ -55,16 +79,21 @@ export const UserPosts = () => {
       <Container className="my-10">
         <Headline title="Posts" textColor="text-steel-blue" />
         <SearchPosts
-          selectedInstrument={selectedInstrument}
-          handleSelectChange={handleSelectChange}
-          setSelectedInstrument={setSelectedInstrument}
+          searchCriteria={searchCriteria}
           searchPost={searchPost}
+          clearSearchCriteria={clearSearchCriteria}
         />
       </Container>
 
       <div className="bg-[#F5F5F5] pt-3">
         <Container className="my-10">
-          <PostGrid posts={showingPosts} handlePostClick={handlePostClick} />
+          {showingPosts.length > 0 ? (
+            <PostGrid posts={showingPosts} handlePostClick={handlePostClick} />
+          ) : (
+            <div className="flex flex-col items-center">
+              <Headline title="No post found" textColor="text-steel-blue" />
+            </div>
+          )}
         </Container>
       </div>
     </div>
