@@ -39,7 +39,6 @@ describe('UsersController (e2e)', () => {
     jwtService = moduleFixture.get<JwtService>(JwtService);
     await app.init();
 
-    // Create a test JWT token
     accessToken = jwtService.sign({ sub: userId });
   });
 
