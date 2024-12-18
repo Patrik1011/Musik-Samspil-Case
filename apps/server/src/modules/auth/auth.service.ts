@@ -1,11 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-  BadRequestException,
-  InternalServerErrorException,
-} from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
@@ -47,19 +40,20 @@ export class AuthService {
       }
 
       if (!isValidPassword(signUpDto.password)) {
-        throw new BadRequestException(
-          "Password must contain at least 6 characters, including uppercase, lowercase, number",
-        );
+        throw new BadRequestException("Password must contain at least 6 characters, including uppercase, lowercase, number");
       }
 
       const { email, first_name, last_name } = signUpDto;
       const userExists = await User.findOne({ email });
 
+      console.log(userExists);
       if (userExists) {
         throw new ConflictException("User already exists");
       }
 
       const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
+      console.log(hashedPassword);
+      console.log(signUpDto);
 
       const session = await mongoose.startSession();
       session.startTransaction();
