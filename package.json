@@ -5,8 +5,7 @@
   "main": "",
   "type": "module",
   "scripts": {
-    "format:biome": "biome format . --write",
-    "biome": "biome check  --unsafe --write .",
+    "format:prettier": "prettier --write .",
     "lint:eslint": "eslint . --fix",
     "lint-staged": "lint-staged",
     "lint-staged-debug": "lint-staged --debug",
@@ -39,7 +38,6 @@
     "node": ">=18.16.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.14.0",
@@ -52,11 +50,19 @@
   },
   "lint-staged": {
     "*.{json,md,yml}": [
-      "biome check --write"
+      "prettier --write"
     ],
     "apps/**/*.{ts,tsx}": [
-      "biome check --write",
+      "prettier --write",
       "eslint --fix"
     ]
+  },
+  "volta": {
+    "node": "20.18.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "^0.19.12"
+    }
   }
 }
