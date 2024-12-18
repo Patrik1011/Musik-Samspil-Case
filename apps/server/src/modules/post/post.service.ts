@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Types } from "mongoose";
-import { Ensemble } from "src/schemas/ensemble.schema";
+import { Ensemble } from "../../schemas/ensemble.schema";
 import { Application } from "../../schemas/application.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Post } from "../../schemas/post.schema";
