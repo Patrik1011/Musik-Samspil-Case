@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { Instrument } from "../utils/types/enums";
 
-const EnsembleMembershipSchema = new Schema(
+export const EnsembleMembershipSchema = new Schema(
   {
     ensemble: { type: Schema.Types.ObjectId, ref: "Ensemble", required: true },
     ensemble_id: { type: String, required: true },
