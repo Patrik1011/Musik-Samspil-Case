@@ -7,7 +7,7 @@ interface Location {
   address: string;
   coordinates: {
     type: string;
-    coordinates: [number, number];
+    coordinates: number[];
   };
 }
 
