@@ -52,7 +52,7 @@ export const PostCard = ({
 
   return (
     <article
-      className={`bg-white rounded-[10px] border border-soft-gray shadow transition-transform transform hover:scale-105 ${className}`}
+      className={`bg-white rounded-[10px] border border-soft-gray shadow transition-transform transform hover:scale-105 ${className} mb-8`}
     >
       <header className="px-4 pt-4">
         <SubHeadline title={title} className="text-steel-blue" />

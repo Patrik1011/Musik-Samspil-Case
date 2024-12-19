@@ -37,26 +37,6 @@ function SearchPosts({
             className="absolute top-1/2 right-4 transform -translate-y-1/3 text-medium-gray cursor-pointer"
           />
         </div>
-
-        <div className="flex items-center gap-x-4 md:w-auto">
-          <Button
-            title="All"
-            className="h-10 px-4 pt-0 pb-0 text-white bg-steel-blue text-xs rounded-[25px] hover:bg-gray-100 hover:text-steel-blue"
-            onClick={() =>
-              searchPost({ genericText: searchCriteria.genericText })
-            }
-          />
-          <Button
-            title="Find musicians"
-            className="h-10 px-4 pt-0 pb-0 text-steel-blue bg-gray-100 text-xs rounded-[25px] hover:bg-steel-blue hover:text-gray-100"
-            onClick={() => console.log("Find musicians")}
-          />
-          <Button
-            title="Find ensemble"
-            className="h-10 px-4 pt-0 pb-0 text-steel-blue bg-gray-100 text-xs rounded-[25px] hover:bg-steel-blue hover:text-gray-100"
-            onClick={() => console.log("Find ensemble")}
-          />
-        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-6 mt-4 w-full">

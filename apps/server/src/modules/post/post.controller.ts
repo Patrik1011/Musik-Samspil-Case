@@ -1,14 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Request,
-  UseGuards,
-} from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
 import { AuthenticatedRequest } from "../../utils/interfaces/AuthenticatedRequest";
@@ -22,26 +12,6 @@ import { PostService } from "./post.service";
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Post("searchPost")
-  @ApiOkResponse()
-  async searchPosts(@Body() searchCriteria: SearchPostsDto) {
-    return this.postService.searchPosts(searchCriteria);
-  }
-
-  @Post(":ensembleId")
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse()
-  async create(
-    @Param("ensembleId") ensembleId: string,
-    @Request() req: AuthenticatedRequest,
-    @Body() createPostDto: CreatePostDto,
-  ) {
-    if (!Types.ObjectId.isValid(ensembleId)) {
-      throw new BadRequestException("Invalid ensemble ID");
-    }
-    return this.postService.create(createPostDto, req.user._id.toString(), ensembleId);
-  }
-
   @Get()
   @ApiOkResponse()
   async getAllPosts() {
@@ -54,16 +24,7 @@ export class PostController {
     return this.postService.getLatestPosts();
   }
 
-  @Get(":id")
-  @ApiOkResponse()
-  async getPostById(@Param("id") postId: string) {
-    if (!Types.ObjectId.isValid(postId)) {
-      throw new BadRequestException("Invalid post ID");
-    }
-    return this.postService.getPostById(postId);
-  }
-
-  @Get("user/posts")
+  @Get("user")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
   async getPostsByUserId(@Request() req: AuthenticatedRequest) {
@@ -72,6 +33,40 @@ export class PostController {
       throw new BadRequestException("Invalid user ID");
     }
     return this.postService.getPostsByUserId(userId);
+  }
+
+  @Get("ensemble/:ensembleId")
+  @ApiOkResponse()
+  async getPostsByEnsembleId(@Param("ensembleId") ensembleId: string) {
+    if (!Types.ObjectId.isValid(ensembleId)) {
+      throw new BadRequestException("Invalid ensemble ID");
+    }
+    return this.postService.getPostsByEnsembleId(ensembleId);
+  }
+
+  @Post("searchPost")
+  @ApiOkResponse()
+  async searchPosts(@Body() searchCriteria: SearchPostsDto) {
+    return this.postService.searchPosts(searchCriteria);
+  }
+
+  @Post(":ensembleId")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async create(@Param("ensembleId") ensembleId: string, @Request() req: AuthenticatedRequest, @Body() createPostDto: CreatePostDto) {
+    if (!Types.ObjectId.isValid(ensembleId)) {
+      throw new BadRequestException("Invalid ensemble ID");
+    }
+    return this.postService.create(createPostDto, req.user._id.toString(), ensembleId);
+  }
+
+  @Get(":id")
+  @ApiOkResponse()
+  async getPostById(@Param("id") postId: string) {
+    if (!Types.ObjectId.isValid(postId)) {
+      throw new BadRequestException("Invalid post ID");
+    }
+    return this.postService.getPostById(postId);
   }
 
   @Delete(":id")

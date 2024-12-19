@@ -1,11 +1,11 @@
 import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Types } from "mongoose";
 import { Ensemble } from "../../schemas/ensemble.schema";
-import { Application } from "../../schemas/application.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
 import { Post } from "../../schemas/post.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { MongoSearchPostsDto, SearchPostsDto } from "./dto/search-posts.dto";
+import { Application } from "../../schemas/application.schema";
 
 @Injectable()
 export class PostService {
@@ -46,6 +46,14 @@ export class PostService {
   async getPostsByUserId(userId: string) {
     try {
       return await Post.find({ author_id: userId }).populate(["ensemble_id", "author_id"]);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async getPostsByEnsembleId(ensembleId: string) {
+    try {
+      return await Post.find({ ensemble_id: ensembleId }).populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -125,6 +133,7 @@ export class PostService {
   }
 
   async searchPosts(searchCriteria: SearchPostsDto) {
+    console.log(searchCriteria);
     try {
       const query: MongoSearchPostsDto = {};
 

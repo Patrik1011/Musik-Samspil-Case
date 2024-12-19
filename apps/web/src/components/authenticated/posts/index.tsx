@@ -11,7 +11,7 @@ import { PostGrid } from "./post-card/PostGrid.tsx";
 import SearchPosts from "./SearchPosts.tsx";
 
 export const UserPosts = () => {
-  const [allPosts, setAllPosts] = useState<PostDetails[]>([]);
+  const [allPosts, setPosts] = useState<PostDetails[]>([]);
   const [showingPosts, setShowingPosts] = useState<PostDetails[]>([]);
   const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({
     location: "",
@@ -30,12 +30,8 @@ export const UserPosts = () => {
   }, [allPosts]);
 
   const fetchPosts = async () => {
-    try {
-      const posts = await postService.getPosts();
-      setAllPosts(posts);
-    } catch (error) {
-      console.error("Failed to fetch posts:", error);
-    }
+    const posts = await postService.getPosts();
+    setPosts(posts);
   };
 
   const searchPost = async (
