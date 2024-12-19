@@ -58,11 +58,9 @@ const Register: React.FC = () => {
         password: "",
         email: "",
       });
-      console.log("Login successful navigating to onboarding");
       navigate("/onboarding");
     } catch (error: unknown) {
       const err = error as CustomError;
-      console.log(err);
       setErrors({ general: err.message });
     }
   };
@@ -111,8 +109,16 @@ const Register: React.FC = () => {
           value={registerData.password}
           onChange={handleChange}
         />
-        <Button type="submit" title="Sign up" className="bg-steel-blue text-white w-full" />
-        {errors.general && <div className="text-red-500 text-sm text-center">{errors.general}</div>}
+        <Button
+          type="submit"
+          title="Sign up"
+          className="bg-steel-blue text-white w-full"
+        />
+        {errors.general && (
+          <div className="text-red-500 text-sm text-center">
+            {errors.general}
+          </div>
+        )}
       </div>
     </form>
   );

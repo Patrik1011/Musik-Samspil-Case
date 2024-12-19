@@ -35,7 +35,6 @@ export const Profile = () => {
 
   const fetchPosts = async () => {
     const posts = await postService.getPostsByUser();
-    console.log(posts);
     setUserPosts(posts);
   };
 

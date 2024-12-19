@@ -46,7 +46,6 @@ export const UserPosts = () => {
       }
       const updatedCriteria = { ...searchCriteria, ...criteria };
       setSearchCriteria(updatedCriteria);
-      console.log(searchCriteria);
       const data = await postService.searchPost(updatedCriteria);
       setShowingPosts(data);
     } catch (error) {
@@ -62,10 +61,8 @@ export const UserPosts = () => {
     setSearchCriteria((prev) => ({ ...prev, [field]: "" }));
 
     if (searchCriteria.genericText) {
-      console.log("fetching posts based on generic text");
       searchPost({ genericText: searchCriteria.genericText }, "clear");
     } else {
-      console.log("fetching all posts");
       fetchPosts();
     }
   };

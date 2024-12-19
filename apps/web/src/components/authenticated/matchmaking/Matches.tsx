@@ -16,7 +16,6 @@ export const Matches = () => {
   const fetchMatches = async () => {
     try {
       const data = await matchmakingService.getMatches();
-      console.log(data);
       setMatches(data);
     } catch (error) {
       setError(error as string);

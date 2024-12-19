@@ -46,14 +46,11 @@ export class AuthService {
       const { email, first_name, last_name } = signUpDto;
       const userExists = await User.findOne({ email });
 
-      console.log(userExists);
       if (userExists) {
         throw new ConflictException("User already exists");
       }
 
       const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
-      console.log(hashedPassword);
-      console.log(signUpDto);
 
       const session = await mongoose.startSession();
       session.startTransaction();

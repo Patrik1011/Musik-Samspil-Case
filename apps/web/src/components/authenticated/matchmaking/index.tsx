@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Ensemble } from "../../../services/EnsembleService";
 import { matchmakingService } from "../../../services/MatchmakingService";
 import { Container } from "../../Container";
@@ -27,16 +27,25 @@ export const Matchmaking = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [tabCounts, setTabCounts] = useState({ matches: 0 });
 
-  useEffect(() => {
+  const fetchRecommendations = useCallback(async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           try {
-            const recommendations = await matchmakingService.getRecommendations({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
+            const recommendations = await matchmakingService.getRecommendations(
+              {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              },
+            );
+
+            setEnsembles((prev) => {
+              const existingIds = new Set(prev.map((e) => e._id));
+              const newEnsembles = recommendations.filter(
+                (e) => !existingIds.has(e._id),
+              );
+              return [...prev, ...newEnsembles];
             });
-            setEnsembles(recommendations);
           } catch {
             setErrorMessage("Error fetching ensembles");
           } finally {
@@ -44,7 +53,9 @@ export const Matchmaking = () => {
           }
         },
         () => {
-          setErrorMessage("Location services are unavailable. Please enable location permissions.");
+          setErrorMessage(
+            "Location services are unavailable. Please enable location permissions.",
+          );
           setIsLoading(false);
         },
       );
@@ -53,6 +64,10 @@ export const Matchmaking = () => {
       setIsLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
 
   useEffect(() => {
     const fetchMatchesCount = async () => {
@@ -66,6 +81,18 @@ export const Matchmaking = () => {
 
     fetchMatchesCount();
   }, []);
+
+  useEffect(() => {
+    if (currentIndex >= ensembles.length && !isLoading && !errorMessage) {
+      fetchRecommendations();
+    }
+  }, [
+    currentIndex,
+    ensembles.length,
+    fetchRecommendations,
+    isLoading,
+    errorMessage,
+  ]);
 
   const onSwipe = async (direction: string, ensembleId: string) => {
     const liked = direction === "right";
@@ -84,8 +111,10 @@ export const Matchmaking = () => {
 
   const renderContent = () => {
     if (isLoading) return <LoadingState />;
-    if (errorMessage) return <StatusMessage message={errorMessage} type="error" />;
-    if (ensembles.length === 0) return <StatusMessage message="No ensembles found in your area" />;
+    if (errorMessage)
+      return <StatusMessage message={errorMessage} type="error" />;
+    if (ensembles.length === 0)
+      return <StatusMessage message="No ensembles found in your area" />;
     if (currentIndex >= ensembles.length)
       return <StatusMessage message="No more ensembles to show!" />;
 

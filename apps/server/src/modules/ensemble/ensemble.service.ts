@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 
 import mongoose, { Types } from "mongoose";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
@@ -35,7 +30,7 @@ export class EnsembleService {
         .lean();
 
       const ensemblesWithMembers = await Promise.all(
-        hostMemberships.map(async (hostMembership) => {
+        hostMemberships.map(async hostMembership => {
           const ensemble = hostMembership.ensemble;
           if (!ensemble) return null;
 
@@ -52,7 +47,7 @@ export class EnsembleService {
         }),
       );
 
-      return ensemblesWithMembers.filter((e) => e !== null);
+      return ensemblesWithMembers.filter(e => e !== null);
     } catch (error) {
       console.error("Error in findUserHostedEnsembles:", error);
       throw new InternalServerErrorException(error);
@@ -67,8 +62,6 @@ export class EnsembleService {
       const { latitude, longitude } = await this.geocodingService.geocodeAddress(
         `${createEnsembleDto.location.address}, ${createEnsembleDto.location.city}, ${createEnsembleDto.location.country}`,
       );
-
-      console.log(latitude, longitude);
 
       const ensemble = await Ensemble.create(
         [
