@@ -1,14 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Request,
-  UseGuards,
-} from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { PostService } from "./post.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -24,11 +14,7 @@ export class PostController {
   @Post(":ensembleId")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async create(
-    @Param("ensembleId") ensembleId: string,
-    @Request() req: AuthenticatedRequest,
-    @Body() createPostDto: CreatePostDto,
-  ) {
+  async create(@Param("ensembleId") ensembleId: string, @Request() req: AuthenticatedRequest, @Body() createPostDto: CreatePostDto) {
     if (!Types.ObjectId.isValid(ensembleId)) {
       throw new BadRequestException("Invalid ensemble ID");
     }
@@ -47,6 +33,17 @@ export class PostController {
     return this.postService.getLatestPosts();
   }
 
+  @Get("user")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getPostsByUserId(@Request() req: AuthenticatedRequest) {
+    const userId = req.user._id.toString();
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+    return this.postService.getPostsByUserId(userId);
+  }
+
   @Get(":id")
   @ApiOkResponse()
   async getPostById(@Param("id") postId: string) {
@@ -56,15 +53,13 @@ export class PostController {
     return this.postService.getPostById(postId);
   }
 
-  @Get("user/posts")
-  @UseGuards(JwtAuthGuard)
+  @Get("ensemble/:ensembleId")
   @ApiOkResponse()
-  async getPostsByUserId(@Request() req: AuthenticatedRequest) {
-    const userId = req.user._id.toString();
-    if (!Types.ObjectId.isValid(userId)) {
-      throw new BadRequestException("Invalid user ID");
+  async getPostsByEnsembleId(@Param("ensembleId") ensembleId: string) {
+    if (!Types.ObjectId.isValid(ensembleId)) {
+      throw new BadRequestException("Invalid ensemble ID");
     }
-    return this.postService.getPostsByUserId(userId);
+    return this.postService.getPostsByEnsembleId(ensembleId);
   }
 
   @Delete(":id")

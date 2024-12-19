@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  ForbiddenException,
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { Types } from "mongoose";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { Post } from "../../schemas/post.schema";
@@ -54,6 +49,14 @@ export class PostService {
     }
   }
 
+  async getPostsByEnsembleId(ensembleId: string) {
+    try {
+      return await Post.find({ ensemble_id: ensembleId }).populate(["ensemble_id", "author_id"]);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+  }
+
   async deletePost(id: string, userId: string) {
     const post = await Post.findById(id).populate("ensemble_id");
     if (!post) {
@@ -79,10 +82,7 @@ export class PostService {
 
   async getLatestPosts() {
     try {
-      return await Post.find()
-        .sort({ created_at: -1 })
-        .limit(6)
-        .populate(["ensemble_id", "author_id"]);
+      return await Post.find().sort({ created_at: -1 }).limit(6).populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

@@ -14,7 +14,7 @@ export const UserPosts = () => {
   }, []);
 
   const fetchPosts = async () => {
-    const posts = await postService.getPosts();
+    const posts = await postService.getPostsByUser();
     setPosts(posts);
   };
 
