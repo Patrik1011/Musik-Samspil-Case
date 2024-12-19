@@ -84,7 +84,7 @@ export const UserPosts = () => {
             <PostGrid posts={showingPosts} handlePostClick={handlePostClick} />
           ) : (
             <div className="flex flex-col items-center">
-              <Headline title="No post found" textColor="text-steel-blue" />
+              <Headline title="No posts found" textColor="text-steel-blue" />
             </div>
           )}
         </Container>
