@@ -94,7 +94,7 @@ export class PostService {
   async searchByInstrument(instrument: string): Promise<Types.ObjectId[]> {
     const matchingEnsembles = await Ensemble.find({ open_positions: instrument }, { _id: 1 }).lean();
 
-    return matchingEnsembles.map(ensemble => ensemble._id);
+    return matchingEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
   }
 
   // Function to handle location-based search
@@ -108,7 +108,7 @@ export class PostService {
       { _id: 1 },
     ).lean();
 
-    return matchingEnsembles.map(ensemble => ensemble._id);
+    return matchingEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
   }
 
   // Function to handle generic text search
@@ -126,14 +126,13 @@ export class PostService {
       Ensemble.find(openPositionsCriteria, { _id: 1 }).lean(),
     ]);
 
-    const locationEnsembleIds = matchingLocationEnsembles.map(ensemble => ensemble._id);
-    const positionEnsembleIds = matchingPositionEnsembles.map(ensemble => ensemble._id);
+    const locationEnsembleIds = matchingLocationEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
+    const positionEnsembleIds = matchingPositionEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
 
     return [...new Set([...locationEnsembleIds, ...positionEnsembleIds])];
   }
 
   async searchPosts(searchCriteria: SearchPostsDto) {
-    console.log(searchCriteria);
     try {
       const query: MongoSearchPostsDto = {};
 

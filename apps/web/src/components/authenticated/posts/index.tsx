@@ -82,7 +82,7 @@ export const UserPosts = () => {
       </Container>
 
       <div className="bg-[#F5F5F5] pt-3">
-        <Container className="my-10">
+        <Container>
           {showingPosts.length > 0 ? (
             <PostGrid posts={showingPosts} handlePostClick={handlePostClick} />
           ) : (
