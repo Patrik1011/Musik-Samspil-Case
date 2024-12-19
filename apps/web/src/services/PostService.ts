@@ -1,5 +1,5 @@
-import { deleteRequest, getRequest, postRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
+import { deleteRequest, getRequest, postRequest } from "../utils/api";
 
 export interface Post {
   _id: string;
@@ -39,7 +39,22 @@ export interface CreatePostInput extends Record<string, string> {
   type: string;
 }
 
+export interface SearchCriteria {
+  instrument?: string;
+  location?: string;
+  genericText?: string;
+}
+
 export const postService = {
+  searchPost: async (data: {
+    instrument?: string;
+    location?: string;
+    genericText?: string;
+  }): Promise<PostDetails[]> => {
+    const response = await postRequest("/post/searchPost", data);
+    return response as PostDetails[];
+  },
+
   createPost: async (
     data: CreatePostInput,
     ensembleId: string,

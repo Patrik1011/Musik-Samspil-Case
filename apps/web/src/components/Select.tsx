@@ -1,24 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface SelectProps {
   label?: string;
+  valueFromProp?: string | null;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: string[];
   errorMessages?: string;
   className?: string;
 }
 
-export const Select = ({ label, onChange, options, errorMessages, className }: SelectProps) => {
-  const [selectedOption, setSelectedOption] = React.useState<string>("");
+export const Select = ({
+  label,
+  valueFromProp,
+  onChange,
+  options,
+  errorMessages,
+  className,
+}: SelectProps) => {
+  const [selectedOption, setSelectedOption] = React.useState<string>(
+    valueFromProp || "",
+  );
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedOption(value);
 
     onChange(e);
   };
+
+  useEffect(() => {
+    setSelectedOption(valueFromProp || "");
+  }, [valueFromProp]);
+
   return (
     <div>
-      <label htmlFor="selectId" className="text-sm text-[14px] text-medium-gray">
+      <label
+        htmlFor="selectId"
+        className="text-sm text-[14px] text-medium-gray"
+      >
         {label}
       </label>
       <select
@@ -36,7 +54,9 @@ export const Select = ({ label, onChange, options, errorMessages, className }: S
           </option>
         ))}
       </select>
-      {errorMessages && <p className="text-red-400 text-[14px]">{errorMessages}</p>}
+      {errorMessages && (
+        <p className="text-red-400 text-[14px]">{errorMessages}</p>
+      )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ interface InputFieldProps {
   name?: string;
   type: string;
   placeholder?: string;
-  value: string;
+  value: string | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errorMessages?: string;
   required?: boolean;
@@ -36,7 +36,7 @@ export const InputField = ({
       )}
       <input
         id={id}
-        className={`${className} w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none`}
+        className={`w-full p-2 mt-1 text-base text-medium-gray border border-soft-gray rounded-xl outline-none ${className}`}
         type={type}
         name={name}
         placeholder={placeholder}
@@ -45,7 +45,9 @@ export const InputField = ({
         required={required}
         disabled={disabled}
       />
-      {errorMessages && <p className="text-red-400 text-[14px]">{errorMessages}</p>}
+      {errorMessages && (
+        <p className="text-red-400 text-[14px]">{errorMessages}</p>
+      )}
     </div>
   );
 };

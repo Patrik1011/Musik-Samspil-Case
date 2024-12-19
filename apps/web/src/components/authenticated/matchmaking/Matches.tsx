@@ -27,10 +27,11 @@ export const Matches = () => {
 
   if (isLoading) return <LoadingState />;
   if (error) return <StatusMessage message={error} type="error" />;
-  if (matches.length === 0) return <StatusMessage message="No matches found yet" />;
+  if (matches.length === 0)
+    return <StatusMessage message="No matches found yet" />;
 
   return (
-    <div className="grid grid-cols-1 gap-6 p-4 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 gap-6 p-4 max-w-7xl mx-auto w-full">
       {matches.map((match) => (
         <div
           key={match._id}
@@ -38,14 +39,20 @@ export const Matches = () => {
         >
           {/* Ensemble Section */}
           <div className="p-6 bg-steel-blue bg-opacity-5">
-            <h3 className="text-xl font-semibold text-steel-blue mb-2">{match.ensemble.name}</h3>
-            <p className="text-gray-600 text-sm line-clamp-2">{match.ensemble.description}</p>
+            <h3 className="text-xl font-semibold text-steel-blue mb-2">
+              {match.ensemble.name}
+            </h3>
+            <p className="text-gray-600 text-sm line-clamp-2">
+              {match.ensemble.description}
+            </p>
           </div>
 
           {/* User Match Section */}
           <div className="p-6">
             <div className="space-y-4">
-              <h4 className="text-lg font-medium text-gray-900">Matched with</h4>
+              <h4 className="text-lg font-medium text-gray-900">
+                Matched with
+              </h4>
               <div className="flex items-center space-x-2">
                 <p className="text-steel-blue font-medium mt-2">
                   {match.user.first_name} {match.user.last_name}
@@ -59,7 +66,9 @@ export const Matches = () => {
 
               {match.user.bio && (
                 <div>
-                  <h4 className="text-base font-medium text-gray-900 mb-1">About</h4>
+                  <h4 className="text-base font-medium text-gray-900 mb-1">
+                    About
+                  </h4>
                   <p className="text-gray-600 text-sm">{match.user.bio}</p>
                 </div>
               )}
