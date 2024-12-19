@@ -52,9 +52,8 @@ export const PostDetailsInfo = ({
   };
 
   const formatLocation = (location: PostDetailsInfoProps["location"]) =>
-    [location.address, location.city, location.country]
-      .filter(Boolean)
-      .join(", ") || "Location not available";
+    [location.address, location.city, location.country].filter(Boolean).join(", ") ||
+    "Location not available";
 
   return (
     <section className="bg-white border border-soft-gray p-8 rounded-[10px] shadow-lg h-full">
@@ -80,9 +79,7 @@ export const PostDetailsInfo = ({
       <section>
         <SubHeadline title="Instruments" className="text-steel-blue" />
         <p className="text-medium-gray text-sm">
-          {instruments.length
-            ? instruments.join(", ")
-            : "No instruments listed."}
+          {instruments.length ? instruments.join(", ") : "No instruments listed."}
         </p>
       </section>
 

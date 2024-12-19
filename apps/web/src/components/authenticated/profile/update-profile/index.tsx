@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { UserEntity } from "../../../../utils/types.ts";
+import { Instrument } from "../../../../enums/Instrument";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../../../services/UserService.ts";
 import { Headline } from "../../../unauthenticated/auth/Headline.tsx";
@@ -53,6 +54,23 @@ export const UpdateProfile = () => {
     }
   };
 
+  const handleInstrumentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedInstrument = e.target.value as Instrument;
+    if (selectedInstrument) {
+      setFormData((prev) => ({
+        ...prev,
+        instruments: [...(prev.instruments || []), selectedInstrument],
+      }));
+    }
+  };
+
+  const removeInstrument = (instrumentToRemove: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      instruments: prev.instruments?.filter((instrument) => instrument !== instrumentToRemove),
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -72,7 +90,7 @@ export const UpdateProfile = () => {
         last_name: formData.last_name?.trim(),
         phone_number: formData.phone_number?.trim(),
         bio: formData.bio?.trim(),
-        instrument: formData.instrument?.trim(),
+        instruments: formData.instruments,
         location: {
           city: formData.location?.city?.trim() as string,
           country: formData.location?.country?.trim() as string,
@@ -181,6 +199,49 @@ export const UpdateProfile = () => {
           label="Bio"
           placeholder={user.bio || ""}
         />
+
+        <div className="space-y-2">
+          <label htmlFor="instruments" className="block text-sm font-medium text-gray-700">
+            Instruments
+          </label>
+          <p className="text-xs text-gray-600 mb-2">
+            Add any instruments that you play - this will increase your chances of getting a match
+            and finding ensembles!
+          </p>
+          <select
+            id="instruments"
+            onChange={handleInstrumentChange}
+            value=""
+            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-steel-blue"
+          >
+            <option value="" disabled>
+              Add an instrument
+            </option>
+            {Object.values(Instrument).map((instrument: Instrument) => (
+              <option key={instrument} value={instrument}>
+                {instrument}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            {formData.instruments?.map((instrument) => (
+              <span
+                key={instrument}
+                className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-steel-blue bg-opacity-10 text-steel-blue"
+              >
+                {instrument}
+                <button
+                  type="button"
+                  onClick={() => removeInstrument(instrument)}
+                  className="ml-2 text-steel-blue hover:text-steel-blue-dark"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
 
         <Button title="Update Profile" type="submit" className="w-full bg-steel-blue text-white" />
       </form>

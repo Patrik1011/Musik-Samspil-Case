@@ -1,5 +1,5 @@
-import { deleteRequest, getRequest, postRequest } from "../utils/api";
 import { Instrument } from "../enums/Instrument";
+import { deleteRequest, getRequest, postRequest } from "../utils/api";
 
 export interface Post {
   _id: string;
@@ -39,8 +39,26 @@ export interface CreatePostInput extends Record<string, string> {
   type: string;
 }
 
+export interface SearchCriteria {
+  instrument?: string;
+  location?: string;
+  genericText?: string;
+}
+
 export const postService = {
-  createPost: async (data: CreatePostInput, ensembleId: string): Promise<Post> => {
+  searchPost: async (data: {
+    instrument?: string;
+    location?: string;
+    genericText?: string;
+  }): Promise<PostDetails[]> => {
+    const response = await postRequest("/post/searchPost", data);
+    return response as PostDetails[];
+  },
+
+  createPost: async (
+    data: CreatePostInput,
+    ensembleId: string,
+  ): Promise<Post> => {
     const response = await postRequest(`/post/${ensembleId}`, data);
     return response as Post;
   },
@@ -55,9 +73,14 @@ export const postService = {
     return response as PostDetails;
   },
 
-  getPostsByUserId: async (): Promise<PostDetails[]> => {
-    const response = await getRequest("/post/user/posts");
+  getPostsByUser: async (): Promise<PostDetails[]> => {
+    const response = await getRequest("/post/user");
     return response as PostDetails[];
+  },
+
+  getPostByEnsembleId: async (ensembleId: string): Promise<PostDetails> => {
+    const response = await getRequest(`/post/ensemble/${ensembleId}`);
+    return response as PostDetails;
   },
 
   deletePost: async (id: string): Promise<void> => {

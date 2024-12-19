@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  ConflictException,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable, BadRequestException, ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Matchmaking } from "../../schemas/matchmaking.schema";
 import { Ensemble } from "../../schemas/ensemble.schema";
 import { Types } from "mongoose";
@@ -39,7 +33,15 @@ export class MatchmakingService {
       user: new Types.ObjectId(userId),
     }).select("ensemble");
 
-    const matchedEnsembleIds = existingMatches.map((match) => match.ensemble);
+    const hostedEnsembles = await EnsembleMembership.find({
+      member_id: userId,
+      is_host: true,
+    }).select("ensemble_id");
+
+    const excludeEnsembleIds = [
+      ...existingMatches.map((match: { ensemble: Types.ObjectId }) => match.ensemble),
+      ...hostedEnsembles.map((membership: { ensemble_id: string }) => new Types.ObjectId(membership.ensemble_id)),
+    ];
 
     const ensembles = await Ensemble.aggregate([
       {
@@ -51,12 +53,13 @@ export class MatchmakingService {
           distanceField: "distance",
           maxDistance: radius * 1000,
           spherical: true,
+          key: "location.coordinates",
         },
       },
       {
         $match: {
           is_active: true,
-          _id: { $nin: matchedEnsembleIds },
+          _id: { $nin: excludeEnsembleIds },
         },
       },
       { $limit: limit },
@@ -66,51 +69,37 @@ export class MatchmakingService {
   }
 
   async getMatches(userId: string) {
-    console.log("userId", userId);
     if (!Types.ObjectId.isValid(userId)) {
       throw new BadRequestException("Invalid user ID");
     }
 
-    // Get all ensembles where user is a member
     const memberships = await EnsembleMembership.find({
       member_id: userId,
       is_host: true,
     });
 
-    const hostedEnsembleIds = memberships.map((membership) => membership.ensemble_id);
-    console.log("hostedEnsembleIds", hostedEnsembleIds);
+    const hostedEnsembleIds = memberships.map((membership: { ensemble_id: string }) => new Types.ObjectId(membership.ensemble_id));
 
     const matches = await Matchmaking.aggregate([
       {
         $match: {
-          $or: [
-            // Outgoing matches (where I liked others)
-            {
-              user_id: userId,
-              liked: true,
-              status: { $in: ["matched", "pending"] },
-            },
-            // Incoming matches (where others liked my ensembles)
-            {
-              ensemble_id: { $in: hostedEnsembleIds },
-              liked: true,
-              status: { $in: ["matched", "pending"] },
-            },
-          ],
+          ensemble: { $in: hostedEnsembleIds.map((id: Types.ObjectId) => id) },
+          liked: true,
+          status: { $in: ["matched", "pending"] },
         },
       },
       {
         $lookup: {
-          from: "users",
-          localField: "user", // ObjectId reference
+          from: "User",
+          localField: "user",
           foreignField: "_id",
           as: "userData",
         },
       },
       {
         $lookup: {
-          from: "ensembles",
-          localField: "ensemble", // ObjectId reference
+          from: "Ensemble",
+          localField: "ensemble",
           foreignField: "_id",
           as: "ensembleData",
         },
@@ -124,20 +113,24 @@ export class MatchmakingService {
       {
         $project: {
           _id: 1,
-          ensemble_id: 1,
-          created_at: "$matched_at",
+          ensemble_id: "$ensemble",
+          created_at: "$created_at",
           status: 1,
           "user.first_name": "$userData.first_name",
           "user.last_name": "$userData.last_name",
           "user.email": "$userData.email",
           "user.phone_number": "$userData.phone_number",
+          "user.bio": "$userData.bio",
+          "user.instruments": "$userData.instruments",
+          "user.location.city": "$userData.location.city",
+          "user.location.country": "$userData.location.country",
+          "user.location.address": "$userData.location.address",
           "ensemble.name": "$ensembleData.name",
           "ensemble.description": "$ensembleData.description",
+          "ensemble.open_positions": "$ensembleData.open_positions",
         },
       },
     ]);
-
-    console.log("matches", matches);
 
     return matches;
   }
@@ -160,15 +153,11 @@ export class MatchmakingService {
         throw new ConflictException("Match already exists for this user and ensemble");
       }
 
-      const [user, ensemble] = await Promise.all([
-        User.findById(userId).session(session),
-        Ensemble.findById(ensembleId).session(session),
-      ]);
+      const [user, ensemble] = await Promise.all([User.findById(userId).session(session), Ensemble.findById(ensembleId).session(session)]);
 
       if (!user || !ensemble) throw new NotFoundException("User or Ensemble not found");
 
-      if (!user.location?.coordinates || !ensemble.location?.coordinates)
-        throw new BadRequestException("User or ensemble location not found");
+      if (!user.location?.coordinates || !ensemble.location?.coordinates) throw new BadRequestException("User or ensemble location not found");
 
       const distanceCalc = calculateDistance(
         {
@@ -185,10 +174,12 @@ export class MatchmakingService {
         [
           {
             user: new Types.ObjectId(userId),
+            user_id: userId,
             ensemble: new Types.ObjectId(ensembleId),
+            ensemble_id: ensembleId,
             status: liked ? "pending" : "rejected",
-            seen: false,
             distance: distanceCalc,
+            seen: false,
             liked,
             created_at: new Date(),
           },

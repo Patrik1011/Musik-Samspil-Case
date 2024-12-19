@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Ensemble } from "../../../services/EnsembleService";
 import { matchmakingService } from "../../../services/MatchmakingService";
 import { Container } from "../../Container";
@@ -10,7 +10,7 @@ import { Matches } from "./Matches";
 type Tab = "feed" | "matches";
 
 const tabs = [
-  { name: "Feed", current: true, count: 0 },
+  { name: "Feed", current: true },
   { name: "Matches", current: false, count: 0 },
 ] as const;
 
@@ -25,18 +25,27 @@ export const Matchmaking = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [swipeMessage, setSwipeMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [tabCounts, setTabCounts] = useState({ feed: 0, matches: 0 });
+  const [tabCounts, setTabCounts] = useState({ matches: 0 });
 
-  useEffect(() => {
+  const fetchRecommendations = useCallback(async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           try {
-            const recommendations = await matchmakingService.getRecommendations({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
+            const recommendations = await matchmakingService.getRecommendations(
+              {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              },
+            );
+
+            setEnsembles((prev) => {
+              const existingIds = new Set(prev.map((e) => e._id));
+              const newEnsembles = recommendations.filter(
+                (e) => !existingIds.has(e._id),
+              );
+              return [...prev, ...newEnsembles];
             });
-            setEnsembles(recommendations);
           } catch {
             setErrorMessage("Error fetching ensembles");
           } finally {
@@ -44,7 +53,9 @@ export const Matchmaking = () => {
           }
         },
         () => {
-          setErrorMessage("Location services are unavailable. Please enable location permissions.");
+          setErrorMessage(
+            "Location services are unavailable. Please enable location permissions.",
+          );
           setIsLoading(false);
         },
       );
@@ -55,10 +66,8 @@ export const Matchmaking = () => {
   }, []);
 
   useEffect(() => {
-    if (ensembles.length > currentIndex) {
-      setTabCounts((prev) => ({ ...prev, feed: ensembles.length - currentIndex }));
-    }
-  }, [ensembles.length, currentIndex]);
+    fetchRecommendations();
+  }, [fetchRecommendations]);
 
   useEffect(() => {
     const fetchMatchesCount = async () => {
@@ -72,6 +81,18 @@ export const Matchmaking = () => {
 
     fetchMatchesCount();
   }, []);
+
+  useEffect(() => {
+    if (currentIndex >= ensembles.length && !isLoading && !errorMessage) {
+      fetchRecommendations();
+    }
+  }, [
+    currentIndex,
+    ensembles.length,
+    fetchRecommendations,
+    isLoading,
+    errorMessage,
+  ]);
 
   const onSwipe = async (direction: string, ensembleId: string) => {
     const liked = direction === "right";
@@ -90,8 +111,10 @@ export const Matchmaking = () => {
 
   const renderContent = () => {
     if (isLoading) return <LoadingState />;
-    if (errorMessage) return <StatusMessage message={errorMessage} type="error" />;
-    if (ensembles.length === 0) return <StatusMessage message="No ensembles found in your area" />;
+    if (errorMessage)
+      return <StatusMessage message={errorMessage} type="error" />;
+    if (ensembles.length === 0)
+      return <StatusMessage message="No ensembles found in your area" />;
     if (currentIndex >= ensembles.length)
       return <StatusMessage message="No more ensembles to show!" />;
 
@@ -128,7 +151,7 @@ export const Matchmaking = () => {
             const tabKey = tab.name.toLowerCase() as Tab;
             return (
               <option key={tabKey} value={tabKey}>
-                {tab.name} ({tabCounts[tabKey]})
+                {tab.name} {tabKey === "matches" && `(${tabCounts.matches})`}
               </option>
             );
           })}
@@ -164,16 +187,18 @@ export const Matchmaking = () => {
                   type="button"
                 >
                   {tab.name}
-                  <span
-                    className={classNames(
-                      activeTab === tabKey
-                        ? "bg-steel-blue bg-opacity-10 text-steel-blue"
-                        : "bg-gray-100 text-gray-900",
-                      "ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block",
-                    )}
-                  >
-                    {tabCounts[tabKey]}
-                  </span>
+                  {tabKey === "matches" && (
+                    <span
+                      className={classNames(
+                        activeTab === tabKey
+                          ? "bg-steel-blue bg-opacity-10 text-steel-blue"
+                          : "bg-gray-100 text-gray-900",
+                        "ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block",
+                      )}
+                    >
+                      {tabCounts.matches}
+                    </span>
+                  )}
                 </button>
               );
             })}

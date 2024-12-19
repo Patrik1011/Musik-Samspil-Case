@@ -9,7 +9,7 @@ interface MatchCardProps {
 export const MatchCard = ({ ensemble, onSwipe }: MatchCardProps) => (
   <TinderCard onSwipe={(dir) => onSwipe(dir, ensemble._id)} preventSwipe={["up", "down"]}>
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-80 mx-auto h-96">
-      <div className="p-8 h-full flex flex-col justify-between">
+      <div className="p-4 h-full flex flex-col justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-3">{ensemble.name}</h2>
           <p className="text-gray-600 mb-6">{ensemble.description}</p>

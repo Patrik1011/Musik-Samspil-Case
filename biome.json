@@ -4,7 +4,13 @@
     "enabled": false
   },
   "files": {
-    "ignore": ["**/node_modules/**", "**/dist/**", "**/.cache/**", "**/build/**", "pnpm-lock.yaml"]
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/.cache/**",
+      "**/build/**",
+      "pnpm-lock.yaml"
+    ]
   },
   "linter": {
     "enabled": true,

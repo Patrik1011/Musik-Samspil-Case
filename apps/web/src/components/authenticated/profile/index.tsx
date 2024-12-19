@@ -34,7 +34,7 @@ export const Profile = () => {
   };
 
   const fetchPosts = async () => {
-    const posts = await postService.getPostsByUserId();
+    const posts = await postService.getPostsByUser();
     setUserPosts(posts);
   };
 
@@ -81,10 +81,15 @@ export const Profile = () => {
             <img src={userImage} alt="user" />
           </div>
           <div className="ml-8">
-            <Headline title={`${user.first_name} ${user.last_name}`} textColor="text-custom-red" />
+            <Headline
+              title={`${user.first_name} ${user.last_name}`}
+              textColor="text-custom-red"
+            />
             <Paragraph content={user.email} className="mt-4" />
             <Paragraph content={user.phone_number} />
-            {user.location?.address && <Paragraph content={user.location.address} />}
+            {user.location?.address && (
+              <Paragraph content={user.location.address} />
+            )}
             {(user.location?.city || user.location?.country) && (
               <Paragraph
                 content={`${user.location?.city || ""}, ${user.location?.country || ""}`}
@@ -99,7 +104,11 @@ export const Profile = () => {
         />
       </section>
       <section className="mt-8 md:mt-12">
-        <Headline title="My Posts" textColor="text-steel-blue" className="font-oswald" />
+        <Headline
+          title="My Posts"
+          textColor="text-steel-blue"
+          className="font-oswald"
+        />
         {userPosts.length > 0 ? (
           <PostGrid
             posts={userPosts}
@@ -109,7 +118,10 @@ export const Profile = () => {
           />
         ) : (
           <div className="flex justify-center items-center mt-8">
-            <EmptyState message="posts" onClick={() => navigate("/ensembles")} />
+            <EmptyState
+              message="posts"
+              onClick={() => navigate("/ensembles")}
+            />
           </div>
         )}
       </section>

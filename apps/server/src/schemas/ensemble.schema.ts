@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { Instrument } from "../utils/types/enums";
 
-const EnsembleSchema = new Schema(
+export const EnsembleSchema = new Schema(
   {
     name: { type: String, required: true },
     description: String,
@@ -35,6 +35,12 @@ const EnsembleSchema = new Schema(
   },
 );
 
+// Create a single geospatial index
 EnsembleSchema.index({ "location.coordinates": "2dsphere" });
 
 export const Ensemble = model("Ensemble", EnsembleSchema);
+
+// Drop and recreate indexes
+Ensemble.collection.dropIndexes().catch((error: string) => {
+  console.log("No indexes to drop or collection doesn't exist yet", error);
+});

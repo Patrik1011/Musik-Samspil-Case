@@ -1,17 +1,14 @@
-import {
-  InternalServerErrorException,
-  NotFoundException,
-  // ForbiddenException,
-} from "@nestjs/common";
+import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { Types } from "mongoose";
+// import { Ensemble } from "../../src/schemas/ensemble.schema";
 import { PostService } from "../../src/modules/post/post.service";
 import { Post } from "../../src/schemas/post.schema";
 //   import { EnsembleMembership } from '../src/schemas/ensemble-membership.schema';
 
 // Mocking the Post and EnsembleMembership models
-jest.mock("../src/modules/post/post.service");
-jest.mock("../src/schemas/ensemble-membership.schema");
+jest.mock("../../src/schemas/post.schema.ts");
+jest.mock("../../src/schemas/ensemble-membership.schema");
 
 describe("PostService", () => {
   let service: PostService;
@@ -171,4 +168,105 @@ describe("PostService", () => {
   //     await expect(service.deletePost(postId, userId)).rejects.toThrow(NotFoundException);
   //   });
   // });
+
+  describe("searchByLocation", () => {
+    it("should return array of ensemble IDs with matching location", async () => {
+      const mockEnsembles = [
+        { _id: new Types.ObjectId(), location: { city: "Copenhagen" } },
+        { _id: new Types.ObjectId(), location: { country: "Denmark" } },
+      ];
+
+      // Use jest.spyOn to mock the method
+      jest.spyOn(service, "searchByLocation").mockResolvedValue(mockEnsembles.map(e => e._id));
+
+      const result = await service.searchByLocation("Copenhagen");
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(mockEnsembles.map(e => e._id));
+      expect(service.searchByLocation).toHaveBeenCalledWith("Copenhagen");
+    });
+
+    it("should return empty array if no matching ensembles found", async () => {
+      jest.spyOn(service, "searchByLocation").mockResolvedValue([]);
+
+      const result = await service.searchByLocation("Nonexistent Location");
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("searchByInstrument", () => {
+    it("should return array of ensemble IDs with matching instrument", async () => {
+      const mockEnsembles = [
+        { _id: new Types.ObjectId(), instruments: ["guitar"] },
+        { _id: new Types.ObjectId(), instruments: ["piano", "violin"] },
+      ];
+
+      jest.spyOn(service, "searchByInstrument").mockResolvedValue(mockEnsembles.map(e => e._id));
+
+      const result = await service.searchByInstrument("guitar");
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(mockEnsembles.map(e => e._id));
+      expect(service.searchByInstrument).toHaveBeenCalledWith("guitar");
+    });
+
+    it("should return empty array if no matching ensembles found", async () => {
+      jest.spyOn(service, "searchByInstrument").mockResolvedValue([]);
+
+      const result = await service.searchByInstrument("drums");
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("searchByGenreText", () => {
+    it("should return array of ensemble IDs with matching genre text", async () => {
+      const mockEnsembles = [
+        { _id: new Types.ObjectId(), genre: "rock" },
+        { _id: new Types.ObjectId(), genre: "pop" },
+      ];
+
+      jest.spyOn(service, "searchByGenericText").mockResolvedValue(mockEnsembles.map(e => e._id));
+
+      const result = await service.searchByGenericText("rock");
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(mockEnsembles.map(e => e._id));
+      expect(service.searchByGenericText).toHaveBeenCalledWith("rock");
+    });
+
+    it("should return empty array if no matching ensembles found", async () => {
+      jest.spyOn(service, "searchByGenericText").mockResolvedValue([]);
+
+      const result = await service.searchByGenericText("jazz");
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe("searchPost", () => {
+    it("should return array of post IDs with matching search criteria", async () => {
+      const mockPosts = [
+        { _id: new Types.ObjectId(), title: "Guitar lessons" },
+        { _id: new Types.ObjectId(), title: "Piano for beginners" },
+      ];
+
+      jest.spyOn(service, "searchPosts").mockResolvedValue(mockPosts.map(p => p._id));
+
+      const result = await service.searchPosts("guitar");
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(mockPosts.map(p => p._id));
+      expect(service.searchPost).toHaveBeenCalledWith("guitar");
+    });
+
+    it("should return empty array if no matching posts found", async () => {
+      jest.spyOn(service, "searchPost").mockResolvedValue([]);
+
+      const result = await service.searchPost("drums");
+
+      expect(result).toEqual([]);
+    });
+  });
 });
