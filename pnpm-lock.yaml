@@ -1908,7 +1908,6 @@ packages:
   '@swc/core-darwin-arm64@1.10.1':
     resolution: {integrity: sha512-NyELPp8EsVZtxH/mEqvzSyWpfPJ1lugpTQcSlMduZLj1EASLO4sC8wt8hmL1aizRlsbjCX+r0PyL+l0xQ64/6Q==}
     engines: {node: '>=10'}
-    cpu: [arm64]
     os: [darwin]
 
   '@swc/core-darwin-x64@1.10.1':
