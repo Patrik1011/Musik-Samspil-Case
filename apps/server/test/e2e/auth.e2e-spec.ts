@@ -3,8 +3,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { AppModule } from "../../src/app.module";
 import { ConfigModule } from "@nestjs/config";
-import { closeInMongodConnection, rootMongooseTestModule } from "../utils/mongoose-test.utils";
-import { User } from "../../src/schemas/user.schema";
+import { rootMongooseTestModule } from "../utils/mongoose-test.utils";
 
 describe("Auth API (e2e)", () => {
   let app: INestApplication;
@@ -24,12 +23,6 @@ describe("Auth API (e2e)", () => {
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
-  });
-
-  afterAll(async () => {
-    await User.deleteMany({});
-    await app.close();
-    await closeInMongodConnection();
   });
 
   describe("POST /auth/register", () => {
