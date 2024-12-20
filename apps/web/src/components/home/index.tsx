@@ -16,6 +16,9 @@ import { Select } from "../Select.tsx";
 export const Home = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
   const [showingPosts, setShowingPosts] = useState<PostDetails[]>([]);
+  const [notFoundInstrument, setNotFoundInstrument] = useState<string | null>(
+    null,
+  );
   const [selectedInstrument, setSelectedInstrument] = useState<string | null>(
     null,
   );
@@ -44,6 +47,7 @@ export const Home = () => {
   };
 
   const searchPostBasedOnInstrument = async (instrument: SearchCriteria) => {
+    setNotFoundInstrument(instrument?.instrument ?? null);
     try {
       const data = await postService.searchPost(instrument);
       setShowingPosts(data);
@@ -111,7 +115,7 @@ export const Home = () => {
         {showingPosts.length > 0 ? (
           <PostGrid posts={showingPosts} handlePostClick={handlePostClick} />
         ) : (
-          <p>No posts available at this moment with {selectedInstrument}! </p>
+          <p>No posts available at this moment with {notFoundInstrument}! </p>
         )}
       </section>
     </Container>
