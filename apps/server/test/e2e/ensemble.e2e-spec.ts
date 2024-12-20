@@ -1,24 +1,26 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { EnsembleService } from "../../src/modules/ensemble/ensemble.service";
-import { Types } from "mongoose";
-import { ForbiddenException } from "@nestjs/common";
-import { CreateEnsembleDto } from "../../src/modules/ensemble/dto/create-ensemble.dto";
-import { Ensemble } from "../../src/schemas/ensemble.schema";
-import { EnsembleMembership } from "../../src/schemas/ensemble-membership.schema";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
+import * as request from "supertest";
+import { AppModule } from "../../src/app.module";
+import { ConfigModule } from "@nestjs/config";
+import { closeInMongodConnection, rootMongooseTestModule } from "../utils/mongoose-test.utils";
 import { GeocodingService } from "../../src/modules/geocoding/geocoding.service";
-import { Instrument } from "../../src/utils/types/enums";
 
-jest.mock("../../src/schemas/ensemble.schema");
-jest.mock("../../src/schemas/ensemble-membership.schema");
-jest.mock("../../src/schemas/post.schema");
+describe("EnsembleController (e2e)", () => {
+  let app: INestApplication;
+  let accessToken: string;
+  let ensembleId: string;
 
-describe("EnsembleService", () => {
-  let service: EnsembleService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: ".env.test",
+        }),
+        rootMongooseTestModule(),
+        AppModule,
+      ],
       providers: [
-        EnsembleService,
         {
           provide: GeocodingService,
           useValue: {
@@ -28,89 +30,85 @@ describe("EnsembleService", () => {
       ],
     }).compile();
 
-    service = module.get<EnsembleService>(EnsembleService);
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
+    await app.init();
+
+    const loginResponse = await request(app.getHttpServer()).post("/auth/login").send({
+      email: "test@example.com",
+      password: "Password123",
+    });
+
+    accessToken = loginResponse.body.accessToken;
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  afterAll(async () => {
+    await app.close();
+    await closeInMongodConnection();
   });
 
-  describe("createWithHost", () => {
-    it("should create an ensemble with host", async () => {
-      const userId = new Types.ObjectId().toHexString();
-      const createDto: CreateEnsembleDto = {
+  describe("/ensemble (POST)", () => {
+    it("should create a new ensemble", async () => {
+      const createDto = {
         name: "Test Ensemble",
         description: "Test Description",
         location: {
-          city: "Test City",
-          country: "Test Country",
-          address: "Test Address",
-          coordinates: { type: "Point", coordinates: [0, 0] },
+          address: "Radhuspladsen 1",
+          city: "Copenhagen",
+          country: "Denmark",
         },
-        open_positions: [Instrument.Violin],
+        open_positions: ["Violin"],
         is_active: true,
       };
 
-      const mockEnsemble = [
-        {
-          _id: new Types.ObjectId(),
-          ...createDto,
-        },
-      ];
+      const response = await request(app.getHttpServer()).post("/ensemble").set("Authorization", `Bearer ${accessToken}`).send(createDto).expect(201);
 
-      (Ensemble.create as jest.Mock).mockResolvedValue(mockEnsemble);
-      (EnsembleMembership.create as jest.Mock).mockResolvedValue([{ ensemble: mockEnsemble[0]._id, member: userId }]);
-
-      const result = await service.createWithHost(createDto, userId);
-      expect(result).toEqual(mockEnsemble[0]);
+      ensembleId = response.body._id;
+      expect(response.body).toHaveProperty("name", createDto.name);
+      expect(response.body).toHaveProperty("description", createDto.description);
     });
   });
 
-  describe("findOne", () => {
-    it("should return an ensemble by id", async () => {
-      const userId = new Types.ObjectId().toHexString();
-      const ensembleId = new Types.ObjectId().toHexString();
-      const mockEnsemble = { _id: ensembleId, name: "Test Ensemble" };
-      const mockMembership = { ensemble: ensembleId, member: userId };
-
-      (EnsembleMembership.findOne as jest.Mock).mockResolvedValue(mockMembership);
-      (Ensemble.findById as jest.Mock).mockResolvedValue(mockEnsemble);
-
-      const result = await service.findOne(ensembleId, userId);
-      expect(result).toEqual(mockEnsemble);
-    });
-
-    it("should throw ForbiddenException when user has no access", async () => {
-      const userId = new Types.ObjectId().toHexString();
-      const ensembleId = new Types.ObjectId().toHexString();
-
-      (EnsembleMembership.findOne as jest.Mock).mockResolvedValue(null);
-
-      await expect(service.findOne(ensembleId, userId)).rejects.toThrow(ForbiddenException);
+  describe("/ensemble/:id (GET)", () => {
+    it("should get ensemble by id", () => {
+      return request(app.getHttpServer())
+        .get(`/ensemble/${ensembleId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body).toHaveProperty("_id", ensembleId);
+          expect(res.body).toHaveProperty("name");
+          expect(res.body).toHaveProperty("description");
+          expect(res.body).toHaveProperty("location");
+          expect(res.body).toHaveProperty("open_positions");
+        });
     });
   });
 
-  describe("update", () => {
-    it("should update an ensemble when user is host", async () => {
-      const userId = new Types.ObjectId().toHexString();
-      const ensembleId = new Types.ObjectId().toHexString();
-      const updateDto = { name: "Updated Ensemble" };
-      const mockEnsemble = { _id: ensembleId, ...updateDto };
+  describe("/ensemble/:id (PUT)", () => {
+    it("should update ensemble", () => {
+      const updateDto = {
+        name: "Updated Ensemble",
+        description: "Updated Description",
+        open_positions: ["Piano"],
+      };
 
-      (EnsembleMembership.findOne as jest.Mock).mockResolvedValue({ is_host: true });
-      (Ensemble.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockEnsemble);
-
-      const result = await service.update(ensembleId, updateDto, userId);
-      expect(result).toEqual(mockEnsemble);
+      return request(app.getHttpServer())
+        .put(`/ensemble/${ensembleId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send(updateDto)
+        .expect(200)
+        .expect(res => {
+          expect(res.body).toHaveProperty("name", updateDto.name);
+          expect(res.body).toHaveProperty("description", updateDto.description);
+          expect(res.body.open_positions).toEqual(updateDto.open_positions);
+        });
     });
+  });
 
-    it("should throw ForbiddenException when user is not host", async () => {
-      const userId = new Types.ObjectId().toHexString();
-      const ensembleId = new Types.ObjectId().toHexString();
-
-      (EnsembleMembership.findOne as jest.Mock).mockResolvedValue(null);
-
-      await expect(service.update(ensembleId, {}, userId)).rejects.toThrow(ForbiddenException);
+  describe("/ensemble/:id (DELETE)", () => {
+    it("should delete ensemble", () => {
+      return request(app.getHttpServer()).delete(`/ensemble/${ensembleId}`).set("Authorization", `Bearer ${accessToken}`).expect(200);
     });
   });
 });

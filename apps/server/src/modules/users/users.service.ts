@@ -66,6 +66,7 @@ export class UsersService {
 
   async getOnboardingStatus(userId: string) {
     const user = await this.validateAndGetUser(userId);
+    console.log(user);
     const isOnboarded = !!user.phone_number;
     return { onboarded: isOnboarded };
   }
@@ -79,5 +80,12 @@ export class UsersService {
       throw new NotFoundException(`User with id: ${userId} was not found`);
     }
     return user;
+  }
+
+  async deleteUser(userId: string) {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+    await User.findByIdAndDelete(userId);
   }
 }

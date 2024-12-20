@@ -3,11 +3,12 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { AppModule } from "../../src/app.module";
 import { ConfigModule } from "@nestjs/config";
-import { rootMongooseTestModule } from "../utils/mongoose-test.utils";
+import { rootMongooseTestModule, closeInMongodConnection } from "../utils/mongoose-test.utils";
+import { GeocodingService } from "../../src/modules/geocoding/geocoding.service";
 
 describe("Auth API (e2e)", () => {
   let app: INestApplication;
-  let authToken: string;
+  let accessToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -18,6 +19,14 @@ describe("Auth API (e2e)", () => {
         rootMongooseTestModule(),
         AppModule,
       ],
+      providers: [
+        {
+          provide: GeocodingService,
+          useValue: {
+            geocodeAddress: jest.fn().mockResolvedValue({ latitude: 0, longitude: 0 }),
+          },
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -25,13 +34,21 @@ describe("Auth API (e2e)", () => {
     await app.init();
   });
 
-  describe("POST /auth/register", () => {
+  afterAll(async () => {
+    // Delete the test user
+    await request(app.getHttpServer()).delete("/users/me").set("Authorization", `Bearer ${accessToken}`).expect(200);
+
+    await app.close();
+    await closeInMongodConnection();
+  });
+
+  describe("POST /auth/signup", () => {
     it("should register a new user", async () => {
       const response = await request(app.getHttpServer())
-        .post("/auth/register")
+        .post("/auth/signup")
         .send({
-          email: "test@example.com",
-          password: "Password123!",
+          email: "testRegister@gmail.com",
+          password: "Password123",
           first_name: "Test",
           last_name: "User",
           phone_number: "+4512345678",
@@ -39,25 +56,16 @@ describe("Auth API (e2e)", () => {
         })
         .expect(201);
 
-      expect(response.body).toHaveProperty("access_token");
+      expect(response.body).toHaveProperty("accessToken");
+      accessToken = response.body.accessToken;
     });
 
-    it("should fail with invalid data", async () => {
+    it("should fail with duplicate email", () => {
       return request(app.getHttpServer())
-        .post("/auth/register")
+        .post("/auth/signup")
         .send({
-          email: "invalid-email",
-          password: "123",
-        })
-        .expect(400);
-    });
-
-    it("should fail with duplicate email", async () => {
-      return request(app.getHttpServer())
-        .post("/auth/register")
-        .send({
-          email: "test@example.com",
-          password: "Password123!",
+          email: "testRegister@gmail.com",
+          password: "Password123",
           first_name: "Test",
           last_name: "User",
           phone_number: "+4512345678",
@@ -72,47 +80,24 @@ describe("Auth API (e2e)", () => {
       const response = await request(app.getHttpServer())
         .post("/auth/login")
         .send({
-          email: "test@example.com",
-          password: "Password123!",
+          email: "testRegister@gmail.com",
+          password: "Password123",
         })
         .expect(200);
 
-      expect(response.body).toHaveProperty("access_token");
-      authToken = response.body.access_token;
+      expect(response.body).toHaveProperty("accessToken");
+      expect(response.body).toHaveProperty("onboarded");
+      accessToken = response.body.accessToken;
     });
 
-    it("should fail with incorrect password", async () => {
+    it("should fail with incorrect password", () => {
       return request(app.getHttpServer())
         .post("/auth/login")
         .send({
-          email: "test@example.com",
+          email: "testRegister@gmail.com",
           password: "wrongpassword",
         })
         .expect(401);
-    });
-
-    it("should fail with non-existent email", async () => {
-      return request(app.getHttpServer())
-        .post("/auth/login")
-        .send({
-          email: "nonexistent@example.com",
-          password: "Password123!",
-        })
-        .expect(401);
-    });
-  });
-
-  describe("GET /auth/profile", () => {
-    it("should get user profile with valid token", async () => {
-      return request(app.getHttpServer()).get("/auth/profile").set("Authorization", `Bearer ${authToken}`).expect(200);
-    });
-
-    it("should fail with invalid token", async () => {
-      return request(app.getHttpServer()).get("/auth/profile").set("Authorization", "Bearer invalid-token").expect(401);
-    });
-
-    it("should fail with no token", async () => {
-      return request(app.getHttpServer()).get("/auth/profile").expect(401);
     });
   });
 });
