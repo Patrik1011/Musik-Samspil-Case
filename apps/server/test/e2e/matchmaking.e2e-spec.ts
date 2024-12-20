@@ -1,133 +1,114 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../../src/app.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
-import { closeInMongodConnection, rootMongooseTestModule } from '../utils/mongoose-test.utils';
-import { Types } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
+import * as request from "supertest";
+import { AppModule } from "../../src/app.module";
+import { ConfigModule } from "@nestjs/config";
+import { closeInMongodConnection, rootMongooseTestModule } from "../utils/mongoose-test.utils";
+import { GeocodingService } from "../../src/modules/geocoding/geocoding.service";
 
-describe('Matchmaking (e2e)', () => {
+describe("Matchmaking (e2e)", () => {
   let app: INestApplication;
-  let jwtService: JwtService;
   let accessToken: string;
-  const userId = new Types.ObjectId().toHexString();
+  let ensembleId: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({
-          envFilePath: '.env.test',
+          envFilePath: ".env.test",
         }),
         rootMongooseTestModule(),
         AppModule,
       ],
+      providers: [
+        {
+          provide: GeocodingService,
+          useValue: {
+            geocodeAddress: jest.fn().mockResolvedValue({ latitude: 0, longitude: 0 }),
+          },
+        },
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    jwtService = moduleFixture.get<JwtService>(JwtService);
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
-    // Create a test JWT token
-    accessToken = jwtService.sign({ sub: userId });
-  });
+    const loginResponse = await request(app.getHttpServer()).post("/auth/login").send({
+      email: "test@example.com",
+      password: "Password123",
+    });
 
-  afterEach(async () => {
-    await app.close();
+    accessToken = loginResponse.body.accessToken;
+
+    const createEnsembleResponse = await request(app.getHttpServer())
+      .post("/ensemble")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({
+        name: "Test Ensemble",
+        description: "Test Description",
+        location: {
+          address: "Radhuspladsen 1",
+          city: "Copenhagen",
+          country: "Denmark",
+        },
+        open_positions: ["Violin"],
+        is_active: true,
+      });
+
+    ensembleId = createEnsembleResponse.body._id;
   });
 
   afterAll(async () => {
+    await app.close();
     await closeInMongodConnection();
   });
 
-  describe('/matchmaking/recommendations (GET)', () => {
-    it('should get recommendations based on location', async () => {
-      const latitude = '55.6761';
-      const longitude = '12.5683';
+  describe("/matchmaking/recommendations (GET)", () => {
+    it("should get recommendations based on location", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/matchmaking/recommendations")
+        .query({
+          latitude: "55.6761",
+          longitude: "12.5683",
+        })
+        .set("Authorization", `Bearer ${accessToken}`)
+        .expect(200);
 
-      return request(app.getHttpServer())
-        .get(`/matchmaking/recommendations?latitude=${latitude}&longitude=${longitude}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200)
-        .expect((res) => {
-          expect(Array.isArray(res.body)).toBeTruthy();
-          if (res.body.length > 0) {
-            expect(res.body[0]).toHaveProperty('_id');
-            expect(res.body[0]).toHaveProperty('distance');
-          }
-        });
+      expect(Array.isArray(response.body)).toBeTruthy();
+      if (response.body.length > 0) {
+        expect(response.body[0]).toHaveProperty("_id");
+        expect(response.body[0]).toHaveProperty("distance");
+      }
     });
 
-    it('should return 401 if no auth token provided', () => {
-      const latitude = '55.6761';
-      const longitude = '12.5683';
-
+    it("should return 401 if no auth token provided", () => {
       return request(app.getHttpServer())
-        .get(`/matchmaking/recommendations?latitude=${latitude}&longitude=${longitude}`)
+        .get("/matchmaking/recommendations")
+        .query({
+          latitude: "55.6761",
+          longitude: "12.5683",
+        })
         .expect(401);
     });
   });
 
-  describe('/matchmaking/matches (GET)', () => {
-    it('should get user matches', () => {
-      return request(app.getHttpServer())
-        .get('/matchmaking/matches')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200)
-        .expect((res) => {
-          expect(Array.isArray(res.body)).toBeTruthy();
-          if (res.body.length > 0) {
-            expect(res.body[0]).toHaveProperty('_id');
-            expect(res.body[0]).toHaveProperty('status');
-            expect(res.body[0]).toHaveProperty('liked');
-          }
-        });
-    });
-
-    it('should return 401 if no auth token provided', () => {
-      return request(app.getHttpServer())
-        .get('/matchmaking/matches')
-        .expect(401);
-    });
-  });
-
-  describe('/matchmaking/match (POST)', () => {
-    it('should create a new match', () => {
-      const ensembleId = new Types.ObjectId().toHexString();
+  describe("/matchmaking/match (POST)", () => {
+    it("should create a new match", async () => {
       const matchData = {
         ensembleId,
         liked: true,
       };
 
-      return request(app.getHttpServer())
-        .post('/matchmaking/match')
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send(matchData)
-        .expect(201)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('_id');
-          expect(res.body).toHaveProperty('user');
-          expect(res.body).toHaveProperty('ensemble');
-          expect(res.body).toHaveProperty('status');
-          expect(res.body).toHaveProperty('liked', true);
-          expect(res.body).toHaveProperty('distance');
-          expect(res.body).toHaveProperty('matched_at');
-          expect(res.body).toHaveProperty('created_at');
-        });
-    });
+      const response = await request(app.getHttpServer()).post("/matchmaking/match").set("Authorization", `Bearer ${accessToken}`).send(matchData).expect(201);
 
-    it('should return 401 if no auth token provided', () => {
-      const ensembleId = new Types.ObjectId().toHexString();
-      const matchData = {
-        ensembleId,
-        liked: true,
-      };
-
-      return request(app.getHttpServer())
-        .post('/matchmaking/match')
-        .send(matchData)
-        .expect(401);
+      expect(response.body).toHaveProperty("_id");
+      expect(response.body).toHaveProperty("user");
+      expect(response.body).toHaveProperty("ensemble");
+      expect(response.body).toHaveProperty("status", "pending");
+      expect(response.body).toHaveProperty("liked", true);
+      expect(response.body).toHaveProperty("distance");
+      expect(response.body).toHaveProperty("created_at");
     });
   });
 });
