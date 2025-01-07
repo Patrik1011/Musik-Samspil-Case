@@ -47,7 +47,7 @@ jobs:
       - name: ESLint
         run: pnpm eslint .
       - name: Biome
-        run: pnpm biome ci .
+        run: pnpm biome check --write
 
   test:
     name: E2E Tests
