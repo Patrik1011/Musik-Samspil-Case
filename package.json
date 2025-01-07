@@ -10,6 +10,7 @@
     "lint:biome": "biome check --write",
     "lint-staged": "lint-staged",
     "lint-staged-debug": "lint-staged --debug",
+    "test:e2e": "pnpm --filter=server test:e2e",
     "start:server": "cross-env NODE_ENV=production pnpm --filter=server start:prod",
     "start:web": "pnpm --filter=web dev",
     "dev": "pnpm --filter=web dev & pnpm --filter=server start:dev",
