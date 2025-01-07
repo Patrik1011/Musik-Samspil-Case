@@ -7,6 +7,11 @@ on:
       - production
   pull_request: {}
   workflow_dispatch:
+    secrets:
+      MONGO_URI:
+        required: true
+      JWT_SECRET:
+        required: true
 
 concurrency:
   group: ${{ github.ref }}
@@ -59,12 +64,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20.18.1'
       - name: Setup Volta
         uses: volta-cli/action@v4
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
+          version: 9.15.0
           run_install: false
       - name: Get PNPM Store Path
         id: pnpm-cache
@@ -84,8 +90,8 @@ jobs:
         run: pnpm test:e2e
         env:
           NODE_ENV: test
-          MONGO_URI: mongodb://localhost:27017/test
-          JWT_SECRET: test-secret
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           TEST_USER_EMAIL: test@example.com
           TEST_USER_PASSWORD: Password123
           TEST_USER_FIRST_NAME: Test
