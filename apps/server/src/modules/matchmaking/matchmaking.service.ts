@@ -1,4 +1,10 @@
-import { Injectable, BadRequestException, ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { Matchmaking } from "../../schemas/matchmaking.schema";
 import { Ensemble } from "../../schemas/ensemble.schema";
 import { Types } from "mongoose";
@@ -40,7 +46,9 @@ export class MatchmakingService {
 
     const excludeEnsembleIds = [
       ...existingMatches.map((match: { ensemble: Types.ObjectId }) => match.ensemble),
-      ...hostedEnsembles.map((membership: { ensemble_id: string }) => new Types.ObjectId(membership.ensemble_id)),
+      ...hostedEnsembles.map(
+        (membership: { ensemble_id: string }) => new Types.ObjectId(membership.ensemble_id),
+      ),
     ];
 
     const ensembles = await Ensemble.aggregate([
@@ -78,7 +86,9 @@ export class MatchmakingService {
       is_host: true,
     });
 
-    const hostedEnsembleIds = memberships.map((membership: { ensemble_id: string }) => new Types.ObjectId(membership.ensemble_id));
+    const hostedEnsembleIds = memberships.map(
+      (membership: { ensemble_id: string }) => new Types.ObjectId(membership.ensemble_id),
+    );
 
     const matches = await Matchmaking.aggregate([
       {
@@ -153,11 +163,15 @@ export class MatchmakingService {
         throw new ConflictException("Match already exists for this user and ensemble");
       }
 
-      const [user, ensemble] = await Promise.all([User.findById(userId).session(session), Ensemble.findById(ensembleId).session(session)]);
+      const [user, ensemble] = await Promise.all([
+        User.findById(userId).session(session),
+        Ensemble.findById(ensembleId).session(session),
+      ]);
 
       if (!user || !ensemble) throw new NotFoundException("User or Ensemble not found");
 
-      if (!user.location?.coordinates || !ensemble.location?.coordinates) throw new BadRequestException("User or ensemble location not found");
+      if (!user.location?.coordinates || !ensemble.location?.coordinates)
+        throw new BadRequestException("User or ensemble location not found");
 
       const distanceCalc = calculateDistance(
         {

@@ -58,7 +58,7 @@ describe("UsersController (e2e)", () => {
         .get("/users/me")
         .set("Authorization", `Bearer ${accessToken}`)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty("_id");
         });
     });
@@ -80,7 +80,10 @@ describe("UsersController (e2e)", () => {
         },
       };
 
-      const response = await request(app.getHttpServer()).put("/users/me").set("Authorization", `Bearer ${accessToken}`).send(updateDto);
+      const response = await request(app.getHttpServer())
+        .put("/users/me")
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send(updateDto);
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("first_name", updateDto.first_name);
@@ -101,7 +104,7 @@ describe("UsersController (e2e)", () => {
       return request(app.getHttpServer())
         .get("/users/instruments")
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(Array.isArray(res.body)).toBeTruthy();
           expect(res.body).toEqual(Object.values(Instrument));
         });
@@ -114,7 +117,7 @@ describe("UsersController (e2e)", () => {
         .get("/users/onboarding-status")
         .set("Authorization", `Bearer ${accessToken}`)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty("onboarded");
           expect(typeof res.body.onboarded).toBe("boolean");
         });

@@ -100,7 +100,11 @@ describe("Matchmaking (e2e)", () => {
         liked: true,
       };
 
-      const response = await request(app.getHttpServer()).post("/matchmaking/match").set("Authorization", `Bearer ${accessToken}`).send(matchData).expect(201);
+      const response = await request(app.getHttpServer())
+        .post("/matchmaking/match")
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send(matchData)
+        .expect(201);
 
       expect(response.body).toHaveProperty("_id");
       expect(response.body).toHaveProperty("user");

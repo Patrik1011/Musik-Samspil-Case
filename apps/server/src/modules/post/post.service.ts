@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { Types } from "mongoose";
 import { Ensemble } from "../../schemas/ensemble.schema";
 import { EnsembleMembership } from "../../schemas/ensemble-membership.schema";
@@ -84,7 +89,10 @@ export class PostService {
 
   async getLatestPosts() {
     try {
-      return await Post.find().sort({ created_at: -1 }).limit(6).populate(["ensemble_id", "author_id"]);
+      return await Post.find()
+        .sort({ created_at: -1 })
+        .limit(6)
+        .populate(["ensemble_id", "author_id"]);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -92,7 +100,10 @@ export class PostService {
 
   // Function to handle instrument-based search
   async searchByInstrument(instrument: string): Promise<Types.ObjectId[]> {
-    const matchingEnsembles = await Ensemble.find({ open_positions: instrument }, { _id: 1 }).lean();
+    const matchingEnsembles = await Ensemble.find(
+      { open_positions: instrument },
+      { _id: 1 },
+    ).lean();
 
     return matchingEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
   }
@@ -103,7 +114,11 @@ export class PostService {
 
     const matchingEnsembles = await Ensemble.find(
       {
-        $or: [{ "location.city": locationPattern }, { "location.country": locationPattern }, { "location.address": locationPattern }],
+        $or: [
+          { "location.city": locationPattern },
+          { "location.country": locationPattern },
+          { "location.address": locationPattern },
+        ],
       },
       { _id: 1 },
     ).lean();
@@ -112,12 +127,18 @@ export class PostService {
   }
 
   // Function to handle generic text search
-  async searchByGenericText(genericText: string | { $regex: string; $options: string }): Promise<Types.ObjectId[]> {
+  async searchByGenericText(
+    genericText: string | { $regex: string; $options: string },
+  ): Promise<Types.ObjectId[]> {
     const genericTextRegex = { $regex: genericText, $options: "i" };
 
     // Fetch ensembles based on generic text in location or open positions
     const locationCriteria = {
-      $or: [{ "location.city": genericTextRegex }, { "location.country": genericTextRegex }, { "location.address": genericTextRegex }],
+      $or: [
+        { "location.city": genericTextRegex },
+        { "location.country": genericTextRegex },
+        { "location.address": genericTextRegex },
+      ],
     };
     const openPositionsCriteria = { open_positions: genericTextRegex };
 
@@ -126,8 +147,12 @@ export class PostService {
       Ensemble.find(openPositionsCriteria, { _id: 1 }).lean(),
     ]);
 
-    const locationEnsembleIds = matchingLocationEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
-    const positionEnsembleIds = matchingPositionEnsembles.map((ensemble: { _id: Types.ObjectId }) => ensemble._id);
+    const locationEnsembleIds = matchingLocationEnsembles.map(
+      (ensemble: { _id: Types.ObjectId }) => ensemble._id,
+    );
+    const positionEnsembleIds = matchingPositionEnsembles.map(
+      (ensemble: { _id: Types.ObjectId }) => ensemble._id,
+    );
 
     return [...new Set([...locationEnsembleIds, ...positionEnsembleIds])];
   }
@@ -157,10 +182,18 @@ export class PostService {
           | { type?: { $regex: string; $options: string } }
           | { ensemble_id?: { $in: Types.ObjectId[] } };
 
-        const genericTextConditions: QueryCondition[] = [{ title: genericTextRegex }, { description: genericTextRegex }, { type: genericTextRegex }];
+        const genericTextConditions: QueryCondition[] = [
+          { title: genericTextRegex },
+          { description: genericTextRegex },
+          { type: genericTextRegex },
+        ];
 
-        const locationEnsembleIds = await this.searchByLocation(searchCriteria.genericText as string);
-        const positionEnsembleIds = await this.searchByInstrument(searchCriteria.genericText as string);
+        const locationEnsembleIds = await this.searchByLocation(
+          searchCriteria.genericText as string,
+        );
+        const positionEnsembleIds = await this.searchByInstrument(
+          searchCriteria.genericText as string,
+        );
         const combinedEnsembleIds = [...new Set([...locationEnsembleIds, ...positionEnsembleIds])];
 
         if (combinedEnsembleIds.length > 0) {

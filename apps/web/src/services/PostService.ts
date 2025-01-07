@@ -55,10 +55,7 @@ export const postService = {
     return response as PostDetails[];
   },
 
-  createPost: async (
-    data: CreatePostInput,
-    ensembleId: string,
-  ): Promise<Post> => {
+  createPost: async (data: CreatePostInput, ensembleId: string): Promise<Post> => {
     const response = await postRequest(`/post/${ensembleId}`, data);
     return response as Post;
   },

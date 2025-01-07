@@ -60,12 +60,15 @@ describe("ApplicationController (e2e)", () => {
 
     ensembleId = createEnsembleResponse.body._id;
 
-    const createPostResponse = await request(app.getHttpServer()).post(`/post/${ensembleId}`).set("Authorization", `Bearer ${accessToken}`).send({
-      title: "Test Post",
-      description: "Test Description",
-      website_url: "https://example.com",
-      type: "Recruitment",
-    });
+    const createPostResponse = await request(app.getHttpServer())
+      .post(`/post/${ensembleId}`)
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({
+        title: "Test Post",
+        description: "Test Description",
+        website_url: "https://example.com",
+        type: "Recruitment",
+      });
 
     postId = createPostResponse.body._id;
   });
@@ -82,7 +85,11 @@ describe("ApplicationController (e2e)", () => {
         message: "I would like to apply for this position",
       };
 
-      const response = await request(app.getHttpServer()).post(`/application/${postId}`).set("Authorization", `Bearer ${accessToken}`).send(createDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post(`/application/${postId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send(createDto)
+        .expect(201);
 
       applicationId = response.body._id;
       expect(response.body).toHaveProperty("message", createDto.message);
@@ -101,7 +108,7 @@ describe("ApplicationController (e2e)", () => {
         .get(`/application/post/${postId}`)
         .set("Authorization", `Bearer ${accessToken}`)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(Array.isArray(res.body)).toBeTruthy();
           if (res.body.length > 0) {
             expect(res.body[0]).toHaveProperty("_id");
@@ -120,7 +127,7 @@ describe("ApplicationController (e2e)", () => {
         .set("Authorization", `Bearer ${accessToken}`)
         .send({ status: "approved" })
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty("status", "approved");
         });
     });

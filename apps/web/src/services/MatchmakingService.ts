@@ -3,18 +3,13 @@ import { Ensemble } from "./EnsembleService";
 import { Match, Coordinates } from "../utils/types";
 
 export const matchmakingService = {
-  getRecommendations: async ({
-    latitude,
-    longitude,
-  }: Coordinates): Promise<Ensemble[]> => {
+  getRecommendations: async ({ latitude, longitude }: Coordinates): Promise<Ensemble[]> => {
     const queryParams = new URLSearchParams({
       latitude: latitude.toString(),
       longitude: longitude.toString(),
     });
 
-    const response = await getRequest(
-      `/matchmaking/recommendations?${queryParams}`,
-    );
+    const response = await getRequest(`/matchmaking/recommendations?${queryParams}`);
     return response as Ensemble[];
   },
 

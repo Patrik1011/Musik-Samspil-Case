@@ -45,9 +45,7 @@ export const Onboarding = () => {
   const [errors, setErrors] = React.useState<Errors>({});
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   const isOnBoarded = useSelector((state: RootState) => state.auth.isOnBoarded);
 
   useEffect(() => {
@@ -56,9 +54,7 @@ export const Onboarding = () => {
     }
   }, [isAuthenticated, isOnBoarded, navigate]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -107,8 +103,7 @@ export const Onboarding = () => {
         location: { city: "", country: "", address: "" },
       });
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
       setErrors({ general: errorMessage });
       console.error("Error during onboarding:", error);
     }
@@ -169,10 +164,7 @@ export const Onboarding = () => {
         />
 
         <div className="space-y-2">
-          <label
-            htmlFor="instruments"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="instruments" className="block text-sm font-medium text-gray-700">
             Instruments
           </label>
           <select
@@ -190,9 +182,7 @@ export const Onboarding = () => {
               </option>
             ))}
           </select>
-          {errors.instruments && (
-            <p className="text-red-500 text-sm">{errors.instruments}</p>
-          )}
+          {errors.instruments && <p className="text-red-500 text-sm">{errors.instruments}</p>}
           <div className="flex flex-wrap gap-2 mt-2">
             {formData.instruments.map((instrument) => (
               <span
@@ -212,16 +202,10 @@ export const Onboarding = () => {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          title="Complete Onboarding"
-          className="bg-steel-blue text-white"
-        />
+        <Button type="submit" title="Complete Onboarding" className="bg-steel-blue text-white" />
 
         {errors.general && (
-          <div className="text-red-500 text-sm text-center mt-2">
-            {errors.general}
-          </div>
+          <div className="text-red-500 text-sm text-center mt-2">{errors.general}</div>
         )}
       </form>
     </div>

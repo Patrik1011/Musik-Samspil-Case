@@ -45,9 +45,7 @@ export const InputField = ({
         required={required}
         disabled={disabled}
       />
-      {errorMessages && (
-        <p className="text-red-400 text-[14px]">{errorMessages}</p>
-      )}
+      {errorMessages && <p className="text-red-400 text-[14px]">{errorMessages}</p>}
     </div>
   );
 };

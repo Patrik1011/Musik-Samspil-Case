@@ -75,7 +75,11 @@ describe("PostController (e2e)", () => {
         type: PostType.Recruitment,
       };
 
-      const response = await request(app.getHttpServer()).post(`/post/${ensembleId}`).set("Authorization", `Bearer ${accessToken}`).send(createDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post(`/post/${ensembleId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send(createDto)
+        .expect(201);
 
       postId = response.body._id;
       expect(response.body).toHaveProperty("title", createDto.title);
@@ -124,7 +128,10 @@ describe("PostController (e2e)", () => {
 
   describe("/post/:id (DELETE)", () => {
     it("should delete post", async () => {
-      await request(app.getHttpServer()).delete(`/post/${postId}`).set("Authorization", `Bearer ${accessToken}`).expect(200);
+      await request(app.getHttpServer())
+        .delete(`/post/${postId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .expect(200);
 
       await request(app.getHttpServer()).get(`/post/${postId}`).expect(500);
     });

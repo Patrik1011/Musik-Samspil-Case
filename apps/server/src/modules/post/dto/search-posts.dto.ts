@@ -39,6 +39,10 @@ export type MongoSearchPostsDto = Partial<
     type?: string | { $regex: string; $options: string };
     ensemble_id?: { $in: Types.ObjectId[] };
     instrument?: string | { $regex: string; $options: string };
-    $or?: Array<Partial<Pick<MongoSearchPostsDto, "title" | "description" | "type" | "instrument" | "ensemble_id">>>;
+    $or?: Array<
+      Partial<
+        Pick<MongoSearchPostsDto, "title" | "description" | "type" | "instrument" | "ensemble_id">
+      >
+    >;
   }
 >;

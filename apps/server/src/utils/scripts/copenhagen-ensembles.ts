@@ -28,7 +28,13 @@ const COPENHAGEN_AREAS = [
     name: "Østerbro",
     latitude: 55.7076,
     longitude: 12.5748,
-    streets: ["Østerbrogade", "Nordre Frihavnsgade", "Strandboulevarden", "Trianglen", "Classensgade"],
+    streets: [
+      "Østerbrogade",
+      "Nordre Frihavnsgade",
+      "Strandboulevarden",
+      "Trianglen",
+      "Classensgade",
+    ],
   },
   {
     name: "Frederiksberg",
@@ -46,13 +52,25 @@ const COPENHAGEN_AREAS = [
     name: "Christianshavn",
     latitude: 55.6733,
     longitude: 12.5927,
-    streets: ["Torvegade", "Prinsessegade", "Christianshavns Voldgade", "Overgaden oven Vandet", "Strandgade"],
+    streets: [
+      "Torvegade",
+      "Prinsessegade",
+      "Christianshavns Voldgade",
+      "Overgaden oven Vandet",
+      "Strandgade",
+    ],
   },
   {
     name: "Valby",
     latitude: 55.6666,
     longitude: 12.5166,
-    streets: ["Valby Langgade", "Toftegårds Allé", "Vigerslev Allé", "Gl. Jernbanevej", "Skolegade"],
+    streets: [
+      "Valby Langgade",
+      "Toftegårds Allé",
+      "Vigerslev Allé",
+      "Gl. Jernbanevej",
+      "Skolegade",
+    ],
   },
 ];
 
@@ -73,7 +91,9 @@ function generateNearbyCoordinates(centerLat: number, centerLng: number) {
 // Helper function to get a random filled position that's not in open positions
 function getFilledPosition(openPositions: Instrument[]): Instrument {
   const allInstruments = Object.values(Instrument);
-  const filledPositions = allInstruments.filter(instrument => !openPositions.includes(instrument));
+  const filledPositions = allInstruments.filter(
+    (instrument) => !openPositions.includes(instrument),
+  );
   return faker.helpers.arrayElement(filledPositions);
 }
 
@@ -87,7 +107,10 @@ async function main() {
     for (const area of COPENHAGEN_AREAS) {
       for (let i = 0; i < ensemblesPerArea; i++) {
         // Generate ensemble with open positions
-        const openPositions = faker.helpers.arrayElements(Object.values(Instrument), faker.number.int({ min: 1, max: 4 }));
+        const openPositions = faker.helpers.arrayElements(
+          Object.values(Instrument),
+          faker.number.int({ min: 1, max: 4 }),
+        );
 
         const coords = generateNearbyCoordinates(area.latitude, area.longitude);
         const streetName = faker.helpers.arrayElement(area.streets);
@@ -131,7 +154,7 @@ async function main() {
   }
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error("Error seeding database:", error);
   process.exit(1);
 });

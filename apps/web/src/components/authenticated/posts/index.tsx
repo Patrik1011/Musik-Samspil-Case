@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  PostDetails,
-  postService,
-  SearchCriteria,
-} from "../../../services/PostService.ts";
+import { PostDetails, postService, SearchCriteria } from "../../../services/PostService.ts";
 import { Container } from "../../Container.tsx";
 import { Headline } from "../../Headline.tsx";
 import { PostGrid } from "./post-card/PostGrid.tsx";
@@ -34,10 +30,7 @@ export const UserPosts = () => {
     setPosts(posts);
   };
 
-  const searchPost = async (
-    criteria: Partial<SearchCriteria>,
-    callingFor?: string,
-  ) => {
+  const searchPost = async (criteria: Partial<SearchCriteria>, callingFor?: string) => {
     try {
       if (callingFor === "clear") {
         const data = await postService.searchPost(criteria);

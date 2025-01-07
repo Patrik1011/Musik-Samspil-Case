@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import homeImage from "../../assets/images-svg/home.svg";
 import { Instrument } from "../../enums/Instrument.ts";
-import {
-  PostDetails,
-  postService,
-  SearchCriteria,
-} from "../../services/PostService.ts";
+import { PostDetails, postService, SearchCriteria } from "../../services/PostService.ts";
 import { PostGrid } from "../authenticated/posts/post-card/PostGrid.tsx";
 import { Button } from "../Button.tsx";
 import { Container } from "../Container.tsx";
@@ -16,12 +12,8 @@ import { Select } from "../Select.tsx";
 export const Home = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
   const [showingPosts, setShowingPosts] = useState<PostDetails[]>([]);
-  const [notFoundInstrument, setNotFoundInstrument] = useState<string | null>(
-    null,
-  );
-  const [selectedInstrument, setSelectedInstrument] = useState<string | null>(
-    null,
-  );
+  const [notFoundInstrument, setNotFoundInstrument] = useState<string | null>(null);
+  const [selectedInstrument, setSelectedInstrument] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -66,18 +58,13 @@ export const Home = () => {
         <div className="flex flex-col-reverse md:flex-row items-center justify-between w-full">
           <div className="md:w-1/1">
             <p className="text-[30px] leading-[34px] mt-12 mb-7 text-custom-red font-oswald md:leading-[54px] md:mt-0 md:mb-14 md:text-[50px]">
-              The place where amateur musicians find each other and play music
-              together
+              The place where amateur musicians find each other and play music together
             </p>
             <div className="flex flex-col space-y-2 md:flex-row items-center justify-between w-full md:space-y-0">
               <div className="w-full  md:w-1/2 md:mr-3">
                 <Select
-                  onChange={(selectedOption) =>
-                    handleSelectChange(selectedOption)
-                  }
-                  options={Object.values(Instrument).map((type) =>
-                    type.toString(),
-                  )}
+                  onChange={(selectedOption) => handleSelectChange(selectedOption)}
+                  options={Object.values(Instrument).map((type) => type.toString())}
                 />
               </div>
               <div className="w-full md:w-1/2 md:ml-3">
@@ -105,10 +92,7 @@ export const Home = () => {
             textColor="text-steel-blue"
             className="text-4xl font-oswald"
           />
-          <a
-            href="/posts"
-            className="text-base md:text-lg text-custom-red font-bold"
-          >
+          <a href="/posts" className="text-base md:text-lg text-custom-red font-bold">
             See all posts
           </a>
         </div>

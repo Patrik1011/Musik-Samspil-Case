@@ -61,7 +61,11 @@ describe("EnsembleController (e2e)", () => {
         is_active: true,
       };
 
-      const response = await request(app.getHttpServer()).post("/ensemble").set("Authorization", `Bearer ${accessToken}`).send(createDto).expect(201);
+      const response = await request(app.getHttpServer())
+        .post("/ensemble")
+        .set("Authorization", `Bearer ${accessToken}`)
+        .send(createDto)
+        .expect(201);
 
       ensembleId = response.body._id;
       expect(response.body).toHaveProperty("name", createDto.name);
@@ -75,7 +79,7 @@ describe("EnsembleController (e2e)", () => {
         .get(`/ensemble/${ensembleId}`)
         .set("Authorization", `Bearer ${accessToken}`)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty("_id", ensembleId);
           expect(res.body).toHaveProperty("name");
           expect(res.body).toHaveProperty("description");
@@ -98,7 +102,7 @@ describe("EnsembleController (e2e)", () => {
         .set("Authorization", `Bearer ${accessToken}`)
         .send(updateDto)
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty("name", updateDto.name);
           expect(res.body).toHaveProperty("description", updateDto.description);
           expect(res.body.open_positions).toEqual(updateDto.open_positions);
@@ -108,7 +112,10 @@ describe("EnsembleController (e2e)", () => {
 
   describe("/ensemble/:id (DELETE)", () => {
     it("should delete ensemble", () => {
-      return request(app.getHttpServer()).delete(`/ensemble/${ensembleId}`).set("Authorization", `Bearer ${accessToken}`).expect(200);
+      return request(app.getHttpServer())
+        .delete(`/ensemble/${ensembleId}`)
+        .set("Authorization", `Bearer ${accessToken}`)
+        .expect(200);
     });
   });
 });

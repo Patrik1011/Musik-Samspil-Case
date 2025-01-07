@@ -1,4 +1,14 @@
-import { Controller, Get, Post, UseGuards, Request, Put, Body, BadRequestException, Delete } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  Put,
+  Body,
+  BadRequestException,
+  Delete,
+} from "@nestjs/common";
 
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -54,7 +64,10 @@ export class UsersController {
   @Post("onboarding")
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse()
-  async completeOnboarding(@Body() onboardingDto: OnboardingDto, @Request() req: OnboardingRequest) {
+  async completeOnboarding(
+    @Body() onboardingDto: OnboardingDto,
+    @Request() req: OnboardingRequest,
+  ) {
     this.validateUserId(req.user._id.toString());
     return this.usersService.completeOnboarding(req.user._id.toString(), onboardingDto);
   }
