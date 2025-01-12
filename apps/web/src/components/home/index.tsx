@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import homeImage from "../../assets/images-svg/home.svg";
 import { Instrument } from "../../enums/Instrument.ts";
 import { PostDetails, postService, SearchCriteria } from "../../services/PostService.ts";
-import { PostGrid } from "../authenticated/posts/post-card/PostGrid.tsx";
 import { Button } from "../Button.tsx";
 import { Container } from "../Container.tsx";
 import { Headline } from "../Headline.tsx";
@@ -11,11 +9,9 @@ import { Select } from "../Select.tsx";
 
 export const Home = () => {
   const [posts, setPosts] = useState<PostDetails[]>([]);
-  const [showingPosts, setShowingPosts] = useState<PostDetails[]>([]);
-  const [notFoundInstrument, setNotFoundInstrument] = useState<string | null>(null);
+  const [, setShowingPosts] = useState<PostDetails[]>([]);
+  const [, setNotFoundInstrument] = useState<string | null>(null);
   const [selectedInstrument, setSelectedInstrument] = useState<string | null>(null);
-
-  const navigate = useNavigate();
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedInstrument(event.target.value);
@@ -46,10 +42,6 @@ export const Home = () => {
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
-  };
-
-  const handlePostClick = (id: string) => {
-    navigate(`/post-details/${id}`);
   };
 
   return (
@@ -96,11 +88,6 @@ export const Home = () => {
             See all posts
           </a>
         </div>
-        {showingPosts.length > 0 ? (
-          <PostGrid posts={showingPosts} handlePostClick={handlePostClick} />
-        ) : (
-          <p>No posts available at this moment with {notFoundInstrument}! </p>
-        )}
       </section>
     </Container>
   );
