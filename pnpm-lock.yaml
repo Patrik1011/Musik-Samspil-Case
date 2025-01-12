@@ -11,9 +11,15 @@ importers:
 
   .:
     dependencies:
+      '@biomejs/cli-darwin-x64':
+        specifier: ^1.9.4
+        version: 1.9.4
       '@nestjs/mapped-types':
         specifier: '*'
         version: 2.0.6(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+      biome:
+        specifier: link:@biomejs/cli-darwin-x64/biome
+        version: link:@biomejs/cli-darwin-x64/biome
       dotenv:
         specifier: ^16.4.5
         version: 16.4.7
@@ -6801,8 +6807,7 @@ snapshots:
 
   '@biomejs/cli-darwin-arm64@1.9.4': {}
 
-  '@biomejs/cli-darwin-x64@1.9.4':
-    optional: true
+  '@biomejs/cli-darwin-x64@1.9.4': {}
 
   '@biomejs/cli-linux-arm64-musl@1.9.4':
     optional: true
