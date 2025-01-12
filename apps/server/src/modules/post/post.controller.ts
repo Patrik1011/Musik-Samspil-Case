@@ -34,6 +34,17 @@ export class PostController {
     return this.postService.getLatestPosts();
   }
 
+  @Get("user")
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse()
+  async getPostsByUserId(@Request() req: AuthenticatedRequest) {
+    const userId = req.user._id.toString();
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException("Invalid user ID");
+    }
+    return this.postService.getPostsByUserId(userId);
+  }
+
   @Get("ensemble/:ensembleId")
   @ApiOkResponse()
   async getPostsByEnsembleId(@Param("ensembleId") ensembleId: string) {
